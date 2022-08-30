@@ -298,13 +298,13 @@ for group = 1, 8 do
 
 		DRF.UFS[id].HealthBar = DRF.UFS[id]:CreateTexture(nil, "ARTWORK")
 		DRF.UFS[id].HealthBar:SetDrawLayer("ARTWORK", DRFLayers["HealthBar"])
-		DRF.UFS[id].HealthBar:SetTexture("Interface/Addons/D4KiR DRF/media/bar")--"Interface/RaidFrame/Raid-Bar-Hp-Fill")
+		DRF.UFS[id].HealthBar:SetTexture("Interface/Addons/DRaidFrames/media/bar")--"Interface/RaidFrame/Raid-Bar-Hp-Fill")
 		DRF.UFS[id].HealthBar:SetVertexColor(0.2, 1, 0.2)
 
 		if UnitGetIncomingHeals and UnitGetTotalAbsorbs then
 			DRF.UFS[id].Prediction = DRF.UFS[id]:CreateTexture(nil, "ARTWORK")
 			DRF.UFS[id].Prediction:SetDrawLayer("ARTWORK", DRFLayers["Prediction"])
-			DRF.UFS[id].Prediction:SetTexture("Interface/Addons/D4KiR DRF/media/bar")--"Interface/RaidFrame/Raid-Bar-Hp-Fill")
+			DRF.UFS[id].Prediction:SetTexture("Interface/Addons/DRaidFrames/media/bar")--"Interface/RaidFrame/Raid-Bar-Hp-Fill")
 			--DRF.UFS[id].Prediction:SetTexCoord(0, 1, 0, 0.53125);
 			DRF.UFS[id].Prediction:SetVertexColor(0, 0, 0)
 
@@ -353,7 +353,7 @@ for group = 1, 8 do
 		DRF.UFS[id].PowerBar = DRF.UFS[id]:CreateTexture(nil, "ARTWORK")
 		DRF.UFS[id].PowerBar:SetDrawLayer("ARTWORK", DRFLayers["PowerBar"])
 		--DRF.UFS[id].PowerBar:SetAllPoints(DRF.UFS[id])
-		DRF.UFS[id].PowerBar:SetTexture("Interface/Addons/D4KiR DRF/media/bar")
+		DRF.UFS[id].PowerBar:SetTexture("Interface/Addons/DRaidFrames/media/bar")
 		DRF.UFS[id].PowerBar:SetVertexColor(1, 1, 1)
 
 		DRF.UFS[id].PowerTextCen = DRF.UFS[id]:CreateFontString(nil, "OVERLAY")
@@ -1272,7 +1272,7 @@ function DRFUpdateUnitInfo(uf, unit)
 			covenants[3] = "ni"
 			covenants[4] = "ne"
 
-			uf.HealthBackground.CovenantIcon:SetTexture("Interface/Addons/D4KiR DRF/media/" .. covenants[id])
+			uf.HealthBackground.CovenantIcon:SetTexture("Interface/Addons/DRaidFrames/media/" .. covenants[id])
 		else
 			uf.HealthBackground.CovenantIcon:SetTexture("")
 		end
@@ -1305,7 +1305,7 @@ function DRFUpdateUnitInfo(uf, unit)
 			if DRFBUILD ~= "RETAIL" then
 				if UnitInBattleground("player") then
 					uf.HealthBackground.LangIcon.lang = lang
-					uf.HealthBackground.LangIcon:SetTexture("Interface\\Addons\\D4KiR DRF\\media\\" .. lang)
+					uf.HealthBackground.LangIcon:SetTexture("Interface\\Addons\\DRaidFrames\\media\\" .. lang)
 					if FLAG then
 						uf.HealthBackground.LangIcon:Show()
 					end
@@ -1329,7 +1329,7 @@ function DRFUpdateUnitInfo(uf, unit)
 				end
 			else
 				uf.HealthBackground.LangIcon.lang = lang
-				uf.HealthBackground.LangIcon:SetTexture("Interface\\Addons\\D4KiR DRF\\media\\" .. lang)
+				uf.HealthBackground.LangIcon:SetTexture("Interface\\Addons\\DRaidFrames\\media\\" .. lang)
 				if FLAG then
 					uf.HealthBackground.LangIcon:Show()
 				end

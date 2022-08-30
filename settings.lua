@@ -152,12 +152,9 @@ SORTTAB = {"Group", "Role"}
 function DRFInitSettings()
 	local DRFSettings = {}
 
-	local DRFname = "DRaidFrames"
-	local DRFcolorname = "|c008888ff"
-	local DRFauthor = "D4KiR"
-	local DRFcolorauthor = "|c0000ffff"
+	local DRFname = "DRaidFrames |T254652/:16:16:0:0|t by |cFFAAAAFFD4KiR |T132115/:16:16:0:0|t"
 
-	local settingname = DRFcolorauthor .. DRFauthor .. " " .. DRFcolorname .. DRFname
+	local settingname = DRFname
 	DRFSettings.panel = CreateFrame("FRAME")
 	DRFSettings.panel.name = settingname
 
