@@ -385,7 +385,7 @@ for group = 1, 8 do
 			DRF.UFS[id].BuffBar[i].buttonInfo = {}
 			DRF.UFS[id].BuffBar[i].buttonInfo.expirationTime = -1
 			DRF.UFS[id].BuffBar[i].parent = DRF.UFS[id].BuffBar;
-
+			
 			if DRF.UFS[id].BuffBar[i].Icon == nil then
 				DRF.UFS[id].BuffBar[i].Icon = _G["DRFBUFF" .. id .. "_" .. i .. "Icon"]
 			end
@@ -393,12 +393,21 @@ for group = 1, 8 do
 			DRF.UFS[id].BuffBar[i]:EnableMouse(false)
 
 			DRF.UFS[id].BuffBar[i]:SetSize(18, 18)
+			DRF.UFS[id].BuffBar[i].Icon:SetSize(18, 18)
 
 			DRF.UFS[id].BuffBar[i].cooldown = CreateFrame("Cooldown", "DRFBUFF" .. id .. "_" .. i .. "Cooldown", DRF.UFS[id].BuffBar[i], "CooldownFrameTemplate")
 			DRF.UFS[id].BuffBar[i].cooldown:SetSize(18, 18)
 			DRF.UFS[id].BuffBar[i].cooldown:SetAllPoints(DRF.UFS[id].BuffBar[i])
 			DRF.UFS[id].BuffBar[i].cooldown:SetHideCountdownNumbers(true)
 			DRF.UFS[id].BuffBar[i].cooldown:SetReverse(true)
+
+			if _G["DRFBUFF" .. id .. "_" .. i .. "Duration"] ~= nil then
+				local duration = _G["DRFBUFF" .. id .. "_" .. i .. "Duration"]
+				hooksecurefunc( duration, "Show", function( self )
+					self:Hide()
+				end )
+				duration:Hide()
+			end
 		end
 
 		-- Debuff
@@ -430,6 +439,14 @@ for group = 1, 8 do
 			DRF.UFS[id].DebuffBar[i].cooldown:SetAllPoints(DRF.UFS[id].DebuffBar[i])
 			DRF.UFS[id].DebuffBar[i].cooldown:SetHideCountdownNumbers(true)
 			DRF.UFS[id].DebuffBar[i].cooldown:SetReverse(true)
+
+			if _G["DRFDEBUFF" .. id .. "_" .. i .. "Duration"] ~= nil then
+				local duration = _G["DRFDEBUFF" .. id .. "_" .. i .. "Duration"]
+				hooksecurefunc( duration, "Show", function( self )
+					self:Hide()
+				end )
+				duration:Hide()
+			end
 		end
 
 
@@ -920,9 +937,11 @@ function DRFUpdateSize()
 				for i = 1, DRF_MAX_BUFFS do
 					DRF.UFS[id].BuffBar[i]:SetPoint("TOPRIGHT", DRF.UFS[id].BuffBar, "TOPRIGHT", -(i - 1) * BUSI, 0)
 					DRF.UFS[id].BuffBar[i]:SetSize(BUSI, BUSI)
+					DRF.UFS[id].BuffBar[i].Icon:SetSize(BUSI, BUSI)
 
 					DRF.UFS[id].DebuffBar[i]:SetPoint("TOPLEFT", DRF.UFS[id].DebuffBar, "TOPLEFT", (i - 1) * DESI, 0)
 					DRF.UFS[id].DebuffBar[i]:SetSize(DESI, DESI)
+					DRF.UFS[id].DebuffBar[i].Icon:SetSize(DESI, DESI)
 					if DRF.UFS[id].DebuffBar[i].Border ~= nil then
 						DRF.UFS[id].DebuffBar[i].Border:SetSize(DESI, DESI)
 					end
