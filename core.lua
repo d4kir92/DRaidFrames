@@ -382,6 +382,8 @@ for group = 1, 8 do
 		DRF.UFS[id].BuffBar:SetPoint("BOTTOMRIGHT", DRF.UFS[id].HealthBackground, "BOTTOMRIGHT", 0, 0)
 		for i = 1, DRF_MAX_BUFFS do
 			DRF.UFS[id].BuffBar[i] = CreateFrame("Button", "DRFBUFF" .. id .. "_" .. i, DRF.UFS[id].BuffBar, "BuffButtonTemplate");
+			DRF.UFS[id].BuffBar[i].buttonInfo = {}
+			DRF.UFS[id].BuffBar[i].buttonInfo.expirationTime = -1
 			DRF.UFS[id].BuffBar[i].parent = DRF.UFS[id].BuffBar;
 
 			if DRF.UFS[id].BuffBar[i].Icon == nil then
@@ -405,6 +407,8 @@ for group = 1, 8 do
 		DRF.UFS[id].DebuffBar:SetPoint("BOTTOMLEFT", DRF.UFS[id].HealthBackground, "BOTTOMLEFT", 0, 0)
 		for i = 1, DRF_MAX_DEBUFFS do
 			DRF.UFS[id].DebuffBar[i] = CreateFrame("Button", "DRFDEBUFF" .. id .. "_" .. i, DRF.UFS[id].DebuffBar, "DebuffButtonTemplate");
+			DRF.UFS[id].DebuffBar[i].buttonInfo = {}
+			DRF.UFS[id].DebuffBar[i].buttonInfo.expirationTime = -1
 			DRF.UFS[id].DebuffBar[i].parent = DRF.UFS[id].DebuffBar;
 
 			if DRF.UFS[id].DebuffBar[i].Icon == nil then

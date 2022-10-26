@@ -3,7 +3,7 @@
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 
 DRFBUILD = "CLASSIC"
-if select(4, GetBuildInfo()) > 90000 then
+if select(4, GetBuildInfo()) >= 100000 then
 	DRFBUILD = "RETAIL"
 elseif select(4, GetBuildInfo()) > 29999 then
 	DRFBUILD = "WRATH"
