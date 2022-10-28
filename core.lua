@@ -1803,15 +1803,18 @@ DRF:SetScript("OnEvent", DRF.OnEvent)
 
 
 
-local HIDDEN = CreateFrame("FRAME")
-HIDDEN:Hide()
+local DRFHIDDEN = CreateFrame("FRAME")
+DRFHIDDEN:Hide()
 if _G["CompactRaidFrameContainer"] then
-	_G["CompactRaidFrameContainer"]:SetParent(HIDDEN)
+	_G["CompactRaidFrameContainer"]:SetParent(DRFHIDDEN)
+end
+if PartyFrame then
+	PartyFrame:SetParent(DRFHIDDEN)
 end
 for i = 1, 4 do
 	local partyframe = _G["PartyMemberFrame" .. i]
 	if partyframe then
-		partyframe:SetParent(HIDDEN)
+		partyframe:SetParent(DRFHIDDEN)
 	end
 end
 
