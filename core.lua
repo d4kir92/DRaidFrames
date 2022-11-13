@@ -225,6 +225,26 @@ function DRFGetMaxLevel()
 	return maxlevel
 end
 
+function DRFUnitXP( unit )
+	if IAUnitXP then
+		return IAUnitXP( unit )
+	end
+	if MAIUnitXP then
+		return MAIUnitXP( unit )
+	end
+	return 0
+end
+
+function DRFUnitXPMax( unit )
+	if IAUnitXPMax then
+		return IAUnitXPMax( unit )
+	end
+	if MAIUnitXPMax then
+		return MAIUnitXPMax( unit )
+	end
+	return 1
+end
+
 -- Main Frame
 local DRF = CreateFrame("Frame", "DRF", UIParent)
 DRF:SetMovable(true)
@@ -1208,8 +1228,8 @@ function DRFUpdateUnitInfo(uf, unit)
 			tCen = "(" .. subgroup .. ")"
 		else
 			local xppercent = ""
-			if MAIUnitXP and MAIUnitXP(unit) > 0 and MAIUnitXPMax and MAIUnitXPMax(unit) > 1 then
-				xppercent = " (" .. string.format("%0.1f", MAIUnitXP(unit) / MAIUnitXPMax(unit) * 100) .. "%)"
+			if DRFUnitXPMax(unit) > 1 then
+				xppercent = " (" .. string.format("%0.1f", DRFUnitXP(unit) / DRFUnitXPMax(unit) * 100) .. "%)"
 			end
 			if UnitEffectiveLevel ~= nil and UnitEffectiveLevel(unit) ~= UnitLevel(unit) then
 				tCen = UnitEffectiveLevel(unit) .. " (" .. UnitLevel(unit) .. ")" .. xppercent
