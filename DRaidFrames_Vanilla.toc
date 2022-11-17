@@ -1,5 +1,5 @@
 ## Interface: 11403
-## Version: 1.0.15
+## Version: 1.0.16
 ## Title: DRaidFrames |T254652:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
 ## Notes: Raid Frames
 ## Author: D4KiR
@@ -12,7 +12,6 @@
 # External Libs
 libs\!LibUIDropDownMenu\LibStub\LibStub.lua
 libs\!LibUIDropDownMenu\LibUIDropDownMenu\LibUIDropDownMenu.xml
-libs/LIB_extendedvariables.lua
 
 locale/enUS.lua
 locale/deDE.lua
