@@ -1279,7 +1279,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			if tCen ~= "" then
 				tCen = tCen .. " "
 			end
-			tCen = tCen .. C_PlayerInfo.GetPlayerMythicPlusRatingSummary( unit ).currentSeasonScore
+			tCen = tCen .. "R: " .. C_PlayerInfo.GetPlayerMythicPlusRatingSummary( unit ).currentSeasonScore
 		end
 		uf.HealthTextBot:SetText(tCen)
 
