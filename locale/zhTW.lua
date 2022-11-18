@@ -1,8 +1,10 @@
 -- zhTW Traditional Chinese
 
-lang = lang or {}
+local AddOnName, DRaidFrames = ...
 
-function DRFLang_zhTW()
+function DRaidFrames:DRFLangzhTW()
+	local lang = DRaidFrames:GetLangTab()
+	
 	lang.SORTTYPE = "排序類型"
 	
 	lang.OUBR = "外邊框"

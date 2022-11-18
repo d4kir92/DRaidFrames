@@ -1,8 +1,10 @@
 -- ruRU Russian
 
-lang = lang or {}
+local AddOnName, DRaidFrames = ...
 
-function DRFLang_ruRU()
+function DRaidFrames:DRFLangruRU()
+	local lang = DRaidFrames:GetLangTab()
+	
 	lang.SORTTYPE = "Тип сортировки"
 	
 	lang.OUBR = "Внешняя граница"

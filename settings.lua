@@ -1,5 +1,7 @@
 -- By D4KiR
 
+local AddOnName, DRaidFrames = ...
+
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 
 DRFBUILD = "CLASSIC"
@@ -15,10 +17,10 @@ end
 
 local DRFLoaded = false
 
-DRFTAB = DRFTAB or {}
-DRFTABPC = DRFTABPC or {}
+function DRaidFrames:GetConfig(key, value, pc)
+	DRFTAB = DRFTAB or {}
+	DRFTABPC = DRFTABPC or {}
 
-function DRFGetConfig(key, value, pc)
 	if DRFLoaded then
 		if DRFTAB ~= nil and DRFTABPC ~= nil then
 			if pc then
@@ -44,7 +46,7 @@ end
 
 
 
-function DRFCreateSlider(parent, key, vval, x, y, vmin, vmax, steps, lstr)
+function DRaidFrames:CreateSlider(parent, key, vval, x, y, vmin, vmax, steps, lstr)
 	local SL = CreateFrame("Slider", nil, parent, "OptionsSliderTemplate")
 
 	SL:SetWidth(400)
@@ -53,11 +55,11 @@ function DRFCreateSlider(parent, key, vval, x, y, vmin, vmax, steps, lstr)
 	SL.Low:SetText(vmin)
 	SL.High:SetText(vmax)
 	
-	SL.Text:SetText(DRFGT(lstr) .. ": " .. DRFGetConfig(key, vval))
+	SL.Text:SetText(DRaidFrames:GT(lstr) .. ": " .. DRaidFrames:GetConfig(key, vval))
 
 	SL:SetMinMaxValues(vmin, vmax)
 
-	SL:SetValue(DRFGetConfig(key, vval))
+	SL:SetValue(DRaidFrames:GetConfig(key, vval))
 
 	SL:SetObeyStepOnDrag(steps)
 	SL:SetValueStep(steps)
@@ -69,24 +71,24 @@ function DRFCreateSlider(parent, key, vval, x, y, vmin, vmax, steps, lstr)
 			val = string.format("%" .. steps .. "f", val)
 		end
 		DRFTAB[key] = val
-		SL.Text:SetText(DRFGT(lstr) .. ": " .. val)
+		SL.Text:SetText(DRaidFrames:GT(lstr) .. ": " .. val)
 
-		DRFSizing = true
+		DRaidFrames:SetSizing( true )
 	end)
 
 	return SL
 end
 
-function DRFCreateCheckBox(parent, key, vval, x, y, lstr, pc)
+function DRaidFrames:CreateCheckBox(parent, key, vval, x, y, lstr, pc)
 	local CB = CreateFrame("CheckButton", nil, parent, "ChatConfigCheckButtonTemplate")
 	CB:SetSize(18, 18)
 
 	CB:SetPoint("TOPLEFT", x, y)
 
 	CB.Text:SetPoint("LEFT", CB, "RIGHT", 0, 0)
-	CB.Text:SetText(DRFGT(lstr))
+	CB.Text:SetText(DRaidFrames:GT(lstr))
 
-	CB:SetChecked(DRFGetConfig(key, vval))
+	CB:SetChecked(DRaidFrames:GetConfig(key, vval))
 
 	CB:SetScript("OnClick", function(self, val)
 		val = CB:GetChecked()
@@ -95,27 +97,27 @@ function DRFCreateCheckBox(parent, key, vval, x, y, lstr, pc)
 		else
 			DRFTAB[key] = val
 		end
-		CB.Text:SetText(DRFGT(lstr))
+		CB.Text:SetText(DRaidFrames:GT(lstr))
 
-		DRFSizing = true
+		DRaidFrames:SetSizing( true )
 	end)
 
 	return CB
 end
 
-function DRFCreateComboBox(parent, key, vval, x, y, lstr, tab)
+function DRaidFrames:CreateComboBox(parent, key, vval, x, y, lstr, tab)
 	local CB = LibDD:Create_UIDropDownMenu("Frame", parent)
 	CB:SetPoint("TOPLEFT", x, y)
 
 	
 	CB.text = CB:CreateFontString(nil, "ARTWORK") 
 	CB.text:SetFont(STANDARD_TEXT_FONT, 12, "")
-	CB.text:SetText(DRFGT(lstr))
+	CB.text:SetText(DRaidFrames:GT(lstr))
 	CB.text:SetPoint("LEFT", CB, "RIGHT", 0, 3)
-	CB.Text:SetText(DRFGT(lstr) .. ": " .. tostring(DRFGetConfig(key, vval)))
+	CB.Text:SetText(DRaidFrames:GT(lstr) .. ": " .. tostring(DRaidFrames:GetConfig(key, vval)))
 
 	LibDD:UIDropDownMenu_SetWidth(CB, 120)
-	LibDD:UIDropDownMenu_SetText(CB, DRFGetConfig(key, vval))
+	LibDD:UIDropDownMenu_SetText(CB, DRaidFrames:GetConfig(key, vval))
 
 	-- Create and bind the initialization function to the dropdown menu
 	LibDD:UIDropDownMenu_Initialize(CB, function(self, level, menuList)
@@ -133,7 +135,7 @@ function DRFCreateComboBox(parent, key, vval, x, y, lstr, tab)
 		LibDD:UIDropDownMenu_SetText(CB, newValue)
 		LibDD:CloseDropDownMenus()
 
-		DRFSizing = true
+		DRaidFrames:SetSizing( true )
 	end
 
 	return CB
@@ -149,7 +151,7 @@ local sliderX = 12
 local SORTTAB = {}
 SORTTAB = {"Group", "Role"}
 
-function DRFInitSettings()
+function DRaidFrames:InitSettings()
 	local DRFSettings = {}
 
 	local DRFname = "DRaidFrames |T254652:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t"
@@ -168,9 +170,9 @@ function DRFInitSettings()
 	text:SetPoint("TOPLEFT", DRFSettings.panel, "TOPLEFT", 10, Y)
 	text:SetText("Watch SubSites")
 
-	DRFCreateSlider(DRFSettings.panel, "DECI", 0, 12, -40, 0, 3, 1.0, "DECI") --parent, key, vval, x, y, vmin, vmax, steps, lstr
+	DRaidFrames:CreateSlider(DRFSettings.panel, "DECI", 0, 12, -40, 0, 3, 1.0, "DECI") --parent, key, vval, x, y, vmin, vmax, steps, lstr
 
-	DRFCreateCheckBox(DRFSettings.panel, "SHTO", true, 12, -80, "Show Tooltip", false)
+	DRaidFrames:CreateCheckBox(DRFSettings.panel, "SHTO", true, 12, -80, "Show Tooltip", false)
 
 	local b = CreateFrame("Button", "MyButton", DRFSettings.panel, "UIPanelButtonTemplate")
 	b:SetSize(200, 24) -- width, height
@@ -227,83 +229,83 @@ function DRFInitSettings()
 	DRFSettings.gpanel.Text = DRFSettings.gpanel:CreateFontString(nil, "ARTWORK")
 	DRFSettings.gpanel.Text:SetFont(STANDARD_TEXT_FONT, 11, "")
 	DRFSettings.gpanel.Text:SetPoint("TOPLEFT", DRFSettings.gpanel, "TOPLEFT", X, Y)
-	DRFSettings.gpanel.Text:SetText(DRFGT("DETY"))
+	DRFSettings.gpanel.Text:SetText(DRaidFrames:GT("DETY"))
 
 	Y = Y - 18
 	for i, v in pairs(DebuffTypeSymbol) do
-		DRFCreateCheckBox(DRFSettings.gpanel, "G" .. i, true, X, Y, i, true) -- parent, key, vval, x, y, lstr)
+		DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "G" .. i, true, X, Y, i, true) -- parent, key, vval, x, y, lstr)
 		Y = Y - 18
 	end
-	DRFCreateCheckBox(DRFSettings.gpanel, "G" .. "None", true, X, Y, "None", true)
+	DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "G" .. "None", true, X, Y, "None", true)
 
 	Y = -10
-	--DRFCreateComboBox(DRFSettings.gpanel, "GSORT", "Role", 0, Y, "SORTTYPE", SORTTAB)
+	--DRaidFrames:CreateComboBox(DRFSettings.gpanel, "GSORT", "Role", 0, Y, "SORTTYPE", SORTTAB)
 
 	--Y = Y - 32
-	DRFCreateComboBox(DRFSettings.gpanel, "GTETOTY", "Name", 0, Y, "TETOTY", {"Name", "Name + Realm", "Class", "Class + Name", "Name + Class", "None"})
+	DRaidFrames:CreateComboBox(DRFSettings.gpanel, "GTETOTY", "Name", 0, Y, "TETOTY", {"Name", "Name + Realm", "Class", "Class + Name", "Name + Class", "None"})
 
 	Y = Y - 32
-	DRFCreateComboBox(DRFSettings.gpanel, "GTECETY", "Health in Percent", 0, Y, "TECETY", {"Health in Percent", "Lost Health in Percent", "None"})
+	DRaidFrames:CreateComboBox(DRFSettings.gpanel, "GTECETY", "Health in Percent", 0, Y, "TECETY", {"Health in Percent", "Lost Health in Percent", "None"})
 
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.gpanel, "GELEM", 5, 12, Y, 1, 40, 1.0, "ELEMENTS")
+	DRaidFrames:CreateSlider(DRFSettings.gpanel, "GELEM", 5, 12, Y, 1, 40, 1.0, "ELEMENTS")
 
 	Y = Y - 32
-	DRFCreateCheckBox(DRFSettings.gpanel, "GSHPO", true, 12, Y, "SHPO") -- parent, key, vval, x, y, lstr)
+	DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GSHPO", true, 12, Y, "SHPO") -- parent, key, vval, x, y, lstr)
 
 	Y = Y - 20
-	DRFCreateCheckBox(DRFSettings.gpanel, "GGRHO", true, 12, Y, "GRHO") -- parent, key, vval, x, y, lstr)
+	DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GGRHO", true, 12, Y, "GRHO") -- parent, key, vval, x, y, lstr)
 
 	Y = Y - 20
-	DRFCreateCheckBox(DRFSettings.gpanel, "GBAUP", true, 12, Y, "BAUP") -- parent, key, vval, x, y, lstr)
+	DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GBAUP", true, 12, Y, "BAUP") -- parent, key, vval, x, y, lstr)
 
 	Y = Y - 20
-	DRFCreateCheckBox(DRFSettings.gpanel, "GOVER", true, 12, Y, "OVER") -- parent, key, vval, x, y, lstr)
+	DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GOVER", true, 12, Y, "OVER") -- parent, key, vval, x, y, lstr)
 
 	if UnitHasRating then
-		DRFCreateCheckBox(DRFSettings.gpanel, "GRATE", true, 200, Y + 60, "Rating") -- parent, key, vval, x, y, lstr)
+		DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GRATE", true, 200, Y + 60, "Rating") -- parent, key, vval, x, y, lstr)
 	end
 
 	if DRFBUILD == "RETAIL" then
-		DRFCreateCheckBox(DRFSettings.gpanel, "GCOVE", true, 400, Y + 60, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE) -- parent, key, vval, x, y, lstr)
+		DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GCOVE", true, 400, Y + 60, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE) -- parent, key, vval, x, y, lstr)
 	end
 
-	DRFCreateCheckBox(DRFSettings.gpanel, "GFLAG", true, 200, Y + 40, LANGUAGE) -- parent, key, vval, x, y, lstr)
+	DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GFLAG", true, 200, Y + 40, LANGUAGE) -- parent, key, vval, x, y, lstr)
 
-	DRFCreateCheckBox(DRFSettings.gpanel, "GCLAS", true, 200, Y + 20, CLASS) -- parent, key, vval, x, y, lstr)
+	DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GCLAS", true, 200, Y + 20, CLASS) -- parent, key, vval, x, y, lstr)
 
-	DRFCreateCheckBox(DRFSettings.gpanel, "GTHRE", true, 200, Y + 0, "Threat") -- parent, key, vval, x, y, lstr)
+	DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GTHRE", true, 200, Y + 0, "Threat") -- parent, key, vval, x, y, lstr)
 
 	Y = Y - 28
-	DRFCreateSlider(DRFSettings.gpanel, "GOUBR", 6, sliderX, Y, 0, 20, 1.0, "OUBR")
+	DRaidFrames:CreateSlider(DRFSettings.gpanel, "GOUBR", 6, sliderX, Y, 0, 20, 1.0, "OUBR")
 
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.gpanel, "GROSP", 6, sliderX, Y, 0, 50, 1.0, "ROSP")
+	DRaidFrames:CreateSlider(DRFSettings.gpanel, "GROSP", 6, sliderX, Y, 0, 50, 1.0, "ROSP")
 
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.gpanel, "GCOSP", 6, sliderX, Y, 0, 50, 1.0, "COSP")
+	DRaidFrames:CreateSlider(DRFSettings.gpanel, "GCOSP", 6, sliderX, Y, 0, 50, 1.0, "COSP")
 
 	Y = Y - 10
 
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.gpanel, "GHEWI", 120, sliderX, Y, 20, 300, 1.0, "HEWI")
+	DRaidFrames:CreateSlider(DRFSettings.gpanel, "GHEWI", 120, sliderX, Y, 20, 300, 1.0, "HEWI")
 
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.gpanel, "GHEHE", 60, sliderX, Y, 20, 300, 1.0, "HEHE")
+	DRaidFrames:CreateSlider(DRFSettings.gpanel, "GHEHE", 60, sliderX, Y, 20, 300, 1.0, "HEHE")
 
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.gpanel, "GPOSI", 20, sliderX, Y, 8, 300, 1.0, "POSI")
+	DRaidFrames:CreateSlider(DRFSettings.gpanel, "GPOSI", 20, sliderX, Y, 8, 300, 1.0, "POSI")
 
 	Y = Y - 10
 
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.gpanel, "GDESI", 16, sliderX, Y, 8, 64, 1.0, "DESI")
+	DRaidFrames:CreateSlider(DRFSettings.gpanel, "GDESI", 16, sliderX, Y, 8, 64, 1.0, "DESI")
 
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.gpanel, "GBUSI", 16, sliderX, Y, 8, 64, 1.0, "BUSI")
+	DRaidFrames:CreateSlider(DRFSettings.gpanel, "GBUSI", 16, sliderX, Y, 8, 64, 1.0, "BUSI")
 	
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.gpanel, "GOORA", 0.4, sliderX, Y, 0.1, 0.9, 0.1, "OORA")
+	DRaidFrames:CreateSlider(DRFSettings.gpanel, "GOORA", 0.4, sliderX, Y, 0.1, 0.9, 0.1, "OORA")
 
 	InterfaceOptions_AddCategory(DRFSettings.gpanel)
 
@@ -325,85 +327,85 @@ function DRFInitSettings()
 	DRFSettings.rpanel.Text = DRFSettings.rpanel:CreateFontString(nil, "ARTWORK")
 	DRFSettings.rpanel.Text:SetFont(STANDARD_TEXT_FONT, 11, "")
 	DRFSettings.rpanel.Text:SetPoint("TOPLEFT", DRFSettings.rpanel, "TOPLEFT", X, Y)
-	DRFSettings.rpanel.Text:SetText(DRFGT("DETY"))
+	DRFSettings.rpanel.Text:SetText(DRaidFrames:GT("DETY"))
 
 	Y = Y - 18
 	for i, v in pairs(DebuffTypeSymbol) do
-		DRFCreateCheckBox(DRFSettings.rpanel, "R" .. i, true, X, Y, i, true) -- parent, key, vval, x, y, lstr)
+		DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "R" .. i, true, X, Y, i, true) -- parent, key, vval, x, y, lstr)
 		Y = Y - 18
 	end
-	DRFCreateCheckBox(DRFSettings.rpanel, "R" .. "None", true, X, Y, "None", true)
+	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "R" .. "None", true, X, Y, "None", true)
 
 
 
 	Y = -10
-	DRFCreateComboBox(DRFSettings.rpanel, "RSORT", "Role", 0, Y, "SORTTYPE", SORTTAB)
+	DRaidFrames:CreateComboBox(DRFSettings.rpanel, "RSORT", "Role", 0, Y, "SORTTYPE", SORTTAB)
 
 	Y = Y - 32
-	DRFCreateComboBox(DRFSettings.rpanel, "RTETOTY", "Name", 0, Y, "TETOTY", {"Name", "Class", "Class + Name", "Name + Class", "None"})
+	DRaidFrames:CreateComboBox(DRFSettings.rpanel, "RTETOTY", "Name", 0, Y, "TETOTY", {"Name", "Class", "Class + Name", "Name + Class", "None"})
 
 	Y = Y - 32
-	DRFCreateComboBox(DRFSettings.rpanel, "RTECETY", "Health in Percent", 0, Y, "TECETY", {"Health in Percent", "Lost Health in Percent", "None"})
+	DRaidFrames:CreateComboBox(DRFSettings.rpanel, "RTECETY", "Health in Percent", 0, Y, "TECETY", {"Health in Percent", "Lost Health in Percent", "None"})
 
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.rpanel, "RELEM", 5, 12, Y, 1, 40, 1.0, "ELEMENTS")
+	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RELEM", 5, 12, Y, 1, 40, 1.0, "ELEMENTS")
 
 	Y = Y - 32
-	DRFCreateCheckBox(DRFSettings.rpanel, "RSHPO", true, 12, Y, "SHPO") -- parent, key, vval, x, y, lstr)
+	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RSHPO", true, 12, Y, "SHPO") -- parent, key, vval, x, y, lstr)
 
 	Y = Y - 20
-	DRFCreateCheckBox(DRFSettings.rpanel, "RGRHO", true, 12, Y, "GRHO") -- parent, key, vval, x, y, lstr)
+	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RGRHO", true, 12, Y, "GRHO") -- parent, key, vval, x, y, lstr)
 
 	Y = Y - 20
-	DRFCreateCheckBox(DRFSettings.rpanel, "RBAUP", true, 12, Y, "BAUP") -- parent, key, vval, x, y, lstr)
+	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RBAUP", true, 12, Y, "BAUP") -- parent, key, vval, x, y, lstr)
 
 	Y = Y - 20
-	DRFCreateCheckBox(DRFSettings.rpanel, "ROVER", false, 12, Y, "OVER") -- parent, key, vval, x, y, lstr)
+	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "ROVER", false, 12, Y, "OVER") -- parent, key, vval, x, y, lstr)
 
 	if UnitHasRating then
-		DRFCreateCheckBox(DRFSettings.rpanel, "RRATE", true, 200, Y + 60, "Rating") -- parent, key, vval, x, y, lstr)
+		DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RRATE", true, 200, Y + 60, "Rating") -- parent, key, vval, x, y, lstr)
 	end
 
 	if DRFBUILD == "RETAIL" then
-		DRFCreateCheckBox(DRFSettings.rpanel, "RCOVE", true, 400, Y + 60, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE) -- parent, key, vval, x, y, lstr)
+		DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RCOVE", true, 400, Y + 60, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE) -- parent, key, vval, x, y, lstr)
 	end
 
-	DRFCreateCheckBox(DRFSettings.rpanel, "RFLAG", true, 200, Y + 40, LANGUAGE) -- parent, key, vval, x, y, lstr)
+	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RFLAG", true, 200, Y + 40, LANGUAGE) -- parent, key, vval, x, y, lstr)
 
-	DRFCreateCheckBox(DRFSettings.rpanel, "RCLAS", true, 200, Y + 20, CLASS) -- parent, key, vval, x, y, lstr)
+	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RCLAS", true, 200, Y + 20, CLASS) -- parent, key, vval, x, y, lstr)
 
-	DRFCreateCheckBox(DRFSettings.rpanel, "RTHRE", false, 200, Y + 0, "Threat") -- parent, key, vval, x, y, lstr)
+	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RTHRE", false, 200, Y + 0, "Threat") -- parent, key, vval, x, y, lstr)
 
 	Y = Y - 28
-	DRFCreateSlider(DRFSettings.rpanel, "ROUBR", 6, sliderX, Y, 0, 20, 1.0, "OUBR")
+	DRaidFrames:CreateSlider(DRFSettings.rpanel, "ROUBR", 6, sliderX, Y, 0, 20, 1.0, "OUBR")
 
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.rpanel, "RROSP", 4, sliderX, Y, 0, 50, 1.0, "ROSP")
+	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RROSP", 4, sliderX, Y, 0, 50, 1.0, "ROSP")
 
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.rpanel, "RCOSP", 20, sliderX, Y, 0, 50, 1.0, "COSP")
+	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RCOSP", 20, sliderX, Y, 0, 50, 1.0, "COSP")
 
 	Y = Y - 10
 
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.rpanel, "RHEWI", 80, sliderX, Y, 20, 300, 1.0, "HEWI")
+	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RHEWI", 80, sliderX, Y, 20, 300, 1.0, "HEWI")
 
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.rpanel, "RHEHE", 60, sliderX, Y, 20, 300, 1.0, "HEHE")
+	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RHEHE", 60, sliderX, Y, 20, 300, 1.0, "HEHE")
 
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.rpanel, "RPOSI", 10, sliderX, Y, 8, 300, 1.0, "POSI")
+	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RPOSI", 10, sliderX, Y, 8, 300, 1.0, "POSI")
 
 	Y = Y - 10
 
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.rpanel, "RDESI", 16, sliderX, Y, 8, 64, 1.0, "DESI")
+	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RDESI", 16, sliderX, Y, 8, 64, 1.0, "DESI")
 
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.rpanel, "RBUSI", 16, sliderX, Y, 8, 64, 1.0, "BUSI")
+	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RBUSI", 16, sliderX, Y, 8, 64, 1.0, "BUSI")
 
 	Y = Y - 32
-	DRFCreateSlider(DRFSettings.rpanel, "ROORA", 0.4, sliderX, Y, 0.1, 0.9, 0.1, "OORA")
+	DRaidFrames:CreateSlider(DRFSettings.rpanel, "ROORA", 0.4, sliderX, Y, 0.1, 0.9, 0.1, "OORA")
 
 
 	InterfaceOptions_AddCategory(DRFSettings.rpanel)
@@ -417,21 +419,20 @@ f:RegisterEvent("PLAYER_ENTERING_WORLD")
 f:RegisterEvent("GROUP_ROSTER_UPDATE")
 function f:OnEvent(event)
 	if event == "GROUP_ROSTER_UPDATE" then
-		DRFSizing = true
+		DRaidFrames:SetSizing( true )
 	end
 
 	if ( event == "PLAYER_LOGIN" or event == "PLAYER_ENTERING_WORLD" ) and not DRFLoaded then
 		DRFLoaded = true
 
-		DRFSizingForce = true
-		DRFUpdateSize()
+		DRaidFrames:SetSizingForce( true )
+		DRaidFrames:UpdateSize()
 
-		DRFUpdating = true
-		DRFUpdatingUnits = true
-		DRFOnUpdate()
+		DRaidFrames:SetUpdating( true )
+		DRaidFrames:OnUpdate()
 		
 		C_Timer.After(0, function()
-			DRFInitSettings()
+			DRaidFrames:InitSettings()
 		end)
 	end
 end

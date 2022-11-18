@@ -1,8 +1,10 @@
 -- deDE German Deutsch
 
-lang = lang or {}
+local AddOnName, DRaidFrames = ...
 
-function DRFLang_deDE()
+function DRaidFrames:DRFLangdeDE()
+	local lang = DRaidFrames:GetLangTab()
+
 	lang.SORTTYPE = "Sortierungsart"
 	
 	lang.OUBR = "Äußerer Rand"

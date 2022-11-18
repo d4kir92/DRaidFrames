@@ -1,10 +1,16 @@
 -- LIB Design
 
-lang = lang or {}
+local AddOnName, DRaidFrames = ...
 
-function DRFGT(str, tab)
+local lang = {}
+
+function DRaidFrames:GetLangTab()
+	return lang
+end
+
+function DRaidFrames:GT(str, tab)
 	local strid = str
-	local result = lang[strid]
+	local result = DRaidFrames:GetLangTab()[strid]
 	if result ~= nil then
 		if tab ~= nil then
 			for i, v in pairs(tab) do
@@ -21,16 +27,16 @@ function DRFGT(str, tab)
 	end
 end
 
-function DRFUpdateLanguage()
-	DRFLang_enUS()
+function DRaidFrames:UpdateLanguage()
+	DRaidFrames:DRFLangenUS()
 	if GetLocale() == "enUS" then
-		DRFLang_enUS()
+		DRaidFrames:DRFLangenUS()
 	elseif GetLocale() == "deDE" then
-		DRFLang_deDE()
+		DRaidFrames:DRFLangdeDE()
 	elseif GetLocale() == "ruRU" then
-		DRFLang_ruRU()
+		DRaidFrames:DRFLangruRU()
 	elseif GetLocale() == "zhTW" then
-		DRFLang_zhTW()
+		DRaidFrames:DRFLangzhTW()
 	end
 end
-DRFUpdateLanguage()
+DRaidFrames:UpdateLanguage()

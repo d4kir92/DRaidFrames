@@ -1,5 +1,6 @@
 -- By D4KiR
 
+local AddOnName, DRaidFrames = ...
 
 -- CONFIG
 local DRF_MAX_BUFFS = 8
@@ -7,7 +8,7 @@ local DRF_MAX_DEBUFFS = 8
 -- CONFIG
 
 -- "Globals"
-DRFReadyStatus = ""
+local DRFReadyStatus = ""
 
 local members = {}
 
@@ -70,7 +71,7 @@ if DRFBUILD ~= "RETAIL" then
 	IncomingHealTarget:SetPoint("LEFT", tfhp, "RIGHT", 0, 0)
 	IncomingHealTarget:SetColorTexture(0, 0, 0, 0)
 
-	function DRFUpdateBLIZZUI()
+	function DRaidFrames:UpdateBLIZZUI()
 		local pw = PlayerFrameHealthBar:GetWidth()
 		if pw and UnitGetIncomingHeals("PLAYER") ~= 0 then
 			local pre = pw * UnitGetIncomingHeals("PLAYER") / UnitHealthMax("PLAYER")
@@ -159,7 +160,7 @@ if DRFBUILD ~= "RETAIL" then
 				end
 			end
 		end
-		DRFUpdateBLIZZUI()
+		DRaidFrames:UpdateBLIZZUI()
 	end)
 
 	function UnitGetIncomingHeals( unit )
@@ -186,10 +187,10 @@ if DRFBUILD ~= "RETAIL" then
 		return 0
 	end
 
-	DRFUpdateBLIZZUI()
+	DRaidFrames:UpdateBLIZZUI()
 end
 
-function DRFUnitName( unit, showrealm )
+function DRaidFrames:UnitName( unit, showrealm )
 	if UnitExists(unit) then
 		local name, realm = UnitName(unit)
 		if SM_CHARNAME then
@@ -211,7 +212,7 @@ function DRFUnitName( unit, showrealm )
 	end
 end
 
-function DRFGetMaxLevel()
+function DRaidFrames:GetMaxLevel()
 	local maxlevel = 60
 	if DRFBUILD == "TBC" then
 		maxlevel = 70
@@ -225,7 +226,7 @@ function DRFGetMaxLevel()
 	return maxlevel
 end
 
-function DRFUnitXP( unit )
+function DRaidFrames:UnitXP( unit )
 	if ImproveAny_UnitXP then
 		return ImproveAny_UnitXP( unit )
 	end
@@ -235,7 +236,7 @@ function DRFUnitXP( unit )
 	return 0
 end
 
-function DRFUnitXPMax( unit )
+function DRaidFrames:UnitXPMax( unit )
 	if ImproveAny_UnitXPMax then
 		return ImproveAny_UnitXPMax( unit )
 	end
@@ -274,20 +275,20 @@ DRF:SetPoint("CENTER", 0, 0)
 DRF.texture = DRF:CreateTexture(nil, "BACKGROUND")
 DRF.texture:SetAllPoints(DRF)
 DRF.texture:SetColorTexture(0, 0, 0, 1)
-function DRF.think()
+function DRaidFrames:Think()
 	if MouseIsOver(DRF) then
 		DRF.texture:SetAlpha(0.5)
 	else
 		DRF.texture:SetAlpha(0.25)
 	end
 
-	C_Timer.After(0.1, DRF.think)
+	C_Timer.After(0.1, DRaidFrames.Think)
 end
-DRF.think()
+DRaidFrames:Think()
 
 
 
-function DRFUpdateTooltip(self)
+function DRaidFrames:UpdateTooltip(self)
 	if SHTO and self.unit then
 		if UnitExists( self.unit ) then
 			GameTooltip_SetDefaultAnchor(GameTooltip, self);
@@ -569,7 +570,7 @@ for group = 1, 8 do
 
 		BTN:SetScript("OnEnter", function(self)
 			if SHTO then
-				DRFUpdateTooltip(self);
+				DRaidFrames:UpdateTooltip(self);
 			end
 		end)
 		
@@ -594,7 +595,7 @@ for group = 1, 8 do
 	end
 end
 
-function SortByRole(a, b)
+function DRaidFrames_SortByRole(a, b)
 	local arole = "NONE" --UnitGroupRolesAssigned(a)
 	local brole = "NONE" --UnitGroupRolesAssigned(b)
 
@@ -645,7 +646,7 @@ function SortByRole(a, b)
 	end
 end
 
-function SortByGroup( unitA, unitB )
+function DRaidFrames_SortByGroup( unitA, unitB )
 	if unitA == nil then
 		unitA = 0
 	end
@@ -672,12 +673,12 @@ function SortByGroup( unitA, unitB )
 
 		return a < b
 	else
-		return SortByRole( unitA, unitB )
+		return DRaidFrames_SortByRole( unitA, unitB )
 	end
 end
 
 local DRFSortedUnits = {}
-function DRFSortUnits()
+function DRaidFrames:SortUnits()
 	DRFSortedUnits = {}
 	
 	if IsInRaid() then
@@ -694,13 +695,13 @@ function DRFSortUnits()
 	end
 
 	if IsInRaid() then
-		if DRFGetConfig("RSORT", "Role") == "Group" then
-			table.sort(DRFSortedUnits, SortByGroup)
-		elseif DRFGetConfig("RSORT", "Role") == "Role" then
-			table.sort(DRFSortedUnits, SortByRole)
+		if DRaidFrames:GetConfig("RSORT", "Role") == "Group" then
+			table.sort(DRFSortedUnits, DRaidFrames_SortByGroup)
+		elseif DRaidFrames:GetConfig("RSORT", "Role") == "Role" then
+			table.sort(DRFSortedUnits, DRaidFrames_SortByRole)
 		end
 	else
-		table.sort(DRFSortedUnits, SortByRole)
+		table.sort(DRFSortedUnits, DRaidFrames_SortByRole)
 	end
 end
 
@@ -721,84 +722,107 @@ local DESI = 16
 local TETOTY = "Name"
 local TECETY = "Health in Percent"
 
-DRFSizing = true
-DRFSizingForce = false
-DRFUpdating = true
-DRFUpdatingUnits = false
+local DRFSizing = true
+local DRFSizingForce = false
+local DRFUpdating = true
 
-function DRFCanUpdate()
-	return DRFSizingForce or (DRFSizing and not InCombatLockdown())
+function DRaidFrames:SetSizing( val )
+	DRFSizing = val
 end
 
-function DRFUpdateSize()
-	if DRFCanUpdate() then
-		DRFSizing = false
-		DRFSizingForce = false
+function DRaidFrames:IsSizing()
+	return DRFSizing
+end
 
-		DRFSortUnits()
+function DRaidFrames:SetSizingForce( val )
+	DRFSizingForce = val
+end
 
-		SHTO = DRFGetConfig("SHTO", true)
+function DRaidFrames:IsSizingForce()
+	return DRFSizingForce
+end
 
-		OUBR = DRFGetConfig("GOUBR", 6)
-		COSP = DRFGetConfig("GCOSP", 4)
-		ROSP = DRFGetConfig("GROSP", 4)
-		HEWI = DRFGetConfig("GHEWI", 120)
-		HEHE = DRFGetConfig("GHEHE", 60)
-		POSI = DRFGetConfig("GPOSI", 20)
+function DRaidFrames:SetUpdating( val )
+	DRFUpdating = val
+end
 
-		SHPO = DRFGetConfig("GSHPO", true)
+function DRaidFrames:IsUpdating()
+	return DRFUpdating
+end
 
-		GroupHorizontal = DRFGetConfig("GGRHO", true)
-		BarUp = DRFGetConfig("GBAUP", true)
+function DRaidFrames:CanUpdate()
+	return DRaidFrames:IsSizingForce() or (DRaidFrames:IsSizing() and not InCombatLockdown())
+end
 
-		BUSI = DRFGetConfig("GBUSI", 16)
-		DESI = DRFGetConfig("GDESI", 16)
+function DRaidFrames:UpdateSize()
+	if DRaidFrames:CanUpdate() then
+		DRaidFrames:SetSizing( false )
+		DRaidFrames:SetSizingForce( false )
 
-		TETOTY = DRFGetConfig("GTETOTY", "Name")
-		TECETY = DRFGetConfig("GTECETY", "Health in Percent")
+		DRaidFrames:SortUnits()
 
-		OVER = DRFGetConfig("GOVER", true)
+		SHTO = DRaidFrames:GetConfig("SHTO", true)
 
-		COVE = DRFGetConfig("GCOVE", true)
-		FLAG = DRFGetConfig("GFLAG", true)
-		CLAS = DRFGetConfig("GCLAS", true)
+		OUBR = DRaidFrames:GetConfig("GOUBR", 6)
+		COSP = DRaidFrames:GetConfig("GCOSP", 4)
+		ROSP = DRaidFrames:GetConfig("GROSP", 4)
+		HEWI = DRaidFrames:GetConfig("GHEWI", 120)
+		HEHE = DRaidFrames:GetConfig("GHEHE", 60)
+		POSI = DRaidFrames:GetConfig("GPOSI", 20)
 
-		ELEM = DRFGetConfig("GELEM", 5)
+		SHPO = DRaidFrames:GetConfig("GSHPO", true)
 
-		THREAT = DRFGetConfig("GTHRE", true)
+		GroupHorizontal = DRaidFrames:GetConfig("GGRHO", true)
+		BarUp = DRaidFrames:GetConfig("GBAUP", true)
+
+		BUSI = DRaidFrames:GetConfig("GBUSI", 16)
+		DESI = DRaidFrames:GetConfig("GDESI", 16)
+
+		TETOTY = DRaidFrames:GetConfig("GTETOTY", "Name")
+		TECETY = DRaidFrames:GetConfig("GTECETY", "Health in Percent")
+
+		OVER = DRaidFrames:GetConfig("GOVER", true)
+
+		COVE = DRaidFrames:GetConfig("GCOVE", true)
+		FLAG = DRaidFrames:GetConfig("GFLAG", true)
+		CLAS = DRaidFrames:GetConfig("GCLAS", true)
+
+		ELEM = DRaidFrames:GetConfig("GELEM", 5)
+
+		THREAT = DRaidFrames:GetConfig("GTHRE", true)
 		
-		OORA = DRFGetConfig( "GOORA", 0.4 )
+		OORA = DRaidFrames:GetConfig( "GOORA", 0.4 )
 
 		if IsInRaid() then
-			OUBR = DRFGetConfig("ROUBR", 6)
-			COSP = DRFGetConfig("RCOSP", 20)
-			ROSP = DRFGetConfig("RROSP", 4)
-			HEWI = DRFGetConfig("RHEWI", 80)
-			HEHE = DRFGetConfig("RHEHE", 60)
-			POSI = DRFGetConfig("RPOSI", 10)
+			OUBR = DRaidFrames:GetConfig("ROUBR", 6)
+			COSP = DRaidFrames:GetConfig("RCOSP", 20)
+			ROSP = DRaidFrames:GetConfig("RROSP", 4)
+			HEWI = DRaidFrames:GetConfig("RHEWI", 80)
+			HEHE = DRaidFrames:GetConfig("RHEHE", 60)
+			POSI = DRaidFrames:GetConfig("RPOSI", 10)
 
-			SHPO = DRFGetConfig("RSHPO", true)
+			SHPO = DRaidFrames:GetConfig("RSHPO", true)
 
-			GroupHorizontal = DRFGetConfig("RGRHO", true)
-			BarUp = DRFGetConfig("RBAUP", true)
+			GroupHorizontal = DRaidFrames:GetConfig("RGRHO", true)
+			BarUp = DRaidFrames:GetConfig("RBAUP", true)
 
-			BUSI = DRFGetConfig("RBUSI", 16)
-			DESI = DRFGetConfig("RDESI", 16)
+			BUSI = DRaidFrames:GetConfig("RBUSI", 16)
+			DESI = DRaidFrames:GetConfig("RDESI", 16)
 
-			TETOTY = DRFGetConfig("RTETOTY", "Name")
-			TECETY = DRFGetConfig("RTECETY", "Health in Percent")
+			TETOTY = DRaidFrames:GetConfig("RTETOTY", "Name")
+			TECETY = DRaidFrames:GetConfig("RTECETY", "Health in Percent")
 
-			OVER = DRFGetConfig("ROVER", false)
+			OVER = DRaidFrames:GetConfig("ROVER", false)
 			
-			COVE = DRFGetConfig("RCOVE", true)
-			FLAG = DRFGetConfig("RFLAG", true)
-			CLAS = DRFGetConfig("RCLAS", true)
+			COVE = DRaidFrames:GetConfig("RCOVE", true)
+			FLAG = DRaidFrames:GetConfig("RFLAG", true)
+			CLAS = DRaidFrames:GetConfig("RCLAS", true)
 
-			ELEM = DRFGetConfig("RELEM", 5)
+			ELEM = DRaidFrames:GetConfig("RELEM", 5)
 
-			THREAT = DRFGetConfig("RTHRE", false)
+			THREAT = DRaidFrames:GetConfig("RTHRE", false)
 
-			OORA = DRFGetConfig( "ROORA", 0.4 )
+			OORA = DRaidFrames:GetConfig( "ROORA", 0.4 )
 		end
 
 		if not SHPO then
@@ -995,7 +1019,7 @@ function DRFUpdateSize()
 		end
 	end
 	C_Timer.After(0.3, function()
-		DRFUpdateSize()
+		DRaidFrames:UpdateSize()
 	end)
 end
 
@@ -1006,7 +1030,7 @@ local ignorebuffs = {
 	186401, -- pvp
 	290958
 }
-function DRFUpdateUnitInfo(uf, unit)
+function DRaidFrames:UpdateUnitInfo(uf, unit)
 	if UnitExists(unit) then
 		uf:Hide()
 
@@ -1160,7 +1184,7 @@ function DRFUpdateUnitInfo(uf, unit)
 
 		local text = ""
 		local class = UnitClass( unit )
-		local name = DRFUnitName( unit, false )
+		local name = DRaidFrames:UnitName( unit, false )
 		if class == nil then
 			class = ""
 		end
@@ -1170,7 +1194,7 @@ function DRFUpdateUnitInfo(uf, unit)
 		if TETOTY == "Name" then
 			text = name
 		elseif TETOTY == "Name + Realm" then
-			text = DRFUnitName( unit, true )
+			text = DRaidFrames:UnitName( unit, true )
 		elseif TETOTY == "Class" then
 			text = class
 		elseif TETOTY == "Class + Name" then
@@ -1189,7 +1213,7 @@ function DRFUpdateUnitInfo(uf, unit)
 		local HealthTextCen = ""
 		if TECETY == "Health in Percent" then
 			local rec = UnitHealth(unit) / UnitHealthMax(unit) * 100
-			local val = string.format("%." .. math.abs( DRFGetConfig("DECI", 0) ) .. "f", rec)
+			local val = string.format("%." .. math.abs( DRaidFrames:GetConfig("DECI", 0) ) .. "f", rec)
 			if rec > 0 then
 				HealthTextCen = val .. "%"
 			else
@@ -1198,7 +1222,7 @@ function DRFUpdateUnitInfo(uf, unit)
 		elseif TECETY == "Lost Health in Percent" then
 			local rec = 1 - UnitHealth(unit) / UnitHealthMax(unit)
 			if rec then
-				local val = string.format("%." .. math.abs( DRFGetConfig("DECI", 0) ) .. "f", rec * 100)
+				local val = string.format("%." .. math.abs( DRaidFrames:GetConfig("DECI", 0) ) .. "f", rec * 100)
 				if rec > 0 then
 					HealthTextCen = "-" .. val .. "%"
 				else
@@ -1213,11 +1237,11 @@ function DRFUpdateUnitInfo(uf, unit)
 		if not UnitIsConnected(unit) then
 			HealthTextCen = PLAYER_OFFLINE
 		elseif UnitIsFeignDeath and UnitIsFeignDeath(unit) then
-			HealthTextCen = DRFGT( "feigndeath" )
+			HealthTextCen = DRaidFrames:GT( "feigndeath" )
 		elseif UnitIsDead(unit) then
 			HealthTextCen = DEAD
 		elseif UnitHealth(unit) <= 1 then
-			HealthTextCen = DRFGT( "ghost" )
+			HealthTextCen = DRaidFrames:GT( "ghost" )
 		elseif uf.resurrect then
 			HealthTextCen = ""
 		end
@@ -1228,12 +1252,12 @@ function DRFUpdateUnitInfo(uf, unit)
 			tCen = "(" .. subgroup .. ")"
 		else
 			local xppercent = ""
-			if DRFUnitXPMax(unit) > 1 then
-				xppercent = " (" .. string.format("%0.1f", DRFUnitXP(unit) / DRFUnitXPMax(unit) * 100) .. "%)"
+			if DRaidFrames:UnitXPMax(unit) > 1 then
+				xppercent = " (" .. string.format("%0.1f", DRaidFrames:UnitXP(unit) / DRaidFrames:UnitXPMax(unit) * 100) .. "%)"
 			end
 			if UnitEffectiveLevel ~= nil and UnitEffectiveLevel(unit) ~= UnitLevel(unit) then
 				tCen = UnitEffectiveLevel(unit) .. " (" .. UnitLevel(unit) .. ")" .. xppercent
-			elseif UnitLevel(unit) < DRFGetMaxLevel() then
+			elseif UnitLevel(unit) < DRaidFrames:GetMaxLevel() then
 				tCen = UnitLevel(unit) .. xppercent
 			else
 				tCen = ""
@@ -1245,11 +1269,11 @@ function DRFUpdateUnitInfo(uf, unit)
 			end
 			tCen = tCen .. "i" .. string.format("%.1f", UnitILvl(unit))
 		end
-		if UnitHasRating and UnitHasRating(DRFUnitName(unit, true), "com") then
+		if UnitHasRating and UnitHasRating(DRaidFrames:UnitName(unit, true), "com") then
 			if tCen ~= "" then
 				tCen = tCen .. " "
 			end
-			tCen = tCen .. UnitRating(DRFUnitName(unit, true), "com", 12)
+			tCen = tCen .. UnitRating(DRaidFrames:UnitName(unit, true), "com", 12)
 		end
 		if C_PlayerInfo and C_PlayerInfo.GetPlayerMythicPlusRatingSummary and C_PlayerInfo.GetPlayerMythicPlusRatingSummary( unit ) then
 			if tCen ~= "" then
@@ -1329,9 +1353,9 @@ function DRFUpdateUnitInfo(uf, unit)
 		local lang = nil
 		if guid then
 			local server = tonumber(strmatch(guid, "^Player%-(%d+)"))
-			local realm = DRFRealms[server]
-			if realm == nil and DRFRealmsLinked then
-				realm = DRFRealms[tonumber(DRFRealmsLinked[server])]
+			local realm = DRaidFrames:GetRealms()[server]
+			if realm == nil and DRaidFrames:GetRealmsLinked() then
+				realm = DRaidFrames:GetRealms()[tonumber(DRaidFrames:GetRealmsLinked()[server])]
 			end
 
 			if realm then
@@ -1510,7 +1534,7 @@ function DRFUpdateUnitInfo(uf, unit)
 				if power and powermax and power > 0 and powermax > 0 and power <= powermax then
 					uf.PowerBar:SetWidth(power / powermax * HEWI)
 
-					uf.PowerTextCen:SetText(string.format("%." .. math.abs( DRFGetConfig("DECI", 0) ) .. "f", power / powermax * 100) .. "%")
+					uf.PowerTextCen:SetText(string.format("%." .. math.abs( DRaidFrames:GetConfig("DECI", 0) ) .. "f", power / powermax * 100) .. "%")
 
 					uf.PowerBar:Show()
 				else
@@ -1621,15 +1645,15 @@ function DRFUpdateUnitInfo(uf, unit)
 			local allowed = false
 			if debuffType ~= nil then
 				if IsInRaid() then
-					allowed = DRFGetConfig("R" .. debuffType, true, true)
+					allowed = DRaidFrames:GetConfig("R" .. debuffType, true, true)
 				else
-					allowed = DRFGetConfig("G" .. debuffType, true, true)
+					allowed = DRaidFrames:GetConfig("G" .. debuffType, true, true)
 				end
 			else
 				if IsInRaid() then
-					allowed = DRFGetConfig("R" .. "None", true, true)
+					allowed = DRaidFrames:GetConfig("R" .. "None", true, true)
 				else
-					allowed = DRFGetConfig("G" .. "None", true, true)
+					allowed = DRaidFrames:GetConfig("G" .. "None", true, true)
 				end
 			end
 
@@ -1733,34 +1757,34 @@ function DRFUpdateUnitInfo(uf, unit)
 	end
 end
 
-function DRFOnUpdate()
-	if DRFUpdating then
-		DRFUpdating = false
+function DRaidFrames:OnUpdate()
+	if DRaidFrames:IsUpdating() then
+		DRaidFrames:SetUpdating( false )
 		if DRF.size ~= GetNumGroupMembers() then
 			DRF.size = GetNumGroupMembers()
 			
-			DRFSizing = true
+			DRaidFrames:SetSizing( true )
 		end
 		
 		if IsInRaid() then
 			if DRF.typ ~= "raid" then
 				DRF.typ = "raid"
-				DRFSizing = true
+				DRaidFrames:SetSizing( true )
 			end
 		elseif IsInGroup() then
 			if DRF.typ ~= "group" then
 				DRF.typ = "group"
-				DRFSizing = true
+				DRaidFrames:SetSizing( true )
 			end
 		else
 			if DRF.typ ~= "none" then
 				DRF.typ = "none"
-				DRFSizing = true
+				DRaidFrames:SetSizing( true )
 			end
 		end
 
 
-		if (DRFUpdating or not InCombatLockdown()) and not DRF:IsShown() then
+		if (DRaidFrames:IsUpdating() or not InCombatLockdown()) and not DRF:IsShown() then
 			DRF:SetMovable(true)
 			DRF:SetUserPlaced(true)
 		end
@@ -1773,7 +1797,7 @@ function DRFOnUpdate()
 			for i, uf in pairs(DRF.UFS) do
 				local unit = DRFSortedUnits[uf.id]
 				if unit and UnitExists(unit) then
-					DRFUpdateUnitInfo(uf, unit)
+					DRaidFrames:UpdateUnitInfo(uf, unit)
 				else
 					uf:Hide()
 					if not InCombatLockdown() then
@@ -1785,20 +1809,18 @@ function DRFOnUpdate()
 				DRF:Show()
 			end
 		end
-
-		DRFUpdatingUnits = false
 	end
 end
 
-function DRFUpdateLoop()
-	C_Timer.After(0.3, function()
-		DRFUpdating = true
-		DRFOnUpdate()
+function DRaidFrames:UpdateLoop()
+	C_Timer.After( 0.3, function()
+		DRaidFrames:SetUpdating( true )
+		DRaidFrames:OnUpdate()
 
-		DRFUpdateLoop()
-	end)
+		DRaidFrames:UpdateLoop()
+	end )
 end
-DRFUpdateLoop()
+DRaidFrames:UpdateLoop()
 
 DRF:RegisterEvent("READY_CHECK")
 DRF:RegisterEvent("READY_CHECK_CONFIRM")
@@ -1816,8 +1838,8 @@ function DRF:OnEvent(event, ...)
 		end)
 	end
 
-	DRFUpdating = true
-	DRFOnUpdate()
+	DRaidFrames:SetUpdating( true )
+	DRaidFrames:OnUpdate()
 end
 DRF:SetScript("OnEvent", DRF.OnEvent)
 
@@ -1840,7 +1862,7 @@ end
 
 
 
-function DRFSetup( force )
+function DRaidFrames:Setup( force )
 	if not InCombatLockdown() or force then
 		point = DRFTAB["DRF" .. "point"]
 		parent = DRFTAB["DRF" .. "parent"]
@@ -1852,7 +1874,7 @@ function DRFSetup( force )
 			DRF:SetPoint( point, parent, relativePoint, ofsx, ofsy )
 		end
 	else
-		C_Timer.After(0.1, DRFSetup)
+		C_Timer.After(0.1, DRaidFrames.Setup)
 	end
 end
 
@@ -1864,7 +1886,7 @@ function f:OnEvent(event)
 	if ( event == "PLAYER_LOGIN" or event == "PLAYER_ENTERING_WORLD" ) and not DRFLoaded then
 		DRFLoaded = true
 
-		DRFSetup()
+		DRaidFrames:Setup()
 	end
 end
 f:SetScript("OnEvent", f.OnEvent)

@@ -1,4 +1,7 @@
-DRFRealms = {
+
+local AddOnName, DRaidFrames = ...
+
+local DRFRealms = {
     [1]="Lightbringer,enUS",
     [2]="Cenarien,enUS",
     [3]="Uther,enUS",
@@ -1426,10 +1429,18 @@ local linked = {
     "3944,3944",
 }
 
-DRFRealmsLinked = {}
-for i, v in pairs(linked) do
+local DRFRealmsLinked = {}
+for i, v in pairs( linked ) do
     local realmData = { strsplit(",", v) }
     for j, w in pairs(realmData) do
         DRFRealmsLinked[tonumber(realmData[1])] = tonumber(w)
     end
+end
+
+function DRaidFrames:GetRealms()
+	return DRFRealms
+end
+
+function DRaidFrames:GetRealmsLinked()
+	return DRFRealmsLinked
 end

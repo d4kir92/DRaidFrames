@@ -1,8 +1,10 @@
 -- enUS English
 
-lang = lang or {}
+local AddOnName, DRaidFrames = ...
 
-function DRFLang_enUS()
+function DRaidFrames:DRFLangenUS()
+	local lang = DRaidFrames:GetLangTab()
+	
 	lang.SORTTYPE = "Sorting type"
 	
 	lang.OUBR = "Outer Border"
