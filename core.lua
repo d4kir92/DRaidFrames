@@ -226,8 +226,8 @@ function DRFGetMaxLevel()
 end
 
 function DRFUnitXP( unit )
-	if IAUnitXP then
-		return IAUnitXP( unit )
+	if ImproveAny_UnitXP then
+		return ImproveAny_UnitXP( unit )
 	end
 	if MAIUnitXP then
 		return MAIUnitXP( unit )
@@ -236,8 +236,8 @@ function DRFUnitXP( unit )
 end
 
 function DRFUnitXPMax( unit )
-	if IAUnitXPMax then
-		return IAUnitXPMax( unit )
+	if ImproveAny_UnitXPMax then
+		return ImproveAny_UnitXPMax( unit )
 	end
 	if MAIUnitXPMax then
 		return MAIUnitXPMax( unit )
