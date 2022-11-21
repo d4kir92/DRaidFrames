@@ -412,7 +412,7 @@ function DRaidFrames:InitSettings()
 end
 
 
-
+SetCVar( "ScriptErrors", 1 )
 local f = CreateFrame("Frame")
 f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -424,6 +424,8 @@ function f:OnEvent(event)
 
 	if ( event == "PLAYER_LOGIN" or event == "PLAYER_ENTERING_WORLD" ) and not DRFLoaded then
 		DRFLoaded = true
+		
+		SetCVar( "ScriptErrors", 1 )
 
 		DRaidFrames:SetSizingForce( true )
 		DRaidFrames:UpdateSize()
