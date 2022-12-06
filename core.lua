@@ -227,8 +227,8 @@ function DRaidFrames:GetMaxLevel()
 end
 
 function DRaidFrames:UnitXP( unit )
-	if ImproveAny_UnitXP then
-		return ImproveAny_UnitXP( unit )
+	if IATAB and IATAB.UnitXP then
+		return IATAB:UnitXP( unit )
 	end
 	if MAIUnitXP then
 		return MAIUnitXP( unit )
@@ -237,8 +237,8 @@ function DRaidFrames:UnitXP( unit )
 end
 
 function DRaidFrames:UnitXPMax( unit )
-	if ImproveAny_UnitXPMax then
-		return ImproveAny_UnitXPMax( unit )
+	if IATAB and IATAB.UnitXPMax then
+		return IATAB:UnitXPMax( unit )
 	end
 	if MAIUnitXPMax then
 		return MAIUnitXPMax( unit )
