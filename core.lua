@@ -49,11 +49,6 @@ DRFLayers["RankIcon2"] = 3
 DRFLayers["ReadyCheck"] = 3
 DRFLayers["Highlight"] = 4
 
-ClickCastFrames = ClickCastFrames
-if ClickCastFrames == nil then
-	ClickCastFrames =  {} -- "Clicked" Support
-end
-
 if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
 	local DRFHealTab = {}
 	local DRFIncomingHeals = {}
@@ -595,7 +590,7 @@ for group = 1, 8 do
 	end
 end
 
-function DRaidFrames_SortByRole(a, b)
+local function DRaidFrames_SortByRole(a, b)
 	local arole = "NONE" --UnitGroupRolesAssigned(a)
 	local brole = "NONE" --UnitGroupRolesAssigned(b)
 
@@ -646,7 +641,7 @@ function DRaidFrames_SortByRole(a, b)
 	end
 end
 
-function DRaidFrames_SortByGroup( unitA, unitB )
+local function DRaidFrames_SortByGroup( unitA, unitB )
 	if unitA == nil then
 		unitA = 0
 	end
@@ -1269,11 +1264,11 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			end
 			tCen = tCen .. "i" .. string.format("%.1f", UnitILvl(unit))
 		end
-		if UnitHasRating and UnitHasRating(DRaidFrames:UnitName(unit, true), "com") then
+		if RAPLTAB and RAPLTAB.UnitHasRating and RAPLTAB:UnitHasRating(DRaidFrames:UnitName(unit, true), "com") then
 			if tCen ~= "" then
 				tCen = tCen .. " "
 			end
-			tCen = tCen .. UnitRating(DRaidFrames:UnitName(unit, true), "com", 12)
+			tCen = tCen .. RAPLTAB:UnitRating(DRaidFrames:UnitName(unit, true), "com", 12)
 		end
 		if C_PlayerInfo and C_PlayerInfo.GetPlayerMythicPlusRatingSummary and C_PlayerInfo.GetPlayerMythicPlusRatingSummary( unit ) then
 			if tCen ~= "" then
@@ -1744,7 +1739,9 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			uf.btn:SetMovable(true)
 			uf.btn:SetUserPlaced(true)
 			uf.btn:Show()
-			ClickCastFrames[uf.btn] = true -- "Clicked" Support
+			if ClickCastFrames then
+				ClickCastFrames[uf.btn] = true -- "Clicked" Support
+			end
 		end
 	else
 		uf:Hide()
@@ -1752,7 +1749,9 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			uf.btn:SetMovable(true)
 			uf.btn:SetUserPlaced(true)
 			uf.btn:Hide()
-			ClickCastFrames[uf.btn] = false -- "Clicked" Support
+			if ClickCastFrames then
+				ClickCastFrames[uf.btn] = false -- "Clicked" Support
+			end
 		end
 	end
 end
