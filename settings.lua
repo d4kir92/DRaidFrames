@@ -2,8 +2,6 @@
 
 local AddOnName, DRaidFrames = ...
 
-local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
-
 local BuildNr = select(4, GetBuildInfo())
 local Build = "CLASSIC"
 if BuildNr >= 100000 then
@@ -88,6 +86,25 @@ function DRaidFrames:CreateSlider(parent, key, vval, x, y, vmin, vmax, steps, ls
 	return SL
 end
 
+function DRaidFrames:CreateComboBox(parent, key, vval, x, y, lstr, tab)
+	local rows = {
+		["name"] = lstr,
+		["parent"]= parent,
+		["title"] = lstr,
+		["items"]= tab,
+		["defaultVal"] =  DRaidFrames:GetConfig(key, vval), 
+		["changeFunc"] = function( dropdown_frame, dropdown_val )
+			--dropdown_val = tonumber( dropdown_val )
+			DRFTAB[key] = dropdown_val
+			DRaidFrames:SetSizing( true )
+		end
+	}
+	local DD = DRaidFrames:CreateDropdown( rows )
+	DD:SetPoint( "TOPLEFT", parent, "TOPLEFT", x, y )
+
+	return DD
+end
+
 function DRaidFrames:CreateCheckBox(parent, key, vval, x, y, lstr, pc)
 	local CB = CreateFrame("CheckButton", nil, parent, "ChatConfigCheckButtonTemplate")
 	CB:SetSize(18, 18)
@@ -114,51 +131,10 @@ function DRaidFrames:CreateCheckBox(parent, key, vval, x, y, lstr, pc)
 	return CB
 end
 
-function DRaidFrames:CreateComboBox(parent, key, vval, x, y, lstr, tab)
-	local CB = LibDD:Create_UIDropDownMenu("Frame", parent)
-	CB:SetPoint("TOPLEFT", x, y)
-
-	
-	CB.text = CB:CreateFontString(nil, "ARTWORK") 
-	CB.text:SetFont(STANDARD_TEXT_FONT, 12, "")
-	CB.text:SetText(DRaidFrames:GT(lstr))
-	CB.text:SetPoint("LEFT", CB, "RIGHT", 0, 3)
-	CB.Text:SetText(DRaidFrames:GT(lstr) .. ": " .. tostring(DRaidFrames:GetConfig(key, vval)))
-
-	LibDD:UIDropDownMenu_SetWidth(CB, 120)
-	LibDD:UIDropDownMenu_SetText(CB, DRaidFrames:GetConfig(key, vval))
-
-	-- Create and bind the initialization function to the dropdown menu
-	LibDD:UIDropDownMenu_Initialize(CB, function(self, level, menuList)
-		for i, v in pairs(tab) do
-			local info = LibDD:UIDropDownMenu_CreateInfo()
-			info.func = self.SetValue
-			info.text = v
-			info.arg1 = v
-			LibDD:UIDropDownMenu_AddButton(info)
-		end
-	end)
-
-	function CB:SetValue(newValue)
-		DRFTAB[key] = newValue
-		LibDD:UIDropDownMenu_SetText(CB, newValue)
-		LibDD:CloseDropDownMenus()
-
-		DRaidFrames:SetSizing( true )
-	end
-
-	return CB
-end
-
-
-
 local Y = 0
 local H = 16
 local BR = 30
 local sliderX = 12
-
-local SORTTAB = {}
-SORTTAB = {"Group", "Role"}
 
 function DRaidFrames:InitSettings()
 	local DRFSettings = {}
@@ -248,7 +224,6 @@ function DRaidFrames:InitSettings()
 	DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "G" .. "None", true, X, Y, "None", true)
 
 	Y = -10
-	--DRaidFrames:CreateComboBox(DRFSettings.gpanel, "GSORT", "Role", 0, Y, "SORTTYPE", SORTTAB)
 
 	--Y = Y - 32
 	DRaidFrames:CreateComboBox(DRFSettings.gpanel, "GTETOTY", "Name", 0, Y, "TETOTY", {"Name", "Name + Realm", "Class", "Class + Name", "Name + Class", "None"})
@@ -348,7 +323,7 @@ function DRaidFrames:InitSettings()
 
 
 	Y = -10
-	DRaidFrames:CreateComboBox(DRFSettings.rpanel, "RSORT", "Role", 0, Y, "SORTTYPE", SORTTAB)
+	DRaidFrames:CreateComboBox(DRFSettings.rpanel, "RSORT", "Role", 0, Y, "SORTTYPE", {"Group", "Role"})
 
 	Y = Y - 32
 	DRaidFrames:CreateComboBox(DRFSettings.rpanel, "RTETOTY", "Name", 0, Y, "TETOTY", {"Name", "Class", "Class + Name", "Name + Class", "None"})
