@@ -54,7 +54,7 @@ if ClickCastFrames == nil then
 	ClickCastFrames =  {} -- "Clicked" Support
 end
 
-if DRFBUILD ~= "RETAIL" then
+if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
 	local DRFHealTab = {}
 	local DRFIncomingHeals = {}
 
@@ -214,10 +214,10 @@ end
 
 function DRaidFrames:GetMaxLevel()
 	local maxlevel = 60
-	if DRFBUILD == "TBC" then
+	if DRaidFrames:GetWoWBuild() == "TBC" then
 		maxlevel = 70
 	end
-	if DRFBUILD == "WRATH" then
+	if DRaidFrames:GetWoWBuild() == "WRATH" then
 		maxlevel = 80
 	end
 	if GetMaxLevelForPlayerExpansion ~= nil then
@@ -1372,7 +1372,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		end
 
 		if lang ~= nil and UnitIsPlayer(unit) and uf.HealthBackground.LangIcon.lang ~= lang then
-			if DRFBUILD ~= "RETAIL" then
+			if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
 				if UnitInBattleground("player") then
 					uf.HealthBackground.LangIcon.lang = lang
 					uf.HealthBackground.LangIcon:SetTexture("Interface\\Addons\\DRaidFrames\\media\\" .. lang)

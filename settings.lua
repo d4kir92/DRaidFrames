@@ -4,13 +4,22 @@ local AddOnName, DRaidFrames = ...
 
 local LibDD = LibStub:GetLibrary("LibUIDropDownMenu-4.0")
 
-DRFBUILD = "CLASSIC"
-if select(4, GetBuildInfo()) >= 100000 then
-	DRFBUILD = "RETAIL"
-elseif select(4, GetBuildInfo()) > 29999 then
-	DRFBUILD = "WRATH"
-elseif select(4, GetBuildInfo()) > 19999 then
-	DRFBUILD = "TBC"
+local BuildNr = select(4, GetBuildInfo())
+local Build = "CLASSIC"
+if BuildNr >= 100000 then
+	Build = "RETAIL"
+elseif BuildNr > 29999 then
+	Build = "WRATH"
+elseif BuildNr > 19999 then
+	Build = "TBC"
+end
+
+function DRaidFrames:GetWoWBuildNr()
+	return BuildNr
+end
+
+function DRaidFrames:GetWoWBuild()
+	return Build
 end
 
 
@@ -266,7 +275,7 @@ function DRaidFrames:InitSettings()
 		DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GRATE", true, 200, Y + 60, "Rating") -- parent, key, vval, x, y, lstr)
 	end
 
-	if DRFBUILD == "RETAIL" then
+	if DRaidFrames:GetWoWBuild() == "RETAIL" then
 		DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GCOVE", true, 400, Y + 60, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE) -- parent, key, vval, x, y, lstr)
 	end
 
@@ -366,7 +375,7 @@ function DRaidFrames:InitSettings()
 		DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RRATE", true, 200, Y + 60, "Rating") -- parent, key, vval, x, y, lstr)
 	end
 
-	if DRFBUILD == "RETAIL" then
+	if DRaidFrames:GetWoWBuild() == "RETAIL" then
 		DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RCOVE", true, 400, Y + 60, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE) -- parent, key, vval, x, y, lstr)
 	end
 
