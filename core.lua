@@ -397,7 +397,11 @@ for group = 1, 8 do
 		DRF.UFS[id].BuffBar:SetSize(DRF_MAX_BUFFS * 18, 18)
 		DRF.UFS[id].BuffBar:SetPoint("BOTTOMRIGHT", DRF.UFS[id].HealthBackground, "BOTTOMRIGHT", 0, 0)
 		for i = 1, DRF_MAX_BUFFS do
-			DRF.UFS[id].BuffBar[i] = CreateFrame("Button", "DRFBUFF" .. id .. "_" .. i, DRF.UFS[id].BuffBar, "BuffButtonTemplate");
+			if true then
+				DRF.UFS[id].BuffBar[i] = CreateFrame("Button", "DRFBUFF" .. id .. "_" .. i, DRF.UFS[id].BuffBar, "BuffButtonTemplate");
+			else
+				DRF.UFS[id].BuffBar[i] = CreateFrame("Button", "DRFBUFF" .. id .. "_" .. i, DRF.UFS[id].BuffBar);
+			end
 			DRF.UFS[id].BuffBar[i].buttonInfo = {}
 			DRF.UFS[id].BuffBar[i].buttonInfo.expirationTime = -1
 			DRF.UFS[id].BuffBar[i].parent = DRF.UFS[id].BuffBar;
@@ -409,7 +413,9 @@ for group = 1, 8 do
 			DRF.UFS[id].BuffBar[i]:EnableMouse(false)
 
 			DRF.UFS[id].BuffBar[i]:SetSize(18, 18)
-			DRF.UFS[id].BuffBar[i].Icon:SetSize(18, 18)
+			if DRF.UFS[id].BuffBar[i].Icon then
+				DRF.UFS[id].BuffBar[i].Icon:SetSize(18, 18)
+			end
 
 			DRF.UFS[id].BuffBar[i].cooldown = CreateFrame("Cooldown", "DRFBUFF" .. id .. "_" .. i .. "Cooldown", DRF.UFS[id].BuffBar[i], "CooldownFrameTemplate")
 			DRF.UFS[id].BuffBar[i].cooldown:SetSize(18, 18)
@@ -431,7 +437,11 @@ for group = 1, 8 do
 		DRF.UFS[id].DebuffBar:SetSize(DRF_MAX_DEBUFFS * 18, 18)
 		DRF.UFS[id].DebuffBar:SetPoint("BOTTOMLEFT", DRF.UFS[id].HealthBackground, "BOTTOMLEFT", 0, 0)
 		for i = 1, DRF_MAX_DEBUFFS do
-			DRF.UFS[id].DebuffBar[i] = CreateFrame("Button", "DRFDEBUFF" .. id .. "_" .. i, DRF.UFS[id].DebuffBar, "DebuffButtonTemplate");
+			if true then
+				DRF.UFS[id].DebuffBar[i] = CreateFrame("Button", "DRFDEBUFF" .. id .. "_" .. i, DRF.UFS[id].DebuffBar, "DebuffButtonTemplate");
+			else
+				DRF.UFS[id].DebuffBar[i] = CreateFrame("Button", "DRFDEBUFF" .. id .. "_" .. i, DRF.UFS[id].DebuffBar);
+			end
 			DRF.UFS[id].DebuffBar[i].buttonInfo = {}
 			DRF.UFS[id].DebuffBar[i].buttonInfo.expirationTime = -1
 			DRF.UFS[id].DebuffBar[i].parent = DRF.UFS[id].DebuffBar;
@@ -443,8 +453,10 @@ for group = 1, 8 do
 			if DRF.UFS[id].DebuffBar[i].Border == nil then
 				DRF.UFS[id].DebuffBar[i].Border = _G["DRFDEBUFF" .. id .. "_" .. i .. "Border"]
 			end
-			DRF.UFS[id].DebuffBar[i].Border:Hide()
-			DRF.UFS[id].DebuffBar[i].Border:SetSize(18, 18)
+			if DRF.UFS[id].DebuffBar[i].Border then
+				DRF.UFS[id].DebuffBar[i].Border:Hide()
+				DRF.UFS[id].DebuffBar[i].Border:SetSize(18, 18)
+			end
 
 			DRF.UFS[id].DebuffBar[i]:EnableMouse(false)
 
@@ -976,11 +988,15 @@ function DRaidFrames:UpdateSize()
 				for i = 1, DRF_MAX_BUFFS do
 					DRF.UFS[id].BuffBar[i]:SetPoint("TOPRIGHT", DRF.UFS[id].BuffBar, "TOPRIGHT", -(i - 1) * BUSI, 0)
 					DRF.UFS[id].BuffBar[i]:SetSize(BUSI, BUSI)
-					DRF.UFS[id].BuffBar[i].Icon:SetSize(BUSI, BUSI)
+					if DRF.UFS[id].BuffBar[i].Icon then
+						DRF.UFS[id].BuffBar[i].Icon:SetSize(BUSI, BUSI)
+					end
 
 					DRF.UFS[id].DebuffBar[i]:SetPoint("TOPLEFT", DRF.UFS[id].DebuffBar, "TOPLEFT", (i - 1) * DESI, 0)
 					DRF.UFS[id].DebuffBar[i]:SetSize(DESI, DESI)
-					DRF.UFS[id].DebuffBar[i].Icon:SetSize(DESI, DESI)
+					if DRF.UFS[id].DebuffBar[i].Icon then
+						DRF.UFS[id].DebuffBar[i].Icon:SetSize(DESI, DESI)
+					end
 					if DRF.UFS[id].DebuffBar[i].Border ~= nil then
 						DRF.UFS[id].DebuffBar[i].Border:SetSize(DESI, DESI)
 					end
@@ -1598,10 +1614,14 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 					if ( count >= 100 ) then
 						countText = BUFF_STACKS_OVERFLOW;
 					end
-					uf.BuffBar[idbu].count:Show();
-					uf.BuffBar[idbu].count:SetText(countText);
+					if uf.BuffBar[idbu].count then
+						uf.BuffBar[idbu].count:Show();
+						uf.BuffBar[idbu].count:SetText(countText);
+					end
 				else
-					uf.BuffBar[idbu].count:Hide();
+					if uf.BuffBar[idbu].count then
+						uf.BuffBar[idbu].count:Hide();
+					end
 				end
 
 				local enabled = expirationTime and expirationTime ~= 0;
@@ -1627,7 +1647,9 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 				uf.BuffBar[i].count:Hide();
 			end
 
-			uf.BuffBar[i].count:Hide();
+			if uf.BuffBar[idbu].count then
+				uf.BuffBar[i].count:Hide();
+			end
 		end
 
 		-- Debuff
