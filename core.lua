@@ -178,7 +178,7 @@ if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
 		return 0
 	end
 
-	function UnitGetTotalAbsorbs(unit)
+	function UnitGetTotalAbsorbs( unit )
 		return 0
 	end
 
@@ -186,8 +186,8 @@ if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
 end
 
 function DRaidFrames:UnitName( unit, showrealm )
-	if UnitExists(unit) then
-		local name, realm = UnitName(unit)
+	if UnitExists( unit ) then
+		local name, realm = UnitName( unit )
 		if SM_CHARNAME then
 			local pn = UnitName( "player" )
 			if name == pn then
@@ -214,6 +214,9 @@ function DRaidFrames:GetMaxLevel()
 	end
 	if DRaidFrames:GetWoWBuild() == "WRATH" then
 		maxlevel = 80
+	end
+	if DRaidFrames:GetWoWBuild() == "RETAIL" then
+		maxlevel = 70
 	end
 	if GetMaxLevelForPlayerExpansion ~= nil then
 		maxlevel = GetMaxLevelForPlayerExpansion()
@@ -661,20 +664,20 @@ local function DRaidFrames_SortByGroup( unitA, unitB )
 		unitB = 0
 	end
 
-	local unitAID = string.gsub(unitA, "RAID", "")
-	local unitBID = string.gsub(unitB, "RAID", "")
+	local unitAID = string.gsub( unitA, "RAID", "" )
+	local unitBID = string.gsub( unitB, "RAID", "" )
 
 	if unitAID and unitBID then
-		unitAID = tonumber(unitAID)
-		unitBID = tonumber(unitBID)
+		unitAID = tonumber( unitAID )
+		unitBID = tonumber( unitBID )
 
-		local _, _, a = GetRaidRosterInfo(unitAID)
-		local _, _, b = GetRaidRosterInfo(unitBID)
+		local _, _, a = GetRaidRosterInfo( unitAID )
+		local _, _, b = GetRaidRosterInfo( unitBID )
 
-		if not UnitExists(unitA) then
+		if not UnitExists( unitA ) then
 			a = unitAID
 		end
-		if not UnitExists(unitB) then
+		if not UnitExists( unitB ) then
 			b = unitBID
 		end
 
@@ -1042,7 +1045,7 @@ local ignorebuffs = {
 	290958
 }
 function DRaidFrames:UpdateUnitInfo(uf, unit)
-	if UnitExists(unit) then
+	if UnitExists( unit ) then
 		uf:Hide()
 
 		if not InCombatLockdown() then
@@ -1064,8 +1067,8 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		-- Health
 		if BarUp then
 			uf.HealthBar:SetWidth(HEWI)
-			if UnitHealth(unit) > 1 and UnitHealthMax(unit) > 1 then
-				local h = UnitHealth(unit) / UnitHealthMax(unit) * HEHE
+			if UnitHealth( unit ) > 1 and UnitHealthMax( unit ) > 1 then
+				local h = UnitHealth( unit ) / UnitHealthMax( unit ) * HEHE
 				uf.HealthBar:SetPoint("TOPLEFT", uf, "TOPLEFT", 0, -(HEHE - h))
 				uf.HealthBar:SetHeight(h)
 
@@ -1076,8 +1079,8 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		else
 			uf.HealthBar:SetWidth(HEWI)
 			uf.HealthBar:SetPoint("TOPLEFT", uf, "TOPLEFT", 0, 0)
-			if UnitHealth(unit) > 1 and UnitHealthMax(unit) > 1 then
-				uf.HealthBar:SetWidth(UnitHealth(unit) / UnitHealthMax(unit) * HEWI)
+			if UnitHealth( unit ) > 1 and UnitHealthMax( unit ) > 1 then
+				uf.HealthBar:SetWidth( UnitHealth( unit ) / UnitHealthMax( unit ) * HEWI )
 
 				uf.HealthBar:Show()
 			else
@@ -1086,11 +1089,11 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		end
 
 		if UnitGetIncomingHeals and UnitGetTotalAbsorbs then
-			local PREDICTION = UnitGetIncomingHeals(unit);
+			local PREDICTION = UnitGetIncomingHeals( unit );
 
 			if BarUp then
 				if PREDICTION and PREDICTION > 0 then
-					local rec = PREDICTION / UnitHealthMax(unit) * HEHE
+					local rec = PREDICTION / UnitHealthMax( unit ) * HEHE
 					if not OVER then
 						if rec + uf.HealthBar:GetHeight() > uf.HealthBackground:GetHeight() + 1 then
 							rec = uf.HealthBackground:GetHeight() - uf.HealthBar:GetHeight()
@@ -1109,7 +1112,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 				end
 			else
 				if PREDICTION and PREDICTION > 0 then
-					local rec = PREDICTION / UnitHealthMax(unit) * HEWI
+					local rec = PREDICTION / UnitHealthMax( unit ) * HEWI
 					if not OVER then
 						if rec + uf.HealthBar:GetWidth() > uf.HealthBackground:GetWidth() + 1 then
 							rec = uf.HealthBackground:GetWidth() - uf.HealthBar:GetWidth()
@@ -1128,7 +1131,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 				end
 			end
 
-			local ABSORB = UnitGetTotalAbsorbs(unit);
+			local ABSORB = UnitGetTotalAbsorbs( unit );
 			
 			uf.Absorb:Hide()
 			uf.AbsorbOverlay:Hide()
@@ -1154,7 +1157,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 			if BarUp then
 				if ABSORB and ABSORB > 0 then
-					local rec = ABSORB / UnitHealthMax(unit) * HEHE
+					local rec = ABSORB / UnitHealthMax( unit ) * HEHE
 					if not OVER then
 						if rec + uf.HealthBar:GetHeight() + uf.Prediction:GetHeight() > uf.HealthBackground:GetHeight() + 1 then
 							rec = uf.HealthBackground:GetHeight() - uf.HealthBar:GetHeight() - uf.Prediction:GetHeight()
@@ -1173,7 +1176,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 				end
 			else
 				if ABSORB and ABSORB > 0 then
-					local rec = ABSORB / UnitHealthMax(unit) * HEWI
+					local rec = ABSORB / UnitHealthMax( unit ) * HEWI
 					if not OVER then
 						if rec + uf.HealthBar:GetWidth() + uf.Prediction:GetWidth() > uf.HealthBackground:GetWidth() + 1 then
 							rec = uf.HealthBackground:GetWidth() - uf.HealthBar:GetWidth() - uf.Prediction:GetWidth()
@@ -1223,7 +1226,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 		local HealthTextCen = ""
 		if TECETY == "Health in Percent" then
-			local rec = UnitHealth(unit) / UnitHealthMax(unit) * 100
+			local rec = UnitHealth( unit ) / UnitHealthMax( unit ) * 100
 			local val = string.format("%." .. math.abs( DRaidFrames:GetConfig("DECI", 0) ) .. "f", rec)
 			if rec > 0 then
 				HealthTextCen = val .. "%"
@@ -1231,7 +1234,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 				HealthTextCen = ""
 			end
 		elseif TECETY == "Lost Health in Percent" then
-			local rec = 1 - UnitHealth(unit) / UnitHealthMax(unit)
+			local rec = 1 - UnitHealth( unit ) / UnitHealthMax( unit )
 			if rec then
 				local val = string.format("%." .. math.abs( DRaidFrames:GetConfig("DECI", 0) ) .. "f", rec * 100)
 				if rec > 0 then
@@ -1245,13 +1248,13 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		else
 			HealthTextCen = ""
 		end
-		if not UnitIsConnected(unit) then
+		if not UnitIsConnected( unit ) then
 			HealthTextCen = PLAYER_OFFLINE
-		elseif UnitIsFeignDeath and UnitIsFeignDeath(unit) then
+		elseif UnitIsFeignDeath and UnitIsFeignDeath( unit ) then
 			HealthTextCen = DRaidFrames:GT( "feigndeath" )
-		elseif UnitIsDead(unit) then
+		elseif UnitIsDead( unit ) then
 			HealthTextCen = DEAD
-		elseif UnitHealth(unit) <= 1 then
+		elseif UnitHealth( unit ) <= 1 then
 			HealthTextCen = DRaidFrames:GT( "ghost" )
 		elseif uf.resurrect then
 			HealthTextCen = ""
@@ -1263,38 +1266,41 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			tCen = "(" .. subgroup .. ")"
 		else
 			local xppercent = ""
-			if DRaidFrames:UnitXPMax(unit) > 1 then
-				xppercent = " (" .. string.format("%0.1f", DRaidFrames:UnitXP(unit) / DRaidFrames:UnitXPMax(unit) * 100) .. "%)"
+			if DRaidFrames:UnitXPMax( unit ) > 1 then
+				xppercent = " (" .. string.format("%0.1f", DRaidFrames:UnitXP( unit ) / DRaidFrames:UnitXPMax( unit ) * 100) .. "%)"
 			end
-			if UnitEffectiveLevel ~= nil and UnitEffectiveLevel(unit) ~= UnitLevel(unit) then
-				tCen = UnitEffectiveLevel(unit) .. " (" .. UnitLevel(unit) .. ")" .. xppercent
-			elseif UnitLevel(unit) < DRaidFrames:GetMaxLevel() then
-				tCen = UnitLevel(unit) .. xppercent
+			if UnitEffectiveLevel ~= nil and UnitEffectiveLevel( unit ) ~= UnitLevel( unit ) then
+				tCen = UnitEffectiveLevel( unit ) .. " (" .. UnitLevel( unit ) .. ")" .. xppercent
+			elseif UnitLevel( unit ) < DRaidFrames:GetMaxLevel() then
+				tCen = UnitLevel( unit ) .. xppercent
 			else
 				tCen = ""
 			end
 		end
-		if UnitILvl and UnitILvl(unit) > 0 then
+		if UnitILvl and UnitILvl( unit ) > 0 then
 			if tCen ~= "" then
 				tCen = tCen .. " "
 			end
-			tCen = tCen .. "i" .. string.format("%.1f", UnitILvl(unit))
+			tCen = tCen .. "i" .. string.format("%.1f", UnitILvl( unit ))
 		end
-		if RAPLTAB and RAPLTAB.UnitHasRating and RAPLTAB:UnitHasRating(DRaidFrames:UnitName(unit, true), "com") then
+		if RAPLTAB and RAPLTAB.UnitHasRating and RAPLTAB:UnitHasRating( DRaidFrames:UnitName( unit, true ), "com" ) then
 			if tCen ~= "" then
 				tCen = tCen .. " "
 			end
-			tCen = tCen .. RAPLTAB:UnitRating(DRaidFrames:UnitName(unit, true), "com", 12)
+			tCen = tCen .. RAPLTAB:UnitRating( DRaidFrames:UnitName( unit, true ), "com", 12 )
 		end
 		if C_PlayerInfo and C_PlayerInfo.GetPlayerMythicPlusRatingSummary and C_PlayerInfo.GetPlayerMythicPlusRatingSummary( unit ) then
-			if tCen ~= "" then
-				tCen = tCen .. " "
+			local score = C_PlayerInfo.GetPlayerMythicPlusRatingSummary( unit ).currentSeasonScore
+			if UnitLevel( unit ) == DRaidFrames:GetMaxLevel() then
+				if tCen ~= "" then
+					tCen = tCen .. " "
+				end
+				tCen = tCen .. "R: " .. score
 			end
-			tCen = tCen .. "R: " .. C_PlayerInfo.GetPlayerMythicPlusRatingSummary( unit ).currentSeasonScore
 		end
 		uf.HealthTextBot:SetText(tCen)
 
-		local class, classEng, classIndex = UnitClass(unit)
+		local class, classEng, classIndex = UnitClass( unit )
 		if class ~= nil then
 			local r, g, b, argbHex = GetClassColor(classEng)
 			uf.HealthBar:SetVertexColor(r, g, b)
@@ -1305,7 +1311,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			end
 		end
 		
-		local status = UnitThreatSituation(unit);
+		local status = UnitThreatSituation( unit );
 		if status and status > 0 then
 			if GetThreatStatusColor ~= nil then
 				uf.Aggro:SetVertexColor(GetThreatStatusColor(status))
@@ -1322,8 +1328,8 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 
 		if UnitGroupRolesAssigned then
-			if UnitGroupRolesAssigned(unit) ~= "NONE" then
-				uf.HealthBackground.RoleIcon:SetTexCoord(GetTexCoordsForRoleSmallCircle(UnitGroupRolesAssigned(unit)));
+			if UnitGroupRolesAssigned( unit ) ~= "NONE" then
+				uf.HealthBackground.RoleIcon:SetTexCoord(GetTexCoordsForRoleSmallCircle(UnitGroupRolesAssigned( unit )));
 				uf.HealthBackground.RoleIcon:Show()
 			else
 				uf.HealthBackground.RoleIcon:Hide()
@@ -1332,9 +1338,9 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 
 
-		local class, classEng, classID = UnitClass(unit)
-		local t = CLASS_ICON_TCOORDS[select(2, UnitClass(unit))]
-		if CLAS and t and UnitIsPlayer(unit) then
+		local class, classEng, classID = UnitClass( unit )
+		local t = CLASS_ICON_TCOORDS[select(2, UnitClass( unit ))]
+		if CLAS and t and UnitIsPlayer( unit ) then
 			uf.HealthBackground.ClassIcon:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles")
 			uf.HealthBackground.ClassIcon:SetTexCoord(unpack(t))
 			uf.HealthBackground.ClassIcon:Show()
@@ -1344,8 +1350,8 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 
 
-		if COVE and UnitCovenantID and UnitCovenantID(unit) >= 1 and UnitCovenantID(unit) <= 4 then
-			local id = UnitCovenantID(unit)
+		if COVE and UnitCovenantID and UnitCovenantID( unit ) >= 1 and UnitCovenantID( unit ) <= 4 then
+			local id = UnitCovenantID( unit )
 
 			local covenants = {}
 			covenants[1] = "ky"
@@ -1360,7 +1366,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 
 
-		local guid = UnitGUID(unit)
+		local guid = UnitGUID( unit )
 		local lang = nil
 		if guid then
 			local server = tonumber(strmatch(guid, "^Player%-(%d+)"))
@@ -1382,7 +1388,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			end
 		end
 
-		if lang ~= nil and UnitIsPlayer(unit) and uf.HealthBackground.LangIcon.lang ~= lang then
+		if lang ~= nil and UnitIsPlayer( unit ) and uf.HealthBackground.LangIcon.lang ~= lang then
 			if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
 				if UnitInBattleground("player") then
 					uf.HealthBackground.LangIcon.lang = lang
@@ -1421,9 +1427,9 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 
 
-		if UnitIsGroupLeader(unit) then
+		if UnitIsGroupLeader( unit ) then
 			uf.HealthBackground.RankIcon:SetTexture("Interface/GroupFrame/UI-Group-LeaderIcon")
-		elseif UnitIsGroupAssistant(unit) then
+		elseif UnitIsGroupAssistant( unit ) then
 			uf.HealthBackground.RankIcon:SetTexture("Interface/GroupFrame/UI-Group-AssistantIcon")
 		else
 			uf.HealthBackground.RankIcon:SetTexture(nil)
@@ -1444,18 +1450,18 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		
 
 		-- READY CHECK
-		local readyCheckStatus = GetReadyCheckStatus(unit)
+		local readyCheckStatus = GetReadyCheckStatus( unit )
 		local resurrect = nil
 		if UnitHasIncomingResurrection then
-			resurrect = UnitHasIncomingResurrection(unit)
+			resurrect = UnitHasIncomingResurrection( unit )
 		end
 		local phase = nil
 		if UnitPhaseReason then
-			phase = UnitPhaseReason(unit)
+			phase = UnitPhaseReason( unit )
 		end
 		local tp = nil
 		if C_IncomingSummon then
-			tp = C_IncomingSummon.HasIncomingSummon(unit)
+			tp = C_IncomingSummon.HasIncomingSummon( unit )
 		end
 		if resurrect then
 			uf.resurrect = true
@@ -1487,7 +1493,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			uf.HealthBar.ReadyCheck:SetTexture("Interface\\RaidFrame\\Raid-Icon-Rez")
 			uf.HealthBar.ReadyCheck:Show()
 		elseif tp then
-			local tpReason = C_IncomingSummon.IncomingSummonStatus(unit);
+			local tpReason = C_IncomingSummon.IncomingSummonStatus( unit );
 			if tpReason == Enum.SummonStatus.Pending then
 				uf.HealthBar.ReadyCheck:SetAtlas("Raid-Icon-SummonPending")
 				uf.HealthBar.ReadyCheck:Show()
@@ -1508,25 +1514,25 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 
 		-- RaidIcon
-		if GetRaidTargetIndex(unit) then
-			uf.RaidIcon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_" .. GetRaidTargetIndex(unit))
+		if GetRaidTargetIndex( unit ) then
+			uf.RaidIcon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_" .. GetRaidTargetIndex( unit ))
 		else
 			uf.RaidIcon:SetTexture(nil)
 		end
 
 
 
-		local _, class = UnitClass(unit);
+		local _, class = UnitClass( unit );
 		-- POWER
 		if SHPO then
 			local power = UnitPower(unit, Enum.PowerType.Mana)
 			local powermax = UnitPowerMax(unit, Enum.PowerType.Mana)
 			if class == "MONK" then
-				power = UnitPower(unit)
-				powermax = UnitPowerMax(unit)
+				power = UnitPower( unit )
+				powermax = UnitPowerMax( unit )
 			elseif powermax == 0 then
-				power = UnitPower(unit)
-				powermax = UnitPowerMax(unit)
+				power = UnitPower( unit )
+				powermax = UnitPowerMax( unit )
 			end
 			if BarUp then
 				uf.PowerBar:SetWidth(POSI)
@@ -1577,7 +1583,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 				uf.PowerBar:SetVertexColor(info.r, info.g, info.b, 1)
 			end
 		else
-			powerType, powerToken, altR, altG, altB = UnitPowerType(unit);
+			powerType, powerToken, altR, altG, altB = UnitPowerType( unit );
 			local info = PowerBarColor[powerToken];
 			if ( info ) then
 				uf.PowerBar:SetVertexColor(info.r, info.g, info.b)
@@ -1750,7 +1756,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			CooldownFrame_Clear(uf.DebuffBar[i].cooldown);
 		end
 
-		if UnitInRange(unit) or unit == "PLAYER" then -- or unit == player, because unitinrange("player") == nil
+		if UnitInRange( unit ) or unit == "PLAYER" then -- or unit == player, because unitinrange("player") == nil
 			uf:SetAlpha(1)
 		else
 			uf:SetAlpha( OORA ) -- 0.2
@@ -1817,7 +1823,7 @@ function DRaidFrames:OnUpdate()
 		else
 			for i, uf in pairs(DRF.UFS) do
 				local unit = DRFSortedUnits[uf.id]
-				if unit and UnitExists(unit) then
+				if unit and UnitExists( unit ) then
 					DRaidFrames:UpdateUnitInfo(uf, unit)
 				else
 					uf:Hide()
