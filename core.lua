@@ -1286,45 +1286,49 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		end
 		uf.HealthTextCen:SetText(HealthTextCen)
 
-		local tCen = ""
+		local tTop2 = ""
 		if IsInRaid() and ID then
-			tCen = "(" .. subgroup .. ")"
+			tTop2 = "(" .. subgroup .. ")"
 		else
 			local xppercent = ""
 			if DRaidFrames:UnitXPMax( unit ) > 1 then
 				xppercent = " (" .. string.format("%0.1f", DRaidFrames:UnitXP( unit ) / DRaidFrames:UnitXPMax( unit ) * 100) .. "%)"
 			end
 			if UnitEffectiveLevel ~= nil and UnitEffectiveLevel( unit ) ~= UnitLevel( unit ) then
-				tCen = UnitEffectiveLevel( unit ) .. " (" .. UnitLevel( unit ) .. ")" .. xppercent
+				tTop2 = UnitEffectiveLevel( unit ) .. " (" .. UnitLevel( unit ) .. ")" .. xppercent
 			elseif UnitLevel( unit ) < DRaidFrames:GetMaxLevel() then
-				tCen = UnitLevel( unit ) .. xppercent
+				tTop2 = UnitLevel( unit ) .. xppercent
 			else
-				tCen = ""
+				tTop2 = ""
 			end
 		end
 		if UnitILvl and UnitILvl( unit ) > 0 then
-			if tCen ~= "" then
-				tCen = tCen .. " "
+			if tTop2 ~= "" then
+				tTop2 = tTop2 .. " "
 			end
-			tCen = tCen .. "i" .. string.format("%.1f", UnitILvl( unit ))
+			tTop2 = tTop2 .. "i" .. string.format("%.1f", UnitILvl( unit ))
 		end
 		if RAPLTAB and RAPLTAB.UnitHasRating and RAPLTAB:UnitHasRating( DRaidFrames:UnitName( unit, true ), "com" ) then
-			if tCen ~= "" then
-				tCen = tCen .. " "
+			if tTop2 ~= "" then
+				tTop2 = tTop2 .. " "
 			end
-			tCen = tCen .. RAPLTAB:UnitRating( DRaidFrames:UnitName( unit, true ), "com", 12 )
+			tTop2 = tTop2 .. RAPLTAB:UnitRating( DRaidFrames:UnitName( unit, true ), "com", 12 )
 		end
 		if C_PlayerInfo and C_PlayerInfo.GetPlayerMythicPlusRatingSummary and C_PlayerInfo.GetPlayerMythicPlusRatingSummary( unit ) then
 			local score = C_PlayerInfo.GetPlayerMythicPlusRatingSummary( unit ).currentSeasonScore
 			if UnitLevel( unit ) == DRaidFrames:GetMaxLevel() then
-				if tCen ~= "" then
-					tCen = tCen .. " "
+				if tTop2 ~= "" then
+					tTop2 = tTop2 .. " "
 				end
-				tCen = tCen .. "R: " .. score
+				tTop2 = tTop2 .. "R: " .. score
 			end
 		end
 		uf.HealthTextTop2:SetHeight(16)
-		uf.HealthTextTop2:SetText(tCen)
+		if InCombatLockdown() then
+			uf.HealthTextTop2:SetText( "" )
+		else
+			uf.HealthTextTop2:SetText( tTop2 )
+		end
 
 		local class, classEng, classIndex = UnitClass( unit )
 		if class ~= nil then
