@@ -359,11 +359,11 @@ for group = 1, 8 do
 		DRF.UFS[id].HealthTextCen:SetText("")
 		DRF.UFS[id].HealthTextCen:SetPoint("CENTER", DRF.UFS[id].HealthBackground, "CENTER", 0, 0)
 
-		DRF.UFS[id].HealthTextBot = DRF.UFS[id]:CreateFontString(nil, "OVERLAY")
-		DRF.UFS[id].HealthTextBot:SetDrawLayer("OVERLAY", DRFLayers["HealthTextBot"])
-		DRF.UFS[id].HealthTextBot:SetFont(STANDARD_TEXT_FONT, 9, "")
-		DRF.UFS[id].HealthTextBot:SetText("")
-		DRF.UFS[id].HealthTextBot:SetPoint("BOTTOM", DRF.UFS[id].HealthBackground, "BOTTOM", 0, 3)
+		DRF.UFS[id].HealthTextTop2 = DRF.UFS[id]:CreateFontString(nil, "OVERLAY")
+		DRF.UFS[id].HealthTextTop2:SetDrawLayer("OVERLAY", DRFLayers["HealthTextBot"])
+		DRF.UFS[id].HealthTextTop2:SetFont(STANDARD_TEXT_FONT, 9, "")
+		DRF.UFS[id].HealthTextTop2:SetText("")
+		DRF.UFS[id].HealthTextTop2:SetPoint("TOP", DRF.UFS[id].HealthBackground, "TOP", 0, -14)
 		
 
 
@@ -495,9 +495,20 @@ for group = 1, 8 do
 		if UnitGroupRolesAssigned then
 			DRF.UFS[id].HealthBackground.RoleIcon = DRF.UFS[id]:CreateTexture(nil, "OVERLAY")
 			DRF.UFS[id].HealthBackground.RoleIcon:SetDrawLayer("OVERLAY", DRFLayers["RoleIcon"])
-			DRF.UFS[id].HealthBackground.RoleIcon:SetSize(18, 18)
-			DRF.UFS[id].HealthBackground.RoleIcon:SetPoint("TOPRIGHT", DRF.UFS[id].HealthBackground, "TOPRIGHT", -1, -2)
+			DRF.UFS[id].HealthBackground.RoleIcon:SetSize( 18, 18 )
+			DRF.UFS[id].HealthBackground.RoleIcon:SetPoint("TOPRIGHT", DRF.UFS[id].HealthBackground, "TOPRIGHT", 0, 0)
 			DRF.UFS[id].HealthBackground.RoleIcon:SetTexture("Interface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES")
+		end
+
+
+
+		-- M+
+		if DRaidFrames:GetWoWBuild() == "RETAIL" then
+			DRF.UFS[id].HealthBackground.MythicIcon = DRF.UFS[id]:CreateTexture(nil, "OVERLAY")
+			DRF.UFS[id].HealthBackground.MythicIcon:SetDrawLayer("OVERLAY", DRFLayers["RoleIcon"])
+			DRF.UFS[id].HealthBackground.MythicIcon:SetSize( 24, 24 )
+			DRF.UFS[id].HealthBackground.MythicIcon:SetPoint("TOPLEFT", DRF.UFS[id].HealthBackground, "TOPLEFT", 0, 0)
+			DRF.UFS[id].HealthBackground.MythicIcon:SetTexture( nil )
 		end
 
 
@@ -953,7 +964,7 @@ function DRaidFrames:UpdateSize()
 
 				DRF.UFS[id].HealthTextCen:SetPoint("CENTER", DRF.UFS[id].HealthBackground, "CENTER", 0, 0)
 
-				DRF.UFS[id].HealthTextBot:SetPoint("BOTTOM", DRF.UFS[id].HealthBackground, "BOTTOM", 0, 3)
+				DRF.UFS[id].HealthTextTop2:SetPoint("TOP", DRF.UFS[id].HealthBackground, "TOP", 0, -14)
 				
 
 
@@ -983,10 +994,10 @@ function DRaidFrames:UpdateSize()
 
 
 				DRF.UFS[id].BuffBar:SetSize(DRF_MAX_BUFFS * BUSI, BUSI)
-				DRF.UFS[id].BuffBar:SetPoint("BOTTOMRIGHT", DRF.UFS[id].HealthBackground, "BOTTOMRIGHT", -1, 1)
+				DRF.UFS[id].BuffBar:SetPoint("BOTTOMRIGHT", DRF.UFS[id].HealthBackground, "BOTTOMRIGHT", 0, 0)
 
 				DRF.UFS[id].DebuffBar:SetSize(DRF_MAX_BUFFS * DESI, DESI)
-				DRF.UFS[id].DebuffBar:SetPoint("BOTTOMLEFT", DRF.UFS[id].HealthBackground, "BOTTOMLEFT", 1, 1)
+				DRF.UFS[id].DebuffBar:SetPoint("BOTTOMLEFT", DRF.UFS[id].HealthBackground, "BOTTOMLEFT", 0, 0)
 
 				for i = 1, DRF_MAX_BUFFS do
 					DRF.UFS[id].BuffBar[i]:SetPoint("TOPRIGHT", DRF.UFS[id].BuffBar, "TOPRIGHT", -(i - 1) * BUSI, 0)
@@ -1019,14 +1030,14 @@ function DRaidFrames:UpdateSize()
 				DRF.UFS[id].HealthBackground.RankIcon:SetSize(14, 14)
 				DRF.UFS[id].HealthBackground.RankIcon:SetPoint("TOP", DRF.UFS[id].HealthBackground, "TOP", 0, 7)
 
-				DRF.UFS[id].HealthBackground.RankIcon2:SetSize(14, 14)
-				DRF.UFS[id].HealthBackground.RankIcon2:SetPoint("TOP", DRF.UFS[id].HealthBackground, "TOP", 0, - 10 - 7)
+				DRF.UFS[id].HealthBackground.RankIcon2:SetSize(16, 16)
+				DRF.UFS[id].HealthBackground.RankIcon2:SetPoint("TOPLEFT", DRF.UFS[id].HealthBackground, "TOPLEFT", 0, 0)
 				
 				DRF.UFS[id].HealthBar.ReadyCheck:SetSize(18, 18)
 				DRF.UFS[id].HealthBar.ReadyCheck:SetPoint("CENTER", DRF.UFS[id].HealthBackground, "CENTER", 0, 0)
 				
-				DRF.UFS[id].RaidIcon:SetSize(14, 14)
-				DRF.UFS[id].RaidIcon:SetPoint("BOTTOM", DRF.UFS[id].HealthBackground, "BOTTOM", 0, 14)
+				DRF.UFS[id].RaidIcon:SetSize(16, 16)
+				DRF.UFS[id].RaidIcon:SetPoint("BOTTOM", DRF.UFS[id].HealthBackground, "BOTTOM", 0, 24)
 
 				id = id + 1
 			end
@@ -1101,6 +1112,13 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 								rec = 1
 							end
 						end
+					else
+						if rec + uf.HealthBar:GetHeight() > uf.HealthBackground:GetHeight() * 2 then
+							rec = uf.HealthBackground:GetHeight() * 2 - uf.HealthBar:GetHeight()
+							if rec <= 0 then
+								rec = 1
+							end
+						end
 					end
 					uf.Prediction:SetHeight(rec)
 
@@ -1116,6 +1134,13 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 					if not OVER then
 						if rec + uf.HealthBar:GetWidth() > uf.HealthBackground:GetWidth() + 1 then
 							rec = uf.HealthBackground:GetWidth() - uf.HealthBar:GetWidth()
+							if rec <= 0 then
+								rec = 1
+							end
+						end
+					else
+						if rec + uf.HealthBar:GetWidth() > uf.HealthBackground:GetWidth() * 2 then
+							rec = uf.HealthBackground:GetWidth() * 2 - uf.HealthBar:GetWidth()
 							if rec <= 0 then
 								rec = 1
 							end
@@ -1298,7 +1323,8 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 				tCen = tCen .. "R: " .. score
 			end
 		end
-		uf.HealthTextBot:SetText(tCen)
+		uf.HealthTextTop2:SetHeight(16)
+		uf.HealthTextTop2:SetText(tCen)
 
 		local class, classEng, classIndex = UnitClass( unit )
 		if class ~= nil then
@@ -1336,7 +1362,15 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			end
 		end
 
-
+		if uf.HealthBackground.MythicIcon then
+			if UnitDebuff( unit, 396369 ) then
+				uf.HealthBackground.MythicIcon:SetTexture( 135769 ) -- "+"
+			elseif UnitDebuff( unit, 396364 ) then
+				uf.HealthBackground.MythicIcon:SetTexture( 135768 ) -- "-"
+			else
+				uf.HealthBackground.MythicIcon:SetTexture( nil )
+			end
+		end
 
 		local class, classEng, classID = UnitClass( unit )
 		local t = CLASS_ICON_TCOORDS[select(2, UnitClass( unit ))]
@@ -1661,7 +1695,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		-- Debuff
 		local idde = 1
 		for i = 1, 20 do
-			local name, icon, count, debuffType, duration, expirationTime, unitCaster = UnitDebuff(unit, i)
+			local name, icon, count, debuffType, duration, expirationTime, unitCaster = UnitDebuff(unit, i, "RAID")
 			if idde > DRF_MAX_DEBUFFS then
 				break
 			end
