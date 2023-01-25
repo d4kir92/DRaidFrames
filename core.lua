@@ -264,21 +264,32 @@ function DRaidFrames:SavePosition()
 end
 
 function DRaidFrames:UpdatePosition()
-	local point = DRFTAB["DRF" .. "point"]
-	local parent = DRFTAB["DRF" .. "parent"]
-	local relativePoint = DRFTAB["DRF" .. "relativePoint"]
-	local ofsx = DRFTAB["DRF" .. "ofsx"]
-	local ofsy = DRFTAB["DRF" .. "ofsy"]
-	if IsInRaid() and DRFTAB["DRFR" .. "point"] then
-		point = DRFTAB["DRFR" .. "point"]
-		parent = DRFTAB["DRFR" .. "parent"]
-		relativePoint = DRFTAB["DRFR" .. "relativePoint"]
-		ofsx = DRFTAB["DRFR" .. "ofsx"]
-		ofsy = DRFTAB["DRFR" .. "ofsy"]
-	end
-	if point and frameStatus then
-		DRF:ClearAllPoints()
-		DRF:SetPoint( point, parent, relativePoint, ofsx, ofsy )
+	if not InCombatLockdown() then
+		if IsInRaid() and DRFTAB["DRFR" .. "point"] then
+			local point = DRFTAB["DRFR" .. "point"]
+			local parent = DRFTAB["DRFR" .. "parent"]
+			local relativePoint = DRFTAB["DRFR" .. "relativePoint"]
+			local ofsx = DRFTAB["DRFR" .. "ofsx"]
+			local ofsy = DRFTAB["DRFR" .. "ofsy"]
+
+			if point and relativePoint then
+				DRF:ClearAllPoints()
+				DRF:SetPoint( point, parent, relativePoint, ofsx, ofsy )
+			end
+		elseif DRFTAB["DRF" .. "point"] then
+			local point = DRFTAB["DRF" .. "point"]
+			local parent = DRFTAB["DRF" .. "parent"]
+			local relativePoint = DRFTAB["DRF" .. "relativePoint"]
+			local ofsx = DRFTAB["DRF" .. "ofsx"]
+			local ofsy = DRFTAB["DRF" .. "ofsy"]
+
+			if point and relativePoint then
+				DRF:ClearAllPoints()
+				DRF:SetPoint( point, parent, relativePoint, ofsx, ofsy )
+			end
+		end
+	else
+		C_Timer.After( 0.01, DRaidFrames.UpdatePosition )
 	end
 end
 
@@ -1707,7 +1718,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 						uf.BuffBar[idbu].Icon:SetTexture(icon);
 					end
 
-					if count and count > 1 then
+					if uf.BuffBar[idbu].count and count and count > 1 then
 						local countText = count;
 						if ( count >= 100 ) then
 							countText = BUFF_STACKS_OVERFLOW;
@@ -1781,14 +1792,14 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 						uf.DebuffBar[idde].Icon:SetTexture(icon);
 					end
 
-					if count and count > 1 then
+					if uf.DebuffBar[idde].count and count and count > 1 then
 						local countText = count;
 						if ( count >= 100 ) then
 							countText = BUFF_STACKS_OVERFLOW;
 						end
 						uf.DebuffBar[idde].count:Show();
 						uf.DebuffBar[idde].count:SetText(countText);
-					else
+					elseif uf.DebuffBar[idde].count then
 						uf.DebuffBar[idde].count:Hide();
 					end
 
