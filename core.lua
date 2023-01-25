@@ -228,18 +228,12 @@ function DRaidFrames:UnitXP( unit )
 	if IATAB and IATAB.UnitXP then
 		return IATAB:UnitXP( unit )
 	end
-	if MAIUnitXP then
-		return MAIUnitXP( unit )
-	end
 	return 0
 end
 
 function DRaidFrames:UnitXPMax( unit )
 	if IATAB and IATAB.UnitXPMax then
 		return IATAB:UnitXPMax( unit )
-	end
-	if MAIUnitXPMax then
-		return MAIUnitXPMax( unit )
 	end
 	return 1
 end
@@ -251,6 +245,43 @@ DRF:SetUserPlaced(true)
 DRF:EnableMouse(true)
 DRF:RegisterForDrag("LeftButton")
 DRF:SetClampedToScreen(true)
+
+function DRaidFrames:SavePosition()
+	local point, parent, relativePoint, ofsx, ofsy = DRF:GetPoint()
+	if IsInRaid() then
+		DRFTAB["DRFR" .. "point"] = point
+		DRFTAB["DRFR" .. "parent"] = parent
+		DRFTAB["DRFR" .. "relativePoint"] = relativePoint
+		DRFTAB["DRFR" .. "ofsx"] = ofsx
+		DRFTAB["DRFR" .. "ofsy"] = ofsy
+	else
+		DRFTAB["DRF" .. "point"] = point
+		DRFTAB["DRF" .. "parent"] = parent
+		DRFTAB["DRF" .. "relativePoint"] = relativePoint
+		DRFTAB["DRF" .. "ofsx"] = ofsx
+		DRFTAB["DRF" .. "ofsy"] = ofsy
+	end
+end
+
+function DRaidFrames:UpdatePosition()
+	local point = DRFTAB["DRF" .. "point"]
+	local parent = DRFTAB["DRF" .. "parent"]
+	local relativePoint = DRFTAB["DRF" .. "relativePoint"]
+	local ofsx = DRFTAB["DRF" .. "ofsx"]
+	local ofsy = DRFTAB["DRF" .. "ofsy"]
+	if IsInRaid() and DRFTAB["DRFR" .. "point"] then
+		point = DRFTAB["DRFR" .. "point"]
+		parent = DRFTAB["DRFR" .. "parent"]
+		relativePoint = DRFTAB["DRFR" .. "relativePoint"]
+		ofsx = DRFTAB["DRFR" .. "ofsx"]
+		ofsy = DRFTAB["DRFR" .. "ofsy"]
+	end
+	if point and frameStatus then
+		DRF:ClearAllPoints()
+		DRF:SetPoint( point, parent, relativePoint, ofsx, ofsy )
+	end
+end
+
 DRF.isMoving = false
 DRF:SetScript("OnDragStart", function(self)
 	DRF:StartMoving()
@@ -259,15 +290,17 @@ end)
 DRF:SetScript("OnDragStop",  function(self)
 	DRF:StopMovingOrSizing()
 	DRF.isMoving = false
-
-	local point, parent, relativePoint, ofsx, ofsy = self:GetPoint()
-			
-	DRFTAB["DRF" .. "point"] = point
-	DRFTAB["DRF" .. "parent"] = parent
-	DRFTAB["DRF" .. "relativePoint"] = relativePoint
-	DRFTAB["DRF" .. "ofsx"] = ofsx
-	DRFTAB["DRF" .. "ofsy"] = ofsy
+	DRaidFrames:SavePosition()
 end)
+
+DRF.isInRaid = false
+DRF:HookScript( "OnUpdate", function( self, ... )
+	if DRF.isInRaid ~= IsInRaid() then
+		DRF.isInRaid = IsInRaid()
+		DRaidFrames:UpdatePosition()
+	end
+end )
+
 DRF:SetPoint("CENTER", 0, 0)
 
 DRF.texture = DRF:CreateTexture(nil, "BACKGROUND")
@@ -400,10 +433,11 @@ for group = 1, 8 do
 		DRF.UFS[id].BuffBar:SetSize(DRF_MAX_BUFFS * 18, 18)
 		DRF.UFS[id].BuffBar:SetPoint("BOTTOMRIGHT", DRF.UFS[id].HealthBackground, "BOTTOMRIGHT", 0, 0)
 		for i = 1, DRF_MAX_BUFFS do
-			if true then
+			if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
 				DRF.UFS[id].BuffBar[i] = CreateFrame("Button", "DRFBUFF" .. id .. "_" .. i, DRF.UFS[id].BuffBar, "BuffButtonTemplate");
 			else
-				DRF.UFS[id].BuffBar[i] = CreateFrame("Button", "DRFBUFF" .. id .. "_" .. i, DRF.UFS[id].BuffBar);
+				DRF.UFS[id].BuffBar[i] = CreateFrame("Button", "DRFBUFF" .. id .. "_" .. i, DRF.UFS[id].BuffBar, "AuraButtonTemplate");
+				DRF.UFS[id].BuffBar[i]:UpdateAuraType("Buff")
 			end
 			DRF.UFS[id].BuffBar[i].buttonInfo = {}
 			DRF.UFS[id].BuffBar[i].buttonInfo.expirationTime = -1
@@ -433,6 +467,13 @@ for group = 1, 8 do
 				end )
 				duration:Hide()
 			end
+			if DRF.UFS[id].BuffBar[i].Duration ~= nil then
+				local duration = DRF.UFS[id].BuffBar[i].Duration
+				hooksecurefunc( duration, "Show", function( self )
+					self:Hide()
+				end )
+				duration:Hide()
+			end
 		end
 
 		-- Debuff
@@ -440,10 +481,11 @@ for group = 1, 8 do
 		DRF.UFS[id].DebuffBar:SetSize(DRF_MAX_DEBUFFS * 18, 18)
 		DRF.UFS[id].DebuffBar:SetPoint("BOTTOMLEFT", DRF.UFS[id].HealthBackground, "BOTTOMLEFT", 0, 0)
 		for i = 1, DRF_MAX_DEBUFFS do
-			if true then
+			if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
 				DRF.UFS[id].DebuffBar[i] = CreateFrame("Button", "DRFDEBUFF" .. id .. "_" .. i, DRF.UFS[id].DebuffBar, "DebuffButtonTemplate");
 			else
-				DRF.UFS[id].DebuffBar[i] = CreateFrame("Button", "DRFDEBUFF" .. id .. "_" .. i, DRF.UFS[id].DebuffBar);
+				DRF.UFS[id].DebuffBar[i] = CreateFrame("Button", "DRFDEBUFF" .. id .. "_" .. i, DRF.UFS[id].DebuffBar, "AuraButtonTemplate");
+				DRF.UFS[id].DebuffBar[i]:UpdateAuraType("Debuff")
 			end
 			DRF.UFS[id].DebuffBar[i].buttonInfo = {}
 			DRF.UFS[id].DebuffBar[i].buttonInfo.expirationTime = -1
@@ -473,6 +515,13 @@ for group = 1, 8 do
 
 			if _G["DRFDEBUFF" .. id .. "_" .. i .. "Duration"] ~= nil then
 				local duration = _G["DRFDEBUFF" .. id .. "_" .. i .. "Duration"]
+				hooksecurefunc( duration, "Show", function( self )
+					self:Hide()
+				end )
+				duration:Hide()
+			end
+			if DRF.UFS[id].DebuffBar[i].Duration ~= nil then
+				local duration = DRF.UFS[id].DebuffBar[i].Duration
 				hooksecurefunc( duration, "Show", function( self )
 					self:Hide()
 				end )
@@ -1000,19 +1049,23 @@ function DRaidFrames:UpdateSize()
 				DRF.UFS[id].DebuffBar:SetPoint("BOTTOMLEFT", DRF.UFS[id].HealthBackground, "BOTTOMLEFT", 0, 0)
 
 				for i = 1, DRF_MAX_BUFFS do
-					DRF.UFS[id].BuffBar[i]:SetPoint("TOPRIGHT", DRF.UFS[id].BuffBar, "TOPRIGHT", -(i - 1) * BUSI, 0)
-					DRF.UFS[id].BuffBar[i]:SetSize(BUSI, BUSI)
-					if DRF.UFS[id].BuffBar[i].Icon then
-						DRF.UFS[id].BuffBar[i].Icon:SetSize(BUSI, BUSI)
+					if DRF.UFS[id].BuffBar[i] then
+						DRF.UFS[id].BuffBar[i]:SetPoint("TOPRIGHT", DRF.UFS[id].BuffBar, "TOPRIGHT", -(i - 1) * BUSI, 0)
+						DRF.UFS[id].BuffBar[i]:SetSize(BUSI, BUSI)
+						if DRF.UFS[id].BuffBar[i].Icon then
+							DRF.UFS[id].BuffBar[i].Icon:SetSize(BUSI, BUSI)
+						end
 					end
 
-					DRF.UFS[id].DebuffBar[i]:SetPoint("TOPLEFT", DRF.UFS[id].DebuffBar, "TOPLEFT", (i - 1) * DESI, 0)
-					DRF.UFS[id].DebuffBar[i]:SetSize(DESI, DESI)
-					if DRF.UFS[id].DebuffBar[i].Icon then
-						DRF.UFS[id].DebuffBar[i].Icon:SetSize(DESI, DESI)
-					end
-					if DRF.UFS[id].DebuffBar[i].Border ~= nil then
-						DRF.UFS[id].DebuffBar[i].Border:SetSize(DESI, DESI)
+					if DRF.UFS[id].DebuffBar[i] then
+						DRF.UFS[id].DebuffBar[i]:SetPoint("TOPLEFT", DRF.UFS[id].DebuffBar, "TOPLEFT", (i - 1) * DESI, 0)
+						DRF.UFS[id].DebuffBar[i]:SetSize(DESI, DESI)
+						if DRF.UFS[id].DebuffBar[i].Icon then
+							DRF.UFS[id].DebuffBar[i].Icon:SetSize(DESI, DESI)
+						end
+						if DRF.UFS[id].DebuffBar[i].Border ~= nil then
+							DRF.UFS[id].DebuffBar[i].Border:SetSize(DESI, DESI)
+						end
 					end
 				end
 
@@ -1648,37 +1701,41 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 					end
 				end
 			end]]
-			if name and (unitCaster ~= nil) and (MAIBUILD ~= "RETAIL" or MAIBUILD == "RETAIL" and duration > 0) then -- "player" or unitCaster == "pet" or unitCaster == "mouseover") then
-				if uf.BuffBar[idbu].Icon ~= nil then
-					uf.BuffBar[idbu].Icon:SetTexture(icon);
-				end
-
-				if count and count > 1 then
-					local countText = count;
-					if ( count >= 100 ) then
-						countText = BUFF_STACKS_OVERFLOW;
+			if name then
+				if name and (unitCaster ~= nil) and (DRaidFrames:GetWoWBuild() ~= "RETAIL" or DRaidFrames:GetWoWBuild() == "RETAIL" and duration > 0) then -- "player" or unitCaster == "pet" or unitCaster == "mouseover") then
+					if uf.BuffBar[idbu].Icon ~= nil then
+						uf.BuffBar[idbu].Icon:SetTexture(icon);
 					end
-					if uf.BuffBar[idbu].count then
-						uf.BuffBar[idbu].count:Show();
-						uf.BuffBar[idbu].count:SetText(countText);
-					end
-				else
-					if uf.BuffBar[idbu].count then
-						uf.BuffBar[idbu].count:Hide();
-					end
-				end
 
-				local enabled = expirationTime and expirationTime ~= 0;
-				if enabled and duration > 0 then
-					local startTime = expirationTime - duration;
-					CooldownFrame_Set(uf.BuffBar[idbu].cooldown, startTime, duration, true);
-				else
-					CooldownFrame_Clear(uf.BuffBar[idbu].cooldown);
-				end
+					if count and count > 1 then
+						local countText = count;
+						if ( count >= 100 ) then
+							countText = BUFF_STACKS_OVERFLOW;
+						end
+						if uf.BuffBar[idbu].count then
+							uf.BuffBar[idbu].count:Show();
+							uf.BuffBar[idbu].count:SetText(countText);
+						end
+					else
+						if uf.BuffBar[idbu].count then
+							uf.BuffBar[idbu].count:Hide();
+						end
+					end
 
+					local enabled = expirationTime and expirationTime ~= 0;
+					if enabled and duration > 0 then
+						local startTime = expirationTime - duration;
+						CooldownFrame_Set(uf.BuffBar[idbu].cooldown, startTime, duration, true);
+					else
+						CooldownFrame_Clear(uf.BuffBar[idbu].cooldown);
+					end
+
+					uf.BuffBar[idbu]:Show()
+					idbu = idbu + 1
+				end
+			else
+				uf.BuffBar[idbu]:Hide()
 				idbu = idbu + 1
-			elseif name == nil then
-				break
 			end
 		end
 		for i = idbu, DRF_MAX_BUFFS do
@@ -1703,95 +1760,101 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			if idde > DRF_MAX_DEBUFFS then
 				break
 			end
-			local allowed = false
-			if debuffType ~= nil then
-				if IsInRaid() then
-					allowed = DRaidFrames:GetConfig("R" .. debuffType, true, true)
+			if name then
+				local allowed = false
+				if debuffType ~= nil then
+					if IsInRaid() then
+						allowed = DRaidFrames:GetConfig("R" .. debuffType, true, true)
+					else
+						allowed = DRaidFrames:GetConfig("G" .. debuffType, true, true)
+					end
 				else
-					allowed = DRaidFrames:GetConfig("G" .. debuffType, true, true)
+					if IsInRaid() then
+						allowed = DRaidFrames:GetConfig("R" .. "None", true, true)
+					else
+						allowed = DRaidFrames:GetConfig("G" .. "None", true, true)
+					end
+				end
+
+				if name ~= nil and (unitCaster == "player" or debuffType ~= nil) and allowed then
+					if uf.DebuffBar[idde].Icon ~= nil then
+						uf.DebuffBar[idde].Icon:SetTexture(icon);
+					end
+
+					if count and count > 1 then
+						local countText = count;
+						if ( count >= 100 ) then
+							countText = BUFF_STACKS_OVERFLOW;
+						end
+						uf.DebuffBar[idde].count:Show();
+						uf.DebuffBar[idde].count:SetText(countText);
+					else
+						uf.DebuffBar[idde].count:Hide();
+					end
+
+					if uf.DebuffBar[idde].Border then
+						local color = DebuffTypeColor["none"]
+						if DebuffTypeColor[debuffType] ~= nil then
+							color = DebuffTypeColor[debuffType]
+						end
+						uf.DebuffBar[idde].Border:SetVertexColor(color.r, color.g, color.b);
+						uf.DebuffBar[idde].Border:Show()
+
+						if uf.DebuffBar[idde].symbol then
+							local fontFamily, fontSize, fontFlags = uf.DebuffBar[idde].symbol:GetFont()
+							uf.DebuffBar[idde].symbol:SetFont(fontFamily, 9, fontFlags)
+							uf.DebuffBar[idde].symbol:SetWidth(DESI)
+							uf.DebuffBar[idde].symbol:SetHeight(DESI / 2)
+							if DebuffTypeSymbol[debuffType] ~= nil then
+								uf.DebuffBar[idde].symbol:SetText(DebuffTypeSymbol[debuffType]);
+							end
+							uf.DebuffBar[idde].symbol:SetVertexColor(color.r, color.g, color.b);
+						end
+					end
+
+					uf.DebuffBar[idde]:SetID(i);
+					uf.DebuffBar[idde].unit = unit;
+					uf.DebuffBar[idde].filter = nil;
+					uf.DebuffBar[idde]:SetAlpha(1.0);
+					uf.DebuffBar[idde].exitTime = nil;
+					uf.DebuffBar[idde]:Show();
+
+					local enabled = expirationTime and expirationTime ~= 0;
+					if enabled then
+						local startTime = expirationTime - duration;
+						CooldownFrame_Set(uf.DebuffBar[idde].cooldown, startTime, duration, true);
+					else
+						CooldownFrame_Clear(uf.DebuffBar[idde].cooldown);
+					end
+
+					uf.DebuffBar[idde]:Show()
+					idde = idde + 1
 				end
 			else
-				if IsInRaid() then
-					allowed = DRaidFrames:GetConfig("R" .. "None", true, true)
-				else
-					allowed = DRaidFrames:GetConfig("G" .. "None", true, true)
-				end
-			end
-
-			if name ~= nil and (unitCaster == "player" or debuffType ~= nil) and allowed then
-				if uf.DebuffBar[idde].Icon ~= nil then
-					uf.DebuffBar[idde].Icon:SetTexture(icon);
-				end
-
-				if count and count > 1 then
-					local countText = count;
-					if ( count >= 100 ) then
-						countText = BUFF_STACKS_OVERFLOW;
-					end
-					uf.DebuffBar[idde].count:Show();
-					uf.DebuffBar[idde].count:SetText(countText);
-				else
-					uf.DebuffBar[idde].count:Hide();
-				end
-
-				if uf.DebuffBar[idde].Border then
-					local color = DebuffTypeColor["none"]
-					if DebuffTypeColor[debuffType] ~= nil then
-						color = DebuffTypeColor[debuffType]
-					end
-					uf.DebuffBar[idde].Border:SetVertexColor(color.r, color.g, color.b);
-					uf.DebuffBar[idde].Border:Show()
-
-					if uf.DebuffBar[idde].symbol then
-						local fontFamily, fontSize, fontFlags = uf.DebuffBar[idde].symbol:GetFont()
-						uf.DebuffBar[idde].symbol:SetFont(fontFamily, 9, fontFlags)
-						uf.DebuffBar[idde].symbol:SetWidth(DESI)
-						uf.DebuffBar[idde].symbol:SetHeight(DESI / 2)
-						if DebuffTypeSymbol[debuffType] ~= nil then
-							uf.DebuffBar[idde].symbol:SetText(DebuffTypeSymbol[debuffType]);
-						end
-						uf.DebuffBar[idde].symbol:SetVertexColor(color.r, color.g, color.b);
-					end
-				end
-
-				uf.DebuffBar[idde]:SetID(i);
-				uf.DebuffBar[idde].unit = unit;
-				uf.DebuffBar[idde].filter = nil;
-				uf.DebuffBar[idde]:SetAlpha(1.0);
-				uf.DebuffBar[idde].exitTime = nil;
-				uf.DebuffBar[idde]:Show();
-
-				local enabled = expirationTime and expirationTime ~= 0;
-				if enabled then
-					local startTime = expirationTime - duration;
-					CooldownFrame_Set(uf.DebuffBar[idde].cooldown, startTime, duration, true);
-				else
-					CooldownFrame_Clear(uf.DebuffBar[idde].cooldown);
-				end
-
+				uf.DebuffBar[idde]:Hide()
 				idde = idde + 1
-			elseif name == nil then
-				break
 			end
 		end
 		for i = idde, DRF_MAX_DEBUFFS do
-			if uf.DebuffBar[i].Icon ~= nil then
-				uf.DebuffBar[i].Icon:SetTexture(nil);
-			end
+			if uf.DebuffBar[i] then
+				if uf.DebuffBar[i].Icon ~= nil then
+					uf.DebuffBar[i].Icon:SetTexture(nil);
+				end
 
-			if uf.DebuffBar[i].symbol then
-				uf.DebuffBar[i].symbol:SetText("");
-			end
+				if uf.DebuffBar[i].symbol then
+					uf.DebuffBar[i].symbol:SetText("");
+				end
 
-			if uf.DebuffBar[i].Border ~= nil then
-				uf.DebuffBar[i].Border:Hide()
-			end
+				if uf.DebuffBar[i].Border ~= nil then
+					uf.DebuffBar[i].Border:Hide()
+				end
 
-			if uf.DebuffBar[i].count ~= nil then
-				uf.DebuffBar[i].count:Hide();
-			end
+				if uf.DebuffBar[i].count ~= nil then
+					uf.DebuffBar[i].count:Hide();
+				end
 
-			CooldownFrame_Clear(uf.DebuffBar[i].cooldown);
+				CooldownFrame_Clear(uf.DebuffBar[i].cooldown);
+			end
 		end
 
 		if UnitInRange( unit ) or unit == "PLAYER" then -- or unit == player, because unitinrange("player") == nil
@@ -1929,15 +1992,7 @@ end
 
 function DRaidFrames:Setup( force )
 	if not InCombatLockdown() or force then
-		point = DRFTAB["DRF" .. "point"]
-		parent = DRFTAB["DRF" .. "parent"]
-		relativePoint = DRFTAB["DRF" .. "relativePoint"]
-		ofsx = DRFTAB["DRF" .. "ofsx"]
-		ofsy = DRFTAB["DRF" .. "ofsy"]
-		if point and frameStatus then
-			DRF:ClearAllPoints()
-			DRF:SetPoint( point, parent, relativePoint, ofsx, ofsy )
-		end
+		DRaidFrames:UpdatePosition()
 	else
 		C_Timer.After(0.1, DRaidFrames.Setup)
 	end
