@@ -1,7 +1,5 @@
 -- LIB Design
-
-local AddOnName, DRaidFrames = ...
-
+local _, DRaidFrames = ...
 local lang = {}
 
 function DRaidFrames:GetLangTab()
@@ -11,16 +9,19 @@ end
 function DRaidFrames:GT(str, tab)
 	local strid = str
 	local result = DRaidFrames:GetLangTab()[strid]
+
 	if result ~= nil then
 		if tab ~= nil then
 			for i, v in pairs(tab) do
 				local find = i -- "[" .. i .. "]"
 				local replace = v
+
 				if find ~= nil and replace ~= nil then
 					result = string.gsub(result, find, replace)
 				end
 			end
 		end
+
 		return result
 	else
 		return str
@@ -29,6 +30,7 @@ end
 
 function DRaidFrames:UpdateLanguage()
 	DRaidFrames:DRFLangenUS()
+
 	if GetLocale() == "enUS" then
 		DRaidFrames:DRFLangenUS()
 	elseif GetLocale() == "deDE" then
@@ -39,4 +41,5 @@ function DRaidFrames:UpdateLanguage()
 		DRaidFrames:DRFLangzhTW()
 	end
 end
+
 DRaidFrames:UpdateLanguage()
