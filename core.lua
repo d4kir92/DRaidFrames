@@ -7,13 +7,11 @@ local DRF_MAX_DEBUFFS = 8
 -- "Globals"
 local DRFReadyStatus = ""
 local DRFUNITSGROUP = {}
-
 for i = 1, 4 do
 	tinsert(DRFUNITSGROUP, "PARTY" .. i)
 end
 
 local DRFUNITSRAID = {}
-
 for i = 1, 40 do
 	tinsert(DRFUNITSRAID, "RAID" .. i)
 end
@@ -44,7 +42,6 @@ DRFLayers["RankIcon"] = 3
 DRFLayers["RankIcon2"] = 3
 DRFLayers["ReadyCheck"] = 3
 DRFLayers["Highlight"] = 4
-
 if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
 	local DRFHealTab = {}
 	local DRFIncomingHeals = {}
@@ -58,10 +55,8 @@ if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
 	IncomingHealTarget:SetSize(TargetFrameHealthBar:GetWidth(), TargetFrameHealthBar:GetHeight())
 	IncomingHealTarget:SetPoint("LEFT", tfhp, "RIGHT", 0, 0)
 	IncomingHealTarget:SetColorTexture(0, 0, 0, 0)
-
 	function DRaidFrames:UpdateBLIZZUI()
 		local pw = PlayerFrameHealthBar:GetWidth()
-
 		if pw and UnitGetIncomingHeals("PLAYER") ~= 0 then
 			local pre = pw * UnitGetIncomingHeals("PLAYER") / UnitHealthMax("PLAYER")
 			IncomingHealPlayer:SetSize(pre, PlayerFrameHealthBar:GetHeight())
@@ -79,7 +74,6 @@ if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
 		end
 
 		local tw = TargetFrameHealthBar:GetWidth()
-
 		if tw and UnitGetIncomingHeals("TARGET") ~= 0 then
 			local pre = tw * UnitGetIncomingHeals("TARGET") / UnitHealthMax("TARGET")
 			IncomingHealTarget:SetSize(pre, TargetFrameHealthBar:GetHeight())
@@ -96,80 +90,72 @@ if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
 	f:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 	f:RegisterEvent("UNIT_SPELLCAST_STOP")
 	f:RegisterEvent("UNIT_SPELLCAST_FAILED")
+	f:SetScript(
+		"OnEvent",
+		function(self, event, ...)
+			if event == "UNIT_SPELLCAST_SENT" then
+				local unit, target, _, spellID = ...
+				local heal = 1
+				for i, v in pairs({string.split(" ", GetSpellDescription(spellID))}) do
+					if type(tonumber(v)) == "number" then
+						heal = v
+						break
+					end
+				end
 
-	f:SetScript("OnEvent", function(self, event, ...)
-		if event == "UNIT_SPELLCAST_SENT" then
-			local unit, target, _, spellID = ...
-			local heal = 1
+				if spellID and target then
+					DRFHealTab[target] = unit
+					DRFHealTab[unit] = target
+					if DRFIncomingHeals[target] == nil then
+						DRFIncomingHeals[target] = {}
+					end
 
-			for i, v in pairs({string.split(" ", GetSpellDescription(spellID))}) do
-				if type(tonumber(v)) == "number" then
-					heal = v
-					break
+					DRFIncomingHeals[target][unit] = heal
+				end
+			elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
+				local unit, _, spellID = ...
+				local target = DRFHealTab[unit]
+				if spellID and target then
+					DRFHealTab[unit] = nil
+					DRFHealTab[target] = nil
+					DRFIncomingHeals[target][unit] = nil
+					if getn(DRFIncomingHeals[target]) == 0 then
+						DRFIncomingHeals[target] = nil
+					end
+				end
+			elseif event == "UNIT_SPELLCAST_STOP" then
+				local unit, _, spellID = ...
+				local target = DRFHealTab[unit]
+				if spellID and target then
+					DRFHealTab[unit] = nil
+					DRFHealTab[target] = nil
+					DRFIncomingHeals[target][unit] = nil
+					if getn(DRFIncomingHeals[target]) == 0 then
+						DRFIncomingHeals[target] = nil
+					end
+				end
+			elseif event == "UNIT_SPELLCAST_FAILED" then
+				local unit, _, spellID = ...
+				local target = DRFHealTab[unit]
+				if spellID and target then
+					DRFHealTab[unit] = nil
+					DRFHealTab[target] = nil
+					DRFIncomingHeals[target][unit] = nil
+					if getn(DRFIncomingHeals[target]) == 0 then
+						DRFIncomingHeals[target] = nil
+					end
 				end
 			end
 
-			if spellID and target then
-				DRFHealTab[target] = unit
-				DRFHealTab[unit] = target
-
-				if DRFIncomingHeals[target] == nil then
-					DRFIncomingHeals[target] = {}
-				end
-
-				DRFIncomingHeals[target][unit] = heal
-			end
-		elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
-			local unit, _, spellID = ...
-			local target = DRFHealTab[unit]
-
-			if spellID and target then
-				DRFHealTab[unit] = nil
-				DRFHealTab[target] = nil
-				DRFIncomingHeals[target][unit] = nil
-
-				if getn(DRFIncomingHeals[target]) == 0 then
-					DRFIncomingHeals[target] = nil
-				end
-			end
-		elseif event == "UNIT_SPELLCAST_STOP" then
-			local unit, _, spellID = ...
-			local target = DRFHealTab[unit]
-
-			if spellID and target then
-				DRFHealTab[unit] = nil
-				DRFHealTab[target] = nil
-				DRFIncomingHeals[target][unit] = nil
-
-				if getn(DRFIncomingHeals[target]) == 0 then
-					DRFIncomingHeals[target] = nil
-				end
-			end
-		elseif event == "UNIT_SPELLCAST_FAILED" then
-			local unit, _, spellID = ...
-			local target = DRFHealTab[unit]
-
-			if spellID and target then
-				DRFHealTab[unit] = nil
-				DRFHealTab[target] = nil
-				DRFIncomingHeals[target][unit] = nil
-
-				if getn(DRFIncomingHeals[target]) == 0 then
-					DRFIncomingHeals[target] = nil
-				end
-			end
+			DRaidFrames:UpdateBLIZZUI()
 		end
-
-		DRaidFrames:UpdateBLIZZUI()
-	end)
+	)
 
 	function UnitGetIncomingHeals(unit)
 		local target = UnitName(unit)
 		local isPlayer = UnitIsPlayer(unit)
-
 		if target then
 			local heals = 0
-
 			if DRFIncomingHeals[target] then
 				for i, v in pairs(DRFIncomingHeals[target]) do
 					if isPlayer then
@@ -196,7 +182,6 @@ end
 function DRaidFrames:UnitName(unit, showrealm)
 	if UnitExists(unit) then
 		local name, realm = UnitName(unit)
-
 		if SM_CHARNAME then
 			local pn = UnitName("player")
 			if name == pn then return SM_CHARNAME end
@@ -218,7 +203,6 @@ end
 
 function DRaidFrames:GetMaxLevel()
 	local maxlevel = 60
-
 	if DRaidFrames:GetWoWBuild() == "TBC" then
 		maxlevel = 70
 	end
@@ -257,10 +241,8 @@ DRF:SetUserPlaced(true)
 DRF:EnableMouse(true)
 DRF:RegisterForDrag("LeftButton")
 DRF:SetClampedToScreen(true)
-
 function DRaidFrames:SavePosition()
 	local point, parent, relativePoint, ofsx, ofsy = DRF:GetPoint()
-
 	if IsInRaid() then
 		DRFTAB["DRFR" .. "point"] = point
 		DRFTAB["DRFR" .. "parent"] = parent
@@ -284,7 +266,6 @@ function DRaidFrames:UpdatePosition()
 			local relativePoint = DRFTAB["DRFR" .. "relativePoint"]
 			local ofsx = DRFTAB["DRFR" .. "ofsx"]
 			local ofsy = DRFTAB["DRFR" .. "ofsy"]
-
 			if point and relativePoint then
 				DRF:ClearAllPoints()
 				DRF:SetPoint(point, parent, relativePoint, ofsx, ofsy)
@@ -295,7 +276,6 @@ function DRaidFrames:UpdatePosition()
 			local relativePoint = DRFTAB["DRF" .. "relativePoint"]
 			local ofsx = DRFTAB["DRF" .. "ofsx"]
 			local ofsy = DRFTAB["DRF" .. "ofsy"]
-
 			if point and relativePoint then
 				DRF:ClearAllPoints()
 				DRF:SetPoint(point, parent, relativePoint, ofsx, ofsy)
@@ -307,32 +287,38 @@ function DRaidFrames:UpdatePosition()
 end
 
 DRF.isMoving = false
+DRF:SetScript(
+	"OnDragStart",
+	function(self)
+		DRF:StartMoving()
+		DRF.isMoving = true
+	end
+)
 
-DRF:SetScript("OnDragStart", function(self)
-	DRF:StartMoving()
-	DRF.isMoving = true
-end)
-
-DRF:SetScript("OnDragStop", function(self)
-	DRF:StopMovingOrSizing()
-	DRF.isMoving = false
-	DRaidFrames:SavePosition()
-end)
+DRF:SetScript(
+	"OnDragStop",
+	function(self)
+		DRF:StopMovingOrSizing()
+		DRF.isMoving = false
+		DRaidFrames:SavePosition()
+	end
+)
 
 DRF.isInRaid = false
-
-DRF:HookScript("OnUpdate", function(self, ...)
-	if DRF.isInRaid ~= IsInRaid() then
-		DRF.isInRaid = IsInRaid()
-		DRaidFrames:UpdatePosition()
+DRF:HookScript(
+	"OnUpdate",
+	function(self, ...)
+		if DRF.isInRaid ~= IsInRaid() then
+			DRF.isInRaid = IsInRaid()
+			DRaidFrames:UpdatePosition()
+		end
 	end
-end)
+)
 
 DRF:SetPoint("CENTER", 0, 0)
 DRF.texture = DRF:CreateTexture(nil, "BACKGROUND")
 DRF.texture:SetAllPoints(DRF)
 DRF.texture:SetColorTexture(0, 0, 0, 1)
-
 function DRaidFrames:Think()
 	if MouseIsOver(DRF) then
 		DRF.texture:SetAlpha(0.5)
@@ -344,11 +330,9 @@ function DRaidFrames:Think()
 end
 
 DRaidFrames:Think()
-
 function DRaidFrames:UpdateTooltip(self)
 	if SHTO and self.unit and UnitExists(self.unit) then
 		GameTooltip_SetDefaultAnchor(GameTooltip, self)
-
 		if GameTooltip:SetUnit(self.unit, self.hideStatusOnTooltip) then
 			self.UpdateTooltip = self.UpdateTooltip
 		else
@@ -363,7 +347,6 @@ end
 DRF.UFS = {}
 -- Player Frames
 local id = 1
-
 for group = 1, 8 do
 	for ply = 1, 5 do
 		-- Player Box
@@ -377,7 +360,6 @@ for group = 1, 8 do
 		DRF.UFS[id].HealthBar:SetDrawLayer("ARTWORK", DRFLayers["HealthBar"])
 		DRF.UFS[id].HealthBar:SetTexture("Interface/Addons/DRaidFrames/media/bar") --"Interface/RaidFrame/Raid-Bar-Hp-Fill")
 		DRF.UFS[id].HealthBar:SetVertexColor(0.2, 1, 0.2)
-
 		if UnitGetIncomingHeals and UnitGetTotalAbsorbs then
 			DRF.UFS[id].Prediction = DRF.UFS[id]:CreateTexture(nil, "ARTWORK")
 			DRF.UFS[id].Prediction:SetDrawLayer("ARTWORK", DRFLayers["Prediction"])
@@ -438,7 +420,6 @@ for group = 1, 8 do
 		DRF.UFS[id].BuffBar = CreateFrame("Frame", "DRFBUFFBAR" .. id, DRF.UFS[id])
 		DRF.UFS[id].BuffBar:SetSize(DRF_MAX_BUFFS * 18, 18)
 		DRF.UFS[id].BuffBar:SetPoint("BOTTOMRIGHT", DRF.UFS[id].HealthBackground, "BOTTOMRIGHT", 0, 0)
-
 		for i = 1, DRF_MAX_BUFFS do
 			if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
 				DRF.UFS[id].BuffBar[i] = CreateFrame("Button", "DRFBUFF" .. id .. "_" .. i, DRF.UFS[id].BuffBar, "BuffButtonTemplate")
@@ -450,14 +431,12 @@ for group = 1, 8 do
 			DRF.UFS[id].BuffBar[i].buttonInfo = {}
 			DRF.UFS[id].BuffBar[i].buttonInfo.expirationTime = -1
 			DRF.UFS[id].BuffBar[i].parent = DRF.UFS[id].BuffBar
-
 			if DRF.UFS[id].BuffBar[i].Icon == nil then
 				DRF.UFS[id].BuffBar[i].Icon = _G["DRFBUFF" .. id .. "_" .. i .. "Icon"]
 			end
 
 			DRF.UFS[id].BuffBar[i]:EnableMouse(false)
 			DRF.UFS[id].BuffBar[i]:SetSize(18, 18)
-
 			if DRF.UFS[id].BuffBar[i].Icon then
 				DRF.UFS[id].BuffBar[i].Icon:SetSize(18, 18)
 			end
@@ -467,23 +446,28 @@ for group = 1, 8 do
 			DRF.UFS[id].BuffBar[i].cooldown:SetAllPoints(DRF.UFS[id].BuffBar[i])
 			DRF.UFS[id].BuffBar[i].cooldown:SetHideCountdownNumbers(true)
 			DRF.UFS[id].BuffBar[i].cooldown:SetReverse(true)
-
 			if _G["DRFBUFF" .. id .. "_" .. i .. "Duration"] ~= nil then
 				local duration = _G["DRFBUFF" .. id .. "_" .. i .. "Duration"]
-
-				hooksecurefunc(duration, "Show", function(self)
-					self:Hide()
-				end)
+				hooksecurefunc(
+					duration,
+					"Show",
+					function(self)
+						self:Hide()
+					end
+				)
 
 				duration:Hide()
 			end
 
 			if DRF.UFS[id].BuffBar[i].Duration ~= nil then
 				local duration = DRF.UFS[id].BuffBar[i].Duration
-
-				hooksecurefunc(duration, "Show", function(self)
-					self:Hide()
-				end)
+				hooksecurefunc(
+					duration,
+					"Show",
+					function(self)
+						self:Hide()
+					end
+				)
 
 				duration:Hide()
 			end
@@ -493,7 +477,6 @@ for group = 1, 8 do
 		DRF.UFS[id].DebuffBar = CreateFrame("Frame", "DRFDEBUFFBAR" .. id, DRF.UFS[id])
 		DRF.UFS[id].DebuffBar:SetSize(DRF_MAX_DEBUFFS * 18, 18)
 		DRF.UFS[id].DebuffBar:SetPoint("BOTTOMLEFT", DRF.UFS[id].HealthBackground, "BOTTOMLEFT", 0, 0)
-
 		for i = 1, DRF_MAX_DEBUFFS do
 			if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
 				DRF.UFS[id].DebuffBar[i] = CreateFrame("Button", "DRFDEBUFF" .. id .. "_" .. i, DRF.UFS[id].DebuffBar, "DebuffButtonTemplate")
@@ -505,7 +488,6 @@ for group = 1, 8 do
 			DRF.UFS[id].DebuffBar[i].buttonInfo = {}
 			DRF.UFS[id].DebuffBar[i].buttonInfo.expirationTime = -1
 			DRF.UFS[id].DebuffBar[i].parent = DRF.UFS[id].DebuffBar
-
 			if DRF.UFS[id].DebuffBar[i].Icon == nil then
 				DRF.UFS[id].DebuffBar[i].Icon = _G["DRFDEBUFF" .. id .. "_" .. i .. "Icon"]
 			end
@@ -526,23 +508,28 @@ for group = 1, 8 do
 			DRF.UFS[id].DebuffBar[i].cooldown:SetAllPoints(DRF.UFS[id].DebuffBar[i])
 			DRF.UFS[id].DebuffBar[i].cooldown:SetHideCountdownNumbers(true)
 			DRF.UFS[id].DebuffBar[i].cooldown:SetReverse(true)
-
 			if _G["DRFDEBUFF" .. id .. "_" .. i .. "Duration"] ~= nil then
 				local duration = _G["DRFDEBUFF" .. id .. "_" .. i .. "Duration"]
-
-				hooksecurefunc(duration, "Show", function(self)
-					self:Hide()
-				end)
+				hooksecurefunc(
+					duration,
+					"Show",
+					function(self)
+						self:Hide()
+					end
+				)
 
 				duration:Hide()
 			end
 
 			if DRF.UFS[id].DebuffBar[i].Duration ~= nil then
 				local duration = DRF.UFS[id].DebuffBar[i].Duration
-
-				hooksecurefunc(duration, "Show", function(self)
-					self:Hide()
-				end)
+				hooksecurefunc(
+					duration,
+					"Show",
+					function(self)
+						self:Hide()
+					end
+				)
 
 				duration:Hide()
 			end
@@ -554,9 +541,8 @@ for group = 1, 8 do
 		DRF.UFS[id].Aggro:SetTexture("Interface\\RaidFrame\\Raid-FrameHighlights")
 		DRF.UFS[id].Aggro:SetTexCoord(unpack(texCoords["Raid-AggroFrame"]))
 		DRF.UFS[id].Aggro:SetVertexColor(1, 0.2, 0.2)
-
 		-- Role Icon
-		if UnitGroupRolesAssigned then
+		if UnitGroupRolesAssigned and DRaidFrames:GetWoWBuildNr() > 19999 then
 			DRF.UFS[id].HealthBackground.RoleIcon = DRF.UFS[id]:CreateTexture(nil, "OVERLAY")
 			DRF.UFS[id].HealthBackground.RoleIcon:SetDrawLayer("OVERLAY", DRFLayers["RoleIcon"])
 			DRF.UFS[id].HealthBackground.RoleIcon:SetSize(18, 18)
@@ -627,17 +613,22 @@ for group = 1, 8 do
 		DRF.UFS[id].btn.Highlight:SetAllPoints(DRF.UFS[id].btn)
 		DRF.UFS[id].btn.Highlight:SetColorTexture(1, 1, 1)
 		local BTN = DRF.UFS[id].btn
-
-		BTN:SetScript("OnEnter", function(self)
-			if SHTO then
-				DRaidFrames:UpdateTooltip(self)
+		BTN:SetScript(
+			"OnEnter",
+			function(self)
+				if SHTO then
+					DRaidFrames:UpdateTooltip(self)
+				end
 			end
-		end)
+		)
 
-		BTN:SetScript("OnLeave", function(self)
-			self.UpdateTooltip = nil
-			GameTooltip:FadeOut()
-		end)
+		BTN:SetScript(
+			"OnLeave",
+			function(self)
+				self.UpdateTooltip = nil
+				GameTooltip:FadeOut()
+			end
+		)
 
 		function BTN.think()
 			if MouseIsOver(BTN) or BTN.unit and UnitIsUnit("TARGET", BTN.unit) then
@@ -657,15 +648,13 @@ end
 local function DRaidFrames_SortByRole(a, b)
 	local arole = "NONE" --UnitGroupRolesAssigned(a)
 	local brole = "NONE" --UnitGroupRolesAssigned(b)
-
-	if UnitGroupRolesAssigned ~= nil then
+	if UnitGroupRolesAssigned and DRaidFrames:GetWoWBuildNr() > 19999 then
 		arole = UnitGroupRolesAssigned(a)
 		brole = UnitGroupRolesAssigned(b)
 	end
 
 	local av = 1 -- 1 = NONE
 	local bv = 1 -- 1 = NONE
-
 	if arole == "TANK" then
 		av = 4
 	elseif arole == "HEALER" then
@@ -713,13 +702,11 @@ local function DRaidFrames_SortByGroup(unitA, unitB)
 
 	local unitAID = string.gsub(unitA, "RAID", "")
 	local unitBID = string.gsub(unitB, "RAID", "")
-
 	if unitAID and unitBID then
 		unitAID = tonumber(unitAID)
 		unitBID = tonumber(unitBID)
 		local _, _, a = GetRaidRosterInfo(unitAID)
 		local _, _, b = GetRaidRosterInfo(unitBID)
-
 		if not UnitExists(unitA) then
 			a = unitAID
 		end
@@ -735,17 +722,14 @@ local function DRaidFrames_SortByGroup(unitA, unitB)
 end
 
 local DRFSortedUnits = {}
-
 function DRaidFrames:SortUnits()
 	DRFSortedUnits = {}
-
 	if IsInRaid() then
 		for i, v in pairs(DRFUNITSRAID) do
 			tinsert(DRFSortedUnits, v)
 		end
 	elseif IsInGroup() then
 		tinsert(DRFSortedUnits, "PLAYER")
-
 		for i, v in pairs(DRFUNITSGROUP) do
 			tinsert(DRFSortedUnits, v)
 		end
@@ -783,7 +767,6 @@ local TECETY = "Health in Percent"
 local DRFSizing = true
 local DRFSizingForce = false
 local DRFUpdating = true
-
 function DRaidFrames:SetSizing(val)
 	DRFSizing = val
 end
@@ -838,7 +821,6 @@ function DRaidFrames:UpdateSize()
 		ELEM = DRaidFrames:GetConfig("GELEM", 5)
 		THREAT = DRaidFrames:GetConfig("GTHRE", true)
 		OORA = DRaidFrames:GetConfig("GOORA", 0.4)
-
 		if IsInRaid() then
 			OUBR = DRaidFrames:GetConfig("ROUBR", 6)
 			COSP = DRaidFrames:GetConfig("RCOSP", 20)
@@ -870,7 +852,6 @@ function DRaidFrames:UpdateSize()
 		PLHE = HEHE + POSI
 		local sw = 1
 		local sh = GetNumGroupMembers()
-
 		if sh == 0 then
 			sh = 1
 		end
@@ -901,7 +882,6 @@ function DRaidFrames:UpdateSize()
 		local pid = 1
 		local posx = 0
 		local posy = 0
-
 		for group = 1, 8 do
 			for ply = 1, 5 do
 				--posx = posx + 1
@@ -931,7 +911,6 @@ function DRaidFrames:UpdateSize()
 
 				-- PLAYER BUTTON
 				DRF.UFS[pid].btn:ClearAllPoints()
-
 				if GroupHorizontal then
 					if BarUp then
 						DRF.UFS[pid].btn:SetSize(PLWI, HEHE)
@@ -956,11 +935,9 @@ function DRaidFrames:UpdateSize()
 				DRF.UFS[pid].HealthBackground:SetPoint("TOPLEFT", DRF.UFS[pid], "TOPLEFT", 0, 0)
 				DRF.UFS[pid].HealthBar:SetSize(HEWI, HEHE)
 				DRF.UFS[pid].HealthBar:SetPoint("TOPLEFT", DRF.UFS[pid], "TOPLEFT", 0, 0)
-
 				if UnitGetIncomingHeals and UnitGetTotalAbsorbs then
 					DRF.UFS[pid].Prediction:ClearAllPoints()
 					DRF.UFS[pid].Absorb:ClearAllPoints()
-
 					if BarUp then
 						DRF.UFS[pid].Prediction:SetSize(HEWI, HEHE)
 						DRF.UFS[pid].Prediction:SetPoint("BOTTOMLEFT", DRF.UFS[pid].HealthBar, "TOPLEFT", 0, 0)
@@ -981,7 +958,6 @@ function DRaidFrames:UpdateSize()
 				DRF.UFS[pid].HealthTextTop:SetPoint("TOP", DRF.UFS[pid].HealthBackground, "TOP", 0, -3)
 				DRF.UFS[pid].HealthTextCen:SetPoint("CENTER", DRF.UFS[pid].HealthBackground, "CENTER", 0, 0)
 				DRF.UFS[pid].HealthTextTop2:SetPoint("TOP", DRF.UFS[pid].HealthBackground, "TOP", 0, -14)
-
 				-- Power Bar
 				if SHPO then
 					if BarUp then
@@ -1007,12 +983,10 @@ function DRaidFrames:UpdateSize()
 				DRF.UFS[pid].BuffBar:SetPoint("BOTTOMRIGHT", DRF.UFS[pid].HealthBackground, "BOTTOMRIGHT", 0, 0)
 				DRF.UFS[pid].DebuffBar:SetSize(DRF_MAX_BUFFS * DESI, DESI)
 				DRF.UFS[pid].DebuffBar:SetPoint("BOTTOMLEFT", DRF.UFS[pid].HealthBackground, "BOTTOMLEFT", 0, 0)
-
 				for i = 1, DRF_MAX_BUFFS do
 					if DRF.UFS[pid].BuffBar[i] then
 						DRF.UFS[pid].BuffBar[i]:SetPoint("TOPRIGHT", DRF.UFS[pid].BuffBar, "TOPRIGHT", -(i - 1) * BUSI, 0)
 						DRF.UFS[pid].BuffBar[i]:SetSize(BUSI, BUSI)
-
 						if DRF.UFS[pid].BuffBar[i].Icon then
 							DRF.UFS[pid].BuffBar[i].Icon:SetSize(BUSI, BUSI)
 						end
@@ -1021,7 +995,6 @@ function DRaidFrames:UpdateSize()
 					if DRF.UFS[pid].DebuffBar[i] then
 						DRF.UFS[pid].DebuffBar[i]:SetPoint("TOPLEFT", DRF.UFS[pid].DebuffBar, "TOPLEFT", (i - 1) * DESI, 0)
 						DRF.UFS[pid].DebuffBar[i]:SetSize(DESI, DESI)
-
 						if DRF.UFS[pid].DebuffBar[i].Icon then
 							DRF.UFS[pid].DebuffBar[i].Icon:SetSize(DESI, DESI)
 						end
@@ -1035,8 +1008,7 @@ function DRaidFrames:UpdateSize()
 				-- Aggro
 				DRF.UFS[pid].Aggro:ClearAllPoints()
 				DRF.UFS[pid].Aggro:SetAllPoints(DRF.UFS[pid])
-
-				if UnitGroupRolesAssigned then
+				if UnitGroupRolesAssigned and DRaidFrames:GetWoWBuildNr() > 19999 then
 					DRF.UFS[pid].HealthBackground.RoleIcon:SetSize(18, 18)
 					DRF.UFS[pid].HealthBackground.RoleIcon:SetPoint("TOPRIGHT", DRF.UFS[pid].HealthBackground, "TOPRIGHT", -1, -2)
 				end
@@ -1054,15 +1026,17 @@ function DRaidFrames:UpdateSize()
 		end
 	end
 
-	C_Timer.After(0.3, function()
-		DRaidFrames:UpdateSize()
-	end)
+	C_Timer.After(
+		0.3,
+		function()
+			DRaidFrames:UpdateSize()
+		end
+	)
 end
 
 function DRaidFrames:UpdateUnitInfo(uf, unit)
 	if UnitExists(unit) then
 		uf:Hide()
-
 		if not InCombatLockdown() then
 			uf.btn:SetMovable(true)
 			uf.btn:SetUserPlaced(true)
@@ -1075,7 +1049,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		ID = string.gsub(ID, "RAID", "")
 		ID = tonumber(ID)
 		local _, subgroup, _, role
-
 		if IsInRaid() and ID and GetRaidRosterInfo then
 			_, _, subgroup, _, _, _, _, _, _, role, _ = GetRaidRosterInfo(ID)
 		end
@@ -1083,7 +1056,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		-- Health
 		if BarUp then
 			uf.HealthBar:SetWidth(HEWI)
-
 			if UnitHealth(unit) > 1 and UnitHealthMax(unit) > 1 then
 				local h = UnitHealth(unit) / UnitHealthMax(unit) * HEHE
 				uf.HealthBar:SetPoint("TOPLEFT", uf, "TOPLEFT", 0, -(HEHE - h))
@@ -1095,7 +1067,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		else
 			uf.HealthBar:SetWidth(HEWI)
 			uf.HealthBar:SetPoint("TOPLEFT", uf, "TOPLEFT", 0, 0)
-
 			if UnitHealth(unit) > 1 and UnitHealthMax(unit) > 1 then
 				uf.HealthBar:SetWidth(UnitHealth(unit) / UnitHealthMax(unit) * HEWI)
 				uf.HealthBar:Show()
@@ -1106,15 +1077,12 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 		if UnitGetIncomingHeals and UnitGetTotalAbsorbs then
 			local PREDICTION = UnitGetIncomingHeals(unit)
-
 			if BarUp then
 				if PREDICTION and PREDICTION > 0 then
 					local rec = PREDICTION / UnitHealthMax(unit) * HEHE
-
 					if not OVER then
 						if rec + uf.HealthBar:GetHeight() > uf.HealthBackground:GetHeight() + 1 then
 							rec = uf.HealthBackground:GetHeight() - uf.HealthBar:GetHeight()
-
 							if rec <= 0 then
 								rec = 1
 							end
@@ -1122,7 +1090,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 					else
 						if rec + uf.HealthBar:GetHeight() > uf.HealthBackground:GetHeight() * 2 then
 							rec = uf.HealthBackground:GetHeight() * 2 - uf.HealthBar:GetHeight()
-
 							if rec <= 0 then
 								rec = 1
 							end
@@ -1138,11 +1105,9 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			else
 				if PREDICTION and PREDICTION > 0 then
 					local rec = PREDICTION / UnitHealthMax(unit) * HEWI
-
 					if not OVER then
 						if rec + uf.HealthBar:GetWidth() > uf.HealthBackground:GetWidth() + 1 then
 							rec = uf.HealthBackground:GetWidth() - uf.HealthBar:GetWidth()
-
 							if rec <= 0 then
 								rec = 1
 							end
@@ -1150,7 +1115,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 					else
 						if rec + uf.HealthBar:GetWidth() > uf.HealthBackground:GetWidth() * 2 then
 							rec = uf.HealthBackground:GetWidth() * 2 - uf.HealthBar:GetWidth()
-
 							if rec <= 0 then
 								rec = 1
 							end
@@ -1168,7 +1132,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			local ABSORB = UnitGetTotalAbsorbs(unit)
 			uf.Absorb:Hide()
 			uf.AbsorbOverlay:Hide()
-
 			if BarUp then
 				if uf.Prediction:IsShown() then
 					uf.Absorb:SetSize(HEWI, 0)
@@ -1189,14 +1152,11 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 			uf.Absorb:Hide()
 			uf.AbsorbOverlay:Hide()
-
 			if BarUp then
 				if ABSORB and ABSORB > 0 then
 					local rec = ABSORB / UnitHealthMax(unit) * HEHE
-
 					if not OVER and rec + uf.HealthBar:GetHeight() + uf.Prediction:GetHeight() > uf.HealthBackground:GetHeight() + 1 then
 						rec = uf.HealthBackground:GetHeight() - uf.HealthBar:GetHeight() - uf.Prediction:GetHeight()
-
 						if rec <= 0 then
 							rec = 1
 						end
@@ -1212,10 +1172,8 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			else
 				if ABSORB and ABSORB > 0 then
 					local rec = ABSORB / UnitHealthMax(unit) * HEWI
-
 					if not OVER and rec + uf.HealthBar:GetWidth() + uf.Prediction:GetWidth() > uf.HealthBackground:GetWidth() + 1 then
 						rec = uf.HealthBackground:GetWidth() - uf.HealthBar:GetWidth() - uf.Prediction:GetWidth()
-
 						if rec <= 0 then
 							rec = 1
 						end
@@ -1234,7 +1192,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		local text = ""
 		local uClass, uClassEng = UnitClass(unit)
 		local uname = DRaidFrames:UnitName(unit, false)
-
 		if uClass == nil then
 			uClass = ""
 		end
@@ -1264,11 +1221,9 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		uf.HealthTextTop:SetHeight(16)
 		uf.HealthTextTop:SetText(text)
 		local HealthTextCen = ""
-
 		if TECETY == "Health in Percent" then
 			local rec = UnitHealth(unit) / UnitHealthMax(unit) * 100
 			local val = string.format("%." .. math.abs(DRaidFrames:GetConfig("DECI", 0)) .. "f", rec)
-
 			if rec > 0 then
 				HealthTextCen = val .. "%"
 			else
@@ -1276,10 +1231,8 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			end
 		elseif TECETY == "Lost Health in Percent" then
 			local rec = 1 - UnitHealth(unit) / UnitHealthMax(unit)
-
 			if rec then
 				local val = string.format("%." .. math.abs(DRaidFrames:GetConfig("DECI", 0)) .. "f", rec * 100)
-
 				if rec > 0 then
 					HealthTextCen = "-" .. val .. "%"
 				else
@@ -1306,12 +1259,10 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 		uf.HealthTextCen:SetText(HealthTextCen)
 		local tTop2 = ""
-
 		if IsInRaid() and ID then
 			tTop2 = "(" .. subgroup .. ")"
 		else
 			local xppercent = ""
-
 			if DRaidFrames:UnitXPMax(unit) > 1 then
 				xppercent = " (" .. string.format("%0.1f", DRaidFrames:UnitXP(unit) / DRaidFrames:UnitXPMax(unit) * 100) .. "%)"
 			end
@@ -1343,7 +1294,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 		if C_PlayerInfo and C_PlayerInfo.GetPlayerMythicPlusRatingSummary and C_PlayerInfo.GetPlayerMythicPlusRatingSummary(unit) then
 			local score = C_PlayerInfo.GetPlayerMythicPlusRatingSummary(unit).currentSeasonScore
-
 			if UnitLevel(unit) == DRaidFrames:GetMaxLevel() then
 				if tTop2 ~= "" then
 					tTop2 = tTop2 .. " "
@@ -1354,7 +1304,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		end
 
 		uf.HealthTextTop2:SetHeight(16)
-
 		if InCombatLockdown() then
 			uf.HealthTextTop2:SetText("")
 		else
@@ -1364,7 +1313,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		if uClass ~= nil then
 			local r, g, b, _ = GetClassColor(uClassEng)
 			uf.HealthBar:SetVertexColor(r, g, b)
-
 			if UnitGetIncomingHeals and UnitGetTotalAbsorbs then
 				uf.Prediction:SetVertexColor(r + 0.2, g + 0.2, b + 0.2)
 				uf.Absorb:SetVertexColor(1, 1, 1)
@@ -1372,7 +1320,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		end
 
 		local status = UnitThreatSituation(unit)
-
 		if status and status > 0 then
 			if GetThreatStatusColor ~= nil then
 				uf.Aggro:SetVertexColor(GetThreatStatusColor(status))
@@ -1386,7 +1333,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			uf.Aggro:Hide()
 		end
 
-		if UnitGroupRolesAssigned then
+		if UnitGroupRolesAssigned and DRaidFrames:GetWoWBuildNr() > 19999 then
 			if UnitGroupRolesAssigned(unit) ~= "NONE" then
 				uf.HealthBackground.RoleIcon:SetTexCoord(GetTexCoordsForRoleSmallCircle(UnitGroupRolesAssigned(unit)))
 				uf.HealthBackground.RoleIcon:Show()
@@ -1406,7 +1353,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		end
 
 		local t = CLASS_ICON_TCOORDS[select(2, UnitClass(unit))]
-
 		if CLAS and t and UnitIsPlayer(unit) then
 			uf.HealthBackground.ClassIcon:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles")
 			uf.HealthBackground.ClassIcon:SetTexCoord(unpack(t))
@@ -1429,11 +1375,9 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 		local guid = UnitGUID(unit)
 		local lang = nil
-
 		if guid then
 			local server = tonumber(strmatch(guid, "^Player%-(%d+)"))
 			local realm = DRaidFrames:GetRealms()[server]
-
 			if realm == nil and DRaidFrames:GetRealmsLinked() then
 				realm = DRaidFrames:GetRealms()[tonumber(DRaidFrames:GetRealmsLinked()[server])]
 			end
@@ -1442,7 +1386,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 				local s, _ = string.find(realm, ",")
 				realm = string.sub(realm, s + 1)
 				local _, e2 = string.find(realm, ",")
-
 				if e2 then
 					lang = string.sub(realm, 0, e2 - 1)
 				else
@@ -1456,7 +1399,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 				if UnitInBattleground("player") then
 					uf.HealthBackground.LangIcon.lang = lang
 					uf.HealthBackground.LangIcon:SetTexture("Interface\\Addons\\DRaidFrames\\media\\" .. lang)
-
 					if FLAG then
 						uf.HealthBackground.LangIcon:Show()
 					end
@@ -1464,7 +1406,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 					uf.HealthBackground.Threat:Hide()
 				else
 					local _, _, threatpct, _, _, _ = UnitDetailedThreatSituation(unit, "target")
-
 					if threatpct == nil then
 						threatpct = 0
 					end
@@ -1485,7 +1426,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			else
 				uf.HealthBackground.LangIcon.lang = lang
 				uf.HealthBackground.LangIcon:SetTexture("Interface\\Addons\\DRaidFrames\\media\\" .. lang)
-
 				if FLAG then
 					uf.HealthBackground.LangIcon:Show()
 				end
@@ -1515,19 +1455,16 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		-- READY CHECK
 		local readyCheckStatus = GetReadyCheckStatus(unit)
 		local resurrect = nil
-
 		if UnitHasIncomingResurrection then
 			resurrect = UnitHasIncomingResurrection(unit)
 		end
 
 		local phase = nil
-
 		if UnitPhaseReason then
 			phase = UnitPhaseReason(unit)
 		end
 
 		local tp = nil
-
 		if C_IncomingSummon then
 			tp = C_IncomingSummon.HasIncomingSummon(unit)
 		end
@@ -1565,7 +1502,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			uf.HealthBar.ReadyCheck:Show()
 		elseif tp then
 			local tpReason = C_IncomingSummon.IncomingSummonStatus(unit)
-
 			if tpReason == Enum.SummonStatus.Pending then
 				uf.HealthBar.ReadyCheck:SetAtlas("Raid-Icon-SummonPending")
 				uf.HealthBar.ReadyCheck:Show()
@@ -1594,7 +1530,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		if SHPO then
 			local power = UnitPower(unit, Enum.PowerType.Mana)
 			local powermax = UnitPowerMax(unit, Enum.PowerType.Mana)
-
 			if uClass == "MONK" then
 				power = UnitPower(unit)
 				powermax = UnitPowerMax(unit)
@@ -1606,7 +1541,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			if BarUp then
 				uf.PowerBar:SetWidth(POSI)
 				uf.PowerTextCen:SetText("")
-
 				if power and powermax and power > 0 and powermax > 0 and power <= powermax then
 					local h = power / powermax * HEHE
 					uf.PowerBar:SetPoint("TOPLEFT", uf.HealthBackground, "TOPLEFT", HEWI, -(HEHE - h))
@@ -1617,7 +1551,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 				end
 			else
 				uf.PowerBar:SetHeight(POSI)
-
 				if power and powermax and power > 0 and powermax > 0 and power <= powermax then
 					uf.PowerBar:SetWidth(power / powermax * HEWI)
 					uf.PowerTextCen:SetText(string.format("%." .. math.abs(DRaidFrames:GetConfig("DECI", 0)) .. "f", power / powermax * 100) .. "%")
@@ -1638,19 +1571,16 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 		local powerToken
 		local powermax = UnitPowerMax(unit, Enum.PowerType.Mana)
-
 		if powermax and powermax > 0 and uClass ~= "MONK" then
 			local info = PowerBarColor["MANA"]
 			powerType = 0
 			powerToken = "MANA"
-
 			if info then
 				uf.PowerBar:SetVertexColor(info.r, info.g, info.b, 1)
 			end
 		else
 			powerType, powerToken = UnitPowerType(unit)
 			local info = PowerBarColor[powerToken]
-
 			if info then
 				uf.PowerBar:SetVertexColor(info.r, info.g, info.b)
 			end
@@ -1658,11 +1588,9 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 		-- Buff
 		local idbu = 1
-
 		for i = 1, 20 do
 			local name, icon, count, _, duration, expirationTime, unitCaster, _, _, _ = UnitBuff(unit, i, "PLAYER|HELPFUL") --"RAID")
 			if idbu > DRF_MAX_BUFFS then break end
-
 			if name then
 				-- "player" or unitCaster == "pet" or unitCaster == "mouseover") then
 				if name and (unitCaster ~= nil) and (DRaidFrames:GetWoWBuild() ~= "RETAIL" or DRaidFrames:GetWoWBuild() == "RETAIL" and duration > 0) then
@@ -1672,7 +1600,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 					if uf.BuffBar[idbu].count and count and count > 1 then
 						local countText = count
-
 						if count >= 100 then
 							countText = BUFF_STACKS_OVERFLOW
 						end
@@ -1688,7 +1615,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 					end
 
 					local enabled = expirationTime and expirationTime ~= 0
-
 					if enabled and duration > 0 then
 						local startTime = expirationTime - duration
 						CooldownFrame_Set(uf.BuffBar[idbu].cooldown, startTime, duration, true)
@@ -1707,7 +1633,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 		for i = idbu, DRF_MAX_BUFFS do
 			CooldownFrame_Clear(uf.BuffBar[i].cooldown)
-
 			if uf.BuffBar[i].Icon ~= nil then
 				uf.BuffBar[i].Icon:SetTexture(nil)
 			end
@@ -1723,14 +1648,11 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 		-- Debuff
 		local idde = 1
-
 		for i = 1, 20 do
 			local name, icon, count, debuffType, duration, expirationTime, unitCaster = UnitDebuff(unit, i, "RAID")
 			if idde > DRF_MAX_DEBUFFS then break end
-
 			if name then
 				local allowed = false
-
 				if debuffType ~= nil then
 					if IsInRaid() then
 						allowed = DRaidFrames:GetConfig("R" .. debuffType, true, true)
@@ -1752,7 +1674,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 					if uf.DebuffBar[idde].count and count and count > 1 then
 						local countText = count
-
 						if count >= 100 then
 							countText = BUFF_STACKS_OVERFLOW
 						end
@@ -1765,20 +1686,17 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 					if uf.DebuffBar[idde].Border then
 						local color = DebuffTypeColor["none"]
-
 						if DebuffTypeColor[debuffType] ~= nil then
 							color = DebuffTypeColor[debuffType]
 						end
 
 						uf.DebuffBar[idde].Border:SetVertexColor(color.r, color.g, color.b)
 						uf.DebuffBar[idde].Border:Show()
-
 						if uf.DebuffBar[idde].symbol then
 							local fontFamily, _, fontFlags = uf.DebuffBar[idde].symbol:GetFont()
 							uf.DebuffBar[idde].symbol:SetFont(fontFamily, 9, fontFlags)
 							uf.DebuffBar[idde].symbol:SetWidth(DESI)
 							uf.DebuffBar[idde].symbol:SetHeight(DESI / 2)
-
 							if DebuffTypeSymbol[debuffType] ~= nil then
 								uf.DebuffBar[idde].symbol:SetText(DebuffTypeSymbol[debuffType])
 							end
@@ -1794,7 +1712,6 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 					uf.DebuffBar[idde].exitTime = nil
 					uf.DebuffBar[idde]:Show()
 					local enabled = expirationTime and expirationTime ~= 0
-
 					if enabled then
 						local startTime = expirationTime - duration
 						CooldownFrame_Set(uf.DebuffBar[idde].cooldown, startTime, duration, true)
@@ -1841,24 +1758,20 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		end
 
 		uf:Show()
-
 		if not InCombatLockdown() then
 			uf.btn:SetMovable(true)
 			uf.btn:SetUserPlaced(true)
 			uf.btn:Show()
-
 			if ClickCastFrames then
 				ClickCastFrames[uf.btn] = true -- "Clicked" Support
 			end
 		end
 	else
 		uf:Hide()
-
 		if not InCombatLockdown() then
 			uf.btn:SetMovable(true)
 			uf.btn:SetUserPlaced(true)
 			uf.btn:Hide()
-
 			if ClickCastFrames then
 				ClickCastFrames[uf.btn] = false -- "Clicked" Support
 			end
@@ -1869,7 +1782,6 @@ end
 function DRaidFrames:OnUpdate()
 	if DRaidFrames:IsUpdating() then
 		DRaidFrames:SetUpdating(false)
-
 		if DRF.size ~= GetNumGroupMembers() then
 			DRF.size = GetNumGroupMembers()
 			DRaidFrames:SetSizing(true)
@@ -1904,12 +1816,10 @@ function DRaidFrames:OnUpdate()
 		else
 			for i, uf in pairs(DRF.UFS) do
 				local unit = DRFSortedUnits[uf.id]
-
 				if unit and UnitExists(unit) then
 					DRaidFrames:UpdateUnitInfo(uf, unit)
 				else
 					uf:Hide()
-
 					if not InCombatLockdown() then
 						uf.btn:Hide()
 					end
@@ -1924,30 +1834,38 @@ function DRaidFrames:OnUpdate()
 end
 
 function DRaidFrames:UpdateLoop()
-	C_Timer.After(0.3, function()
-		DRaidFrames:SetUpdating(true)
-		DRaidFrames:OnUpdate()
-		DRaidFrames:UpdateLoop()
-	end)
+	C_Timer.After(
+		0.3,
+		function()
+			DRaidFrames:SetUpdating(true)
+			DRaidFrames:OnUpdate()
+			DRaidFrames:UpdateLoop()
+		end
+	)
 end
 
 DRaidFrames:UpdateLoop()
 DRF:RegisterEvent("READY_CHECK")
 DRF:RegisterEvent("READY_CHECK_CONFIRM")
 DRF:RegisterEvent("READY_CHECK_FINISHED")
-
 function DRF:OnEvent(event, ...)
 	if event == "READY_CHECK" then
 		--DRF.rcts = GetTime() + 13
 		DRFReadyStatus = "STARTED"
 	elseif event == "READY_CHECK_FINISHED" then
-		C_Timer.After(1, function()
-			DRFReadyStatus = "ENDED"
-		end)
+		C_Timer.After(
+			1,
+			function()
+				DRFReadyStatus = "ENDED"
+			end
+		)
 
-		C_Timer.After(11, function()
-			DRFReadyStatus = ""
-		end)
+		C_Timer.After(
+			11,
+			function()
+				DRFReadyStatus = ""
+			end
+		)
 	end
 
 	DRaidFrames:SetUpdating(true)
@@ -1957,7 +1875,6 @@ end
 DRF:SetScript("OnEvent", DRF.OnEvent)
 local DRFHIDDEN = CreateFrame("FRAME")
 DRFHIDDEN:Hide()
-
 if _G["CompactRaidFrameContainer"] then
 	_G["CompactRaidFrameContainer"]:SetParent(DRFHIDDEN)
 end
@@ -1968,7 +1885,6 @@ end
 
 for i = 1, 4 do
 	local partyframe = _G["PartyMemberFrame" .. i]
-
 	if partyframe then
 		partyframe:SetParent(DRFHIDDEN)
 	end
@@ -1986,7 +1902,6 @@ local DRFLoaded = false
 local f = CreateFrame("Frame")
 f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("PLAYER_ENTERING_WORLD")
-
 function f:OnEvent(event)
 	if (event == "PLAYER_LOGIN" or event == "PLAYER_ENTERING_WORLD") and not DRFLoaded then
 		DRFLoaded = true
