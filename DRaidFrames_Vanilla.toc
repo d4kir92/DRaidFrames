@@ -1,5 +1,5 @@
 ## Interface: 11500
-## Version: 1.0.48
+## Version: 1.0.49
 ## Title: DRaidFrames |T254652:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
 ## Notes: Raid Frames
 ## Author: D4KiR
@@ -10,8 +10,7 @@
 ## X-Wago-ID: qv63roNb
 
 # External Libs
-##libs\!LibUIDropDownMenu\LibStub\LibStub.lua
-##libs\!LibUIDropDownMenu\LibUIDropDownMenu\LibUIDropDownMenu.xml
+libs\D4Lib\D4Lib.xml
 libs\LibStub\LibStub.lua
 libs\LibDropDown\embed.xml
 

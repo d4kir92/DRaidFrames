@@ -1,8 +1,7 @@
 -- By D4KiR
-local _, DRaidFrames = ...
+local AddonName, DRaidFrames = ...
 local BuildNr = select(4, GetBuildInfo())
 local Build = "CLASSIC"
-
 if BuildNr >= 100000 then
 	Build = "RETAIL"
 elseif BuildNr > 29999 then
@@ -20,11 +19,9 @@ function DRaidFrames:GetWoWBuild()
 end
 
 local DRFLoaded = false
-
 function DRaidFrames:GetConfig(key, value, pc)
 	DRFTAB = DRFTAB or {}
 	DRFTABPC = DRFTABPC or {}
-
 	if DRFLoaded and DRFTAB ~= nil and DRFTABPC ~= nil then
 		if pc then
 			if DRFTABPC[key] ~= nil then
@@ -59,18 +56,20 @@ function DRaidFrames:CreateSlider(parent, key, vval, x, y, vmin, vmax, steps, ls
 	SL:SetValue(DRaidFrames:GetConfig(key, vval))
 	SL:SetObeyStepOnDrag(steps)
 	SL:SetValueStep(steps)
+	SL:SetScript(
+		"OnValueChanged",
+		function(sel, val)
+			if steps == 1 then
+				val = string.format("%" .. ".0" .. "f", val)
+			else
+				val = string.format("%" .. steps .. "f", val)
+			end
 
-	SL:SetScript("OnValueChanged", function(sel, val)
-		if steps == 1 then
-			val = string.format("%" .. ".0" .. "f", val)
-		else
-			val = string.format("%" .. steps .. "f", val)
+			DRFTAB[key] = val
+			SL.Text:SetText(DRaidFrames:GT(lstr) .. ": " .. val)
+			DRaidFrames:SetSizing(true)
 		end
-
-		DRFTAB[key] = val
-		SL.Text:SetText(DRaidFrames:GT(lstr) .. ": " .. val)
-		DRaidFrames:SetSizing(true)
-	end)
+	)
 
 	return SL
 end
@@ -102,28 +101,29 @@ function DRaidFrames:CreateCheckBox(parent, key, vval, x, y, lstr, pc)
 	CB.Text:SetPoint("LEFT", CB, "RIGHT", 0, 0)
 	CB.Text:SetText(DRaidFrames:GT(lstr))
 	CB:SetChecked(DRaidFrames:GetConfig(key, vval))
+	CB:SetScript(
+		"OnClick",
+		function(sel, val)
+			val = CB:GetChecked()
+			if pc then
+				DRFTABPC[key] = val
+			else
+				DRFTAB[key] = val
+			end
 
-	CB:SetScript("OnClick", function(sel, val)
-		val = CB:GetChecked()
-
-		if pc then
-			DRFTABPC[key] = val
-		else
-			DRFTAB[key] = val
+			CB.Text:SetText(DRaidFrames:GT(lstr))
+			DRaidFrames:SetSizing(true)
 		end
-
-		CB.Text:SetText(DRaidFrames:GT(lstr))
-		DRaidFrames:SetSizing(true)
-	end)
+	)
 
 	return CB
 end
 
 local Y = 0
 local sliderX = 12
-
 function DRaidFrames:InitSettings()
 	local DRFSettings = {}
+	D4:SetVersion(AddonName, 254652, "1.0.49")
 	local DRFname = "DRaidFrames |T254652:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t"
 	local settingname = DRFname
 	DRFSettings.panel = CreateFrame("FRAME")
@@ -142,35 +142,39 @@ function DRaidFrames:InitSettings()
 	b:SetSize(200, 24) -- width, height
 	b:SetText("DISCORD")
 	b:SetPoint("BOTTOMLEFT", 10, 10)
-
-	b:SetScript("OnClick", function()
-		local iconbtn = 32
-		local s = CreateFrame("Frame", nil, UIParent) -- or you actual parent instead
-		s:SetSize(300, 2 * iconbtn + 2 * 10)
-		s:SetPoint("CENTER")
-		s.texture = s:CreateTexture(nil, "BACKGROUND")
-		s.texture:SetColorTexture(0, 0, 0, 0.5)
-		s.texture:SetAllPoints(s)
-		s.text = s:CreateFontString(nil, "ARTWORK")
-		s.text:SetFont(STANDARD_TEXT_FONT, 11, "")
-		s.text:SetText("Feedback")
-		s.text:SetPoint("CENTER", s, "TOP", 0, -10)
-		local eb = CreateFrame("EditBox", "logEditBox", s, "InputBoxTemplate")
-		eb:SetFrameStrata("DIALOG")
-		eb:SetSize(280, iconbtn)
-		eb:SetAutoFocus(false)
-		eb:SetText("https://discord.gg/UeBsafs")
-		eb:SetPoint("TOPLEFT", 10, -10 - iconbtn)
-		s.close = CreateFrame("Button", "closediscord", s, "UIPanelButtonTemplate")
-		s.close:SetFrameStrata("DIALOG")
-		s.close:SetPoint("TOPLEFT", 300 - 10 - iconbtn, -10)
-		s.close:SetSize(iconbtn, iconbtn)
-		s.close:SetText("X")
-
-		s.close:SetScript("OnClick", function(sel, btn, down)
-			s:Hide()
-		end)
-	end)
+	b:SetScript(
+		"OnClick",
+		function()
+			local iconbtn = 32
+			local s = CreateFrame("Frame", nil, UIParent) -- or you actual parent instead
+			s:SetSize(300, 2 * iconbtn + 2 * 10)
+			s:SetPoint("CENTER")
+			s.texture = s:CreateTexture(nil, "BACKGROUND")
+			s.texture:SetColorTexture(0, 0, 0, 0.5)
+			s.texture:SetAllPoints(s)
+			s.text = s:CreateFontString(nil, "ARTWORK")
+			s.text:SetFont(STANDARD_TEXT_FONT, 11, "")
+			s.text:SetText("Feedback")
+			s.text:SetPoint("CENTER", s, "TOP", 0, -10)
+			local eb = CreateFrame("EditBox", "logEditBox", s, "InputBoxTemplate")
+			eb:SetFrameStrata("DIALOG")
+			eb:SetSize(280, iconbtn)
+			eb:SetAutoFocus(false)
+			eb:SetText("https://discord.gg/UeBsafs")
+			eb:SetPoint("TOPLEFT", 10, -10 - iconbtn)
+			s.close = CreateFrame("Button", "closediscord", s, "UIPanelButtonTemplate")
+			s.close:SetFrameStrata("DIALOG")
+			s.close:SetPoint("TOPLEFT", 300 - 10 - iconbtn, -10)
+			s.close:SetSize(iconbtn, iconbtn)
+			s.close:SetText("X")
+			s.close:SetScript(
+				"OnClick",
+				function(sel, btn, down)
+					s:Hide()
+				end
+			)
+		end
+	)
 
 	InterfaceOptions_AddCategory(DRFSettings.panel)
 	local settinggname = PARTY
@@ -188,7 +192,6 @@ function DRaidFrames:InitSettings()
 	DRFSettings.gpanel.Text:SetPoint("TOPLEFT", DRFSettings.gpanel, "TOPLEFT", X, Y)
 	DRFSettings.gpanel.Text:SetText(DRaidFrames:GT("DETY"))
 	Y = Y - 18
-
 	for i, v in pairs(DebuffTypeSymbol) do
 		DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "G" .. i, true, X, Y, i, true) -- parent, key, vval, x, y, lstr)
 		Y = Y - 18
@@ -196,14 +199,10 @@ function DRaidFrames:InitSettings()
 
 	DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "G" .. "None", true, X, Y, "None", true)
 	Y = -10
-
 	--Y = Y - 32
 	DRaidFrames:CreateComboBox(DRFSettings.gpanel, "GTETOTY", "Name", 0, Y, "TETOTY", {"Name", "Name + Realm", "Class", "Class + Name", "Name + Class", "None"})
-
 	Y = Y - 32
-
 	DRaidFrames:CreateComboBox(DRFSettings.gpanel, "GTECETY", "Health in Percent", 0, Y, "TECETY", {"Health in Percent", "Lost Health in Percent", "None"})
-
 	Y = Y - 32
 	DRaidFrames:CreateSlider(DRFSettings.gpanel, "GELEM", 5, 12, Y, 1, 40, 1.0, "ELEMENTS")
 	Y = Y - 32
@@ -214,7 +213,6 @@ function DRaidFrames:InitSettings()
 	DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GBAUP", true, 12, Y, "BAUP") -- parent, key, vval, x, y, lstr)
 	Y = Y - 20
 	DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GOVER", true, 12, Y, "OVER") -- parent, key, vval, x, y, lstr)
-
 	if UnitHasRating then
 		DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GRATE", true, 200, Y + 60, "Rating") -- parent, key, vval, x, y, lstr)
 	end
@@ -262,7 +260,6 @@ function DRaidFrames:InitSettings()
 	DRFSettings.rpanel.Text:SetPoint("TOPLEFT", DRFSettings.rpanel, "TOPLEFT", X, Y)
 	DRFSettings.rpanel.Text:SetText(DRaidFrames:GT("DETY"))
 	Y = Y - 18
-
 	for i, v in pairs(DebuffTypeSymbol) do
 		DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "R" .. i, true, X, Y, i, true) -- parent, key, vval, x, y, lstr)
 		Y = Y - 18
@@ -270,17 +267,11 @@ function DRaidFrames:InitSettings()
 
 	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "R" .. "None", true, X, Y, "None", true)
 	Y = -10
-
 	DRaidFrames:CreateComboBox(DRFSettings.rpanel, "RSORT", "Role", 0, Y, "SORTTYPE", {"Group", "Role"})
-
 	Y = Y - 32
-
 	DRaidFrames:CreateComboBox(DRFSettings.rpanel, "RTETOTY", "Name", 0, Y, "TETOTY", {"Name", "Class", "Class + Name", "Name + Class", "None"})
-
 	Y = Y - 32
-
 	DRaidFrames:CreateComboBox(DRFSettings.rpanel, "RTECETY", "Health in Percent", 0, Y, "TECETY", {"Health in Percent", "Lost Health in Percent", "None"})
-
 	Y = Y - 32
 	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RELEM", 5, 12, Y, 1, 40, 1.0, "ELEMENTS")
 	Y = Y - 32
@@ -291,7 +282,6 @@ function DRaidFrames:InitSettings()
 	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RBAUP", true, 12, Y, "BAUP") -- parent, key, vval, x, y, lstr)
 	Y = Y - 20
 	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "ROVER", false, 12, Y, "OVER") -- parent, key, vval, x, y, lstr)
-
 	if UnitHasRating then
 		DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RRATE", true, 200, Y + 60, "Rating") -- parent, key, vval, x, y, lstr)
 	end
@@ -330,7 +320,6 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("PLAYER_ENTERING_WORLD")
 f:RegisterEvent("GROUP_ROSTER_UPDATE")
-
 function f:OnEvent(event)
 	if event == "GROUP_ROSTER_UPDATE" then
 		DRaidFrames:SetSizing(true)
@@ -342,10 +331,12 @@ function f:OnEvent(event)
 		DRaidFrames:UpdateSize()
 		DRaidFrames:SetUpdating(true)
 		DRaidFrames:OnUpdate()
-
-		C_Timer.After(0, function()
-			DRaidFrames:InitSettings()
-		end)
+		C_Timer.After(
+			0,
+			function()
+				DRaidFrames:InitSettings()
+			end
+		)
 	end
 end
 

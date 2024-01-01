@@ -3,7 +3,7 @@
 ## Interface-Wrath: 30403
 ## Interface: 100200
 
-## Version: 1.0.48
+## Version: 1.0.49
 ## Title: DRaidFrames by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
 ## Notes: Raid Frames
 ## Author: D4KiR
@@ -15,8 +15,7 @@
 ## IconTexture: 254652
 
 # External Libs
-##libs\!LibUIDropDownMenu\LibStub\LibStub.lua
-##libs\!LibUIDropDownMenu\LibUIDropDownMenu\LibUIDropDownMenu.xml
+libs\D4Lib\D4Lib.xml
 libs\LibStub\LibStub.lua
 libs\LibDropDown\embed.xml
 
