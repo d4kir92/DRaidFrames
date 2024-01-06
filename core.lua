@@ -597,7 +597,7 @@ for group = 1, 8 do
 		-- READY CHECK
 		DRF.UFS[id].HealthBar.ReadyCheck = DRF.UFS[id]:CreateTexture(nil, "OVERLAY")
 		DRF.UFS[id].HealthBar.ReadyCheck:SetDrawLayer("OVERLAY", DRFLayers["ReadyCheck"])
-		DRF.UFS[id].HealthBar.ReadyCheck:SetSize(18, 18)
+		DRF.UFS[id].HealthBar.ReadyCheck:SetSize(32, 32)
 		DRF.UFS[id].HealthBar.ReadyCheck:SetPoint("CENTER", DRF.UFS[id].HealthBackground, "CENTER", 0, 0)
 		DRF.UFS[id].HealthBar.ReadyCheck:SetTexture(nil)
 		-- BTN
@@ -1017,7 +1017,7 @@ function DRaidFrames:UpdateSize()
 				DRF.UFS[pid].HealthBackground.RankIcon:SetPoint("TOP", DRF.UFS[pid].HealthBackground, "TOP", 0, 7)
 				DRF.UFS[pid].HealthBackground.RankIcon2:SetSize(16, 16)
 				DRF.UFS[pid].HealthBackground.RankIcon2:SetPoint("TOPLEFT", DRF.UFS[pid].HealthBackground, "TOPLEFT", 0, 0)
-				DRF.UFS[pid].HealthBar.ReadyCheck:SetSize(18, 18)
+				DRF.UFS[pid].HealthBar.ReadyCheck:SetSize(32, 32)
 				DRF.UFS[pid].HealthBar.ReadyCheck:SetPoint("CENTER", DRF.UFS[pid].HealthBackground, "CENTER", 0, 0)
 				DRF.UFS[pid].RaidIcon:SetSize(16, 16)
 				DRF.UFS[pid].RaidIcon:SetPoint("BOTTOM", DRF.UFS[pid].HealthBackground, "BOTTOM", 0, 24)
@@ -1475,10 +1475,10 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			uf.resurrect = false
 		end
 
-		if DRFReadyStatus ~= "" then
+		if DRFReadyStatus ~= nil and DRFReadyStatus ~= "" then
 			if DRFReadyStatus == "ENDED" then
 				if uf.HealthBar.ReadyCheck.readyCheckStatus == "waiting" then
-					uf.HealthBar.ReadyCheck:SetTexture(READY_CHECK_NOT_READY_TEXTURE)
+					uf.HealthBar.ReadyCheck:SetAtlas("UI-LFG-DeclineMark")
 					uf.HealthBar.ReadyCheck:Show()
 				end
 			elseif DRFReadyStatus == "STARTED" then
@@ -1487,13 +1487,13 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 				end
 
 				if readyCheckStatus == "ready" then
-					uf.HealthBar.ReadyCheck:SetTexture(READY_CHECK_READY_TEXTURE)
+					uf.HealthBar.ReadyCheck:SetAtlas("UI-LFG-ReadyMark")
 					uf.HealthBar.ReadyCheck:Show()
 				elseif readyCheckStatus == "notready" then
-					uf.HealthBar.ReadyCheck:SetTexture(READY_CHECK_NOT_READY_TEXTURE)
+					uf.HealthBar.ReadyCheck:SetAtlas("UI-LFG-DeclineMark")
 					uf.HealthBar.ReadyCheck:Show()
 				elseif readyCheckStatus == "waiting" then
-					uf.HealthBar.ReadyCheck:SetTexture(READY_CHECK_WAITING_TEXTURE)
+					uf.HealthBar.ReadyCheck:SetAtlas("UI-LFG-PendingMark")
 					uf.HealthBar.ReadyCheck:Show()
 				end
 			end
