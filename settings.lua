@@ -123,7 +123,7 @@ local Y = 0
 local sliderX = 12
 function DRaidFrames:InitSettings()
 	local DRFSettings = {}
-	D4:SetVersion(AddonName, 254652, "1.0.55")
+	D4:SetVersion(AddonName, 254652, "1.0.56")
 	local DRFname = "DRaidFrames |T254652:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t"
 	local settingname = DRFname
 	DRFSettings.panel = CreateFrame("FRAME")
@@ -217,10 +217,6 @@ function DRaidFrames:InitSettings()
 		DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GRATE", true, 200, Y + 60, "Rating") -- parent, key, vval, x, y, lstr)
 	end
 
-	if DRaidFrames:GetWoWBuild() == "RETAIL" then
-		DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GCOVE", true, 400, Y + 60, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE) -- parent, key, vval, x, y, lstr)
-	end
-
 	DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GFLAG", true, 200, Y + 40, LANGUAGE) -- parent, key, vval, x, y, lstr)
 	DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GCLAS", true, 200, Y + 20, CLASS) -- parent, key, vval, x, y, lstr)
 	DRaidFrames:CreateCheckBox(DRFSettings.gpanel, "GTHRE", true, 200, Y + 0, "Threat") -- parent, key, vval, x, y, lstr)
@@ -284,10 +280,6 @@ function DRaidFrames:InitSettings()
 	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "ROVER", false, 12, Y, "OVER") -- parent, key, vval, x, y, lstr)
 	if UnitHasRating then
 		DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RRATE", true, 200, Y + 60, "Rating") -- parent, key, vval, x, y, lstr)
-	end
-
-	if DRaidFrames:GetWoWBuild() == "RETAIL" then
-		DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RCOVE", true, 400, Y + 60, GARRISON_TYPE_9_0_LANDING_PAGE_TITLE) -- parent, key, vval, x, y, lstr)
 	end
 
 	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RFLAG", true, 200, Y + 40, LANGUAGE) -- parent, key, vval, x, y, lstr)

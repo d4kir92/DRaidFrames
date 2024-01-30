@@ -607,7 +607,7 @@ for group = 1, 8 do
 		DRF.UFS[id].btn.id = id
 		DRF.UFS[id].btn:SetAttribute("*type1", "target")
 		DRF.UFS[id].btn:SetAttribute("*type2", "togglemenu")
-		DRF.UFS[id].btn:RegisterForClicks("LeftButtonDown", "RightButtonUp")
+		DRF.UFS[id].btn:RegisterForClicks("AnyUp", "AnyDown")
 		DRF.UFS[id].btn.Highlight = DRF.UFS[id].btn:CreateTexture(nil, "OVERLAY")
 		DRF.UFS[id].btn.Highlight:SetDrawLayer("OVERLAY", DRFLayers["Highlight"])
 		DRF.UFS[id].btn.Highlight:SetAllPoints(DRF.UFS[id].btn)
