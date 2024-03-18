@@ -42,7 +42,7 @@ DRFLayers["RankIcon"] = 3
 DRFLayers["RankIcon2"] = 3
 DRFLayers["ReadyCheck"] = 3
 DRFLayers["Highlight"] = 4
-if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
+if D4:GetWoWBuild() ~= "RETAIL" then
 	local DRFHealTab = {}
 	local DRFIncomingHeals = {}
 	local pfhp = PlayerFrameHealthBar:GetStatusBarTexture()
@@ -203,15 +203,15 @@ end
 
 function DRaidFrames:GetMaxLevel()
 	local maxlevel = 60
-	if DRaidFrames:GetWoWBuild() == "TBC" then
+	if D4:GetWoWBuild() == "TBC" then
 		maxlevel = 70
 	end
 
-	if DRaidFrames:GetWoWBuild() == "WRATH" then
+	if D4:GetWoWBuild() == "WRATH" then
 		maxlevel = 80
 	end
 
-	if DRaidFrames:GetWoWBuild() == "RETAIL" then
+	if D4:GetWoWBuild() == "RETAIL" then
 		maxlevel = 70
 	end
 
@@ -421,7 +421,7 @@ for group = 1, 8 do
 		DRF.UFS[id].BuffBar:SetSize(DRF_MAX_BUFFS * 18, 18)
 		DRF.UFS[id].BuffBar:SetPoint("BOTTOMRIGHT", DRF.UFS[id].HealthBackground, "BOTTOMRIGHT", 0, 0)
 		for i = 1, DRF_MAX_BUFFS do
-			if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
+			if D4:GetWoWBuild() ~= "RETAIL" then
 				DRF.UFS[id].BuffBar[i] = CreateFrame("Button", "DRFBUFF" .. id .. "_" .. i, DRF.UFS[id].BuffBar, "BuffButtonTemplate")
 			else
 				DRF.UFS[id].BuffBar[i] = CreateFrame("Button", "DRFBUFF" .. id .. "_" .. i, DRF.UFS[id].BuffBar, "AuraButtonTemplate")
@@ -478,7 +478,7 @@ for group = 1, 8 do
 		DRF.UFS[id].DebuffBar:SetSize(DRF_MAX_DEBUFFS * 18, 18)
 		DRF.UFS[id].DebuffBar:SetPoint("BOTTOMLEFT", DRF.UFS[id].HealthBackground, "BOTTOMLEFT", 0, 0)
 		for i = 1, DRF_MAX_DEBUFFS do
-			if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
+			if D4:GetWoWBuild() ~= "RETAIL" then
 				DRF.UFS[id].DebuffBar[i] = CreateFrame("Button", "DRFDEBUFF" .. id .. "_" .. i, DRF.UFS[id].DebuffBar, "DebuffButtonTemplate")
 			else
 				DRF.UFS[id].DebuffBar[i] = CreateFrame("Button", "DRFDEBUFF" .. id .. "_" .. i, DRF.UFS[id].DebuffBar, "AuraButtonTemplate")
@@ -542,7 +542,7 @@ for group = 1, 8 do
 		DRF.UFS[id].Aggro:SetTexCoord(unpack(texCoords["Raid-AggroFrame"]))
 		DRF.UFS[id].Aggro:SetVertexColor(1, 0.2, 0.2)
 		-- Role Icon
-		if UnitGroupRolesAssigned and DRaidFrames:GetWoWBuildNr() > 19999 then
+		if UnitGroupRolesAssigned and D4:GetWoWBuildNr() > 19999 then
 			DRF.UFS[id].HealthBackground.RoleIcon = DRF.UFS[id]:CreateTexture(nil, "OVERLAY")
 			DRF.UFS[id].HealthBackground.RoleIcon:SetDrawLayer("OVERLAY", DRFLayers["RoleIcon"])
 			DRF.UFS[id].HealthBackground.RoleIcon:SetSize(18, 18)
@@ -551,7 +551,7 @@ for group = 1, 8 do
 		end
 
 		-- M+
-		if DRaidFrames:GetWoWBuild() == "RETAIL" then
+		if D4:GetWoWBuild() == "RETAIL" then
 			DRF.UFS[id].HealthBackground.MythicIcon = DRF.UFS[id]:CreateTexture(nil, "OVERLAY")
 			DRF.UFS[id].HealthBackground.MythicIcon:SetDrawLayer("OVERLAY", DRFLayers["RoleIcon"])
 			DRF.UFS[id].HealthBackground.MythicIcon:SetSize(24, 24)
@@ -648,7 +648,7 @@ end
 local function DRaidFrames_SortByRole(a, b)
 	local arole = "NONE" --UnitGroupRolesAssigned(a)
 	local brole = "NONE" --UnitGroupRolesAssigned(b)
-	if UnitGroupRolesAssigned and DRaidFrames:GetWoWBuildNr() > 19999 then
+	if UnitGroupRolesAssigned and D4:GetWoWBuildNr() > 19999 then
 		arole = UnitGroupRolesAssigned(a)
 		brole = UnitGroupRolesAssigned(b)
 	end
@@ -1008,7 +1008,7 @@ function DRaidFrames:UpdateSize()
 				-- Aggro
 				DRF.UFS[pid].Aggro:ClearAllPoints()
 				DRF.UFS[pid].Aggro:SetAllPoints(DRF.UFS[pid])
-				if UnitGroupRolesAssigned and DRaidFrames:GetWoWBuildNr() > 19999 then
+				if UnitGroupRolesAssigned and D4:GetWoWBuildNr() > 19999 then
 					DRF.UFS[pid].HealthBackground.RoleIcon:SetSize(18, 18)
 					DRF.UFS[pid].HealthBackground.RoleIcon:SetPoint("TOPRIGHT", DRF.UFS[pid].HealthBackground, "TOPRIGHT", -1, -2)
 				end
@@ -1333,7 +1333,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			uf.Aggro:Hide()
 		end
 
-		if UnitGroupRolesAssigned and DRaidFrames:GetWoWBuildNr() > 19999 then
+		if UnitGroupRolesAssigned and D4:GetWoWBuildNr() > 19999 then
 			if UnitGroupRolesAssigned(unit) ~= "NONE" then
 				uf.HealthBackground.RoleIcon:SetTexCoord(GetTexCoordsForRoleSmallCircle(UnitGroupRolesAssigned(unit)))
 				uf.HealthBackground.RoleIcon:Show()
@@ -1395,7 +1395,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		end
 
 		if lang ~= nil and UnitIsPlayer(unit) and uf.HealthBackground.LangIcon.lang ~= lang then
-			if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
+			if D4:GetWoWBuild() ~= "RETAIL" then
 				if UnitInBattleground("player") then
 					uf.HealthBackground.LangIcon.lang = lang
 					uf.HealthBackground.LangIcon:SetTexture("Interface\\Addons\\DRaidFrames\\media\\" .. lang)
@@ -1593,7 +1593,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			if idbu > DRF_MAX_BUFFS then break end
 			if name then
 				-- "player" or unitCaster == "pet" or unitCaster == "mouseover") then
-				if name and (unitCaster ~= nil) and (DRaidFrames:GetWoWBuild() ~= "RETAIL" or DRaidFrames:GetWoWBuild() == "RETAIL" and duration > 0) then
+				if name and (unitCaster ~= nil) and (D4:GetWoWBuild() ~= "RETAIL" or D4:GetWoWBuild() == "RETAIL" and duration > 0) then
 					if uf.BuffBar[idbu].Icon ~= nil then
 						uf.BuffBar[idbu].Icon:SetTexture(icon)
 					end

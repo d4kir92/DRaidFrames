@@ -1,5 +1,5 @@
 ## Interface: 20504
-## Version: 1.0.60
+## Version: 1.0.62
 ## Title: DRaidFrames |T254652:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
 ## Notes: Raid Frames
 ## Author: D4KiR
@@ -14,13 +14,13 @@ libs\D4Lib\D4Lib.xml
 libs\LibStub\LibStub.lua
 libs\LibDropDown\embed.xml
 
-locale/enUS.lua
-locale/deDE.lua
-locale/ruRU.lua
-locale/zhTW.lua
-libs/LIB_lang.lua
-libs/realms.lua
-libs/dropdown.lua
+locale\enUS.lua
+locale\deDE.lua
+locale\ruRU.lua
+locale\zhTW.lua
+libs\LIB_lang.lua
+libs\realms.lua
+libs\dropdown.lua
 
 settings.lua
 

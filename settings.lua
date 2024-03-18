@@ -1,23 +1,5 @@
 -- By D4KiR
 local AddonName, DRaidFrames = ...
-local BuildNr = select(4, GetBuildInfo())
-local Build = "CLASSIC"
-if BuildNr >= 100000 then
-	Build = "RETAIL"
-elseif BuildNr > 29999 then
-	Build = "WRATH"
-elseif BuildNr > 19999 then
-	Build = "TBC"
-end
-
-function DRaidFrames:GetWoWBuildNr()
-	return BuildNr
-end
-
-function DRaidFrames:GetWoWBuild()
-	return Build
-end
-
 local DRFLoaded = false
 function DRaidFrames:GetConfig(key, value, pc)
 	DRFTAB = DRFTAB or {}
@@ -123,7 +105,7 @@ local Y = 0
 local sliderX = 12
 function DRaidFrames:InitSettings()
 	local DRFSettings = {}
-	D4:SetVersion(AddonName, 254652, "1.0.60")
+	D4:SetVersion(AddonName, 254652, "1.0.62")
 	local DRFname = "DRaidFrames |T254652:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t"
 	local settingname = DRFname
 	DRFSettings.panel = CreateFrame("FRAME")
