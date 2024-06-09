@@ -105,7 +105,7 @@ local Y = 0
 local sliderX = 12
 function DRaidFrames:InitSettings()
 	local DRFSettings = {}
-	D4:SetVersion(AddonName, 254652, "1.0.72")
+	D4:SetVersion(AddonName, 254652, "1.0.73")
 	local DRFname = "DRaidFrames |T254652:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t"
 	local settingname = DRFname
 	DRFSettings.panel = CreateFrame("FRAME")
@@ -158,7 +158,12 @@ function DRaidFrames:InitSettings()
 		end
 	)
 
-	InterfaceOptions_AddCategory(DRFSettings.panel)
+	if InterfaceOptions_AddCategory then
+		InterfaceOptions_AddCategory(DRFSettings.panel)
+	else
+		print("WORK IN PROGRESS (Options)")
+	end
+
 	local settinggname = PARTY
 	DRFSettings.gpanel = CreateFrame("FRAME", settinggname, DRFSettings.panel)
 	DRFSettings.gpanel.name = settinggname
@@ -222,7 +227,12 @@ function DRaidFrames:InitSettings()
 	DRaidFrames:CreateSlider(DRFSettings.gpanel, "GBUSI", 16, sliderX, Y, 8, 64, 1.0, "BUSI")
 	Y = Y - 32
 	DRaidFrames:CreateSlider(DRFSettings.gpanel, "GOORA", 0.4, sliderX, Y, 0.1, 0.9, 0.1, "OORA")
-	InterfaceOptions_AddCategory(DRFSettings.gpanel)
+	if InterfaceOptions_AddCategory then
+		InterfaceOptions_AddCategory(DRFSettings.gpanel)
+	else
+		print("WORK IN PROGRESS (Options)")
+	end
+
 	local settingrname = RAID
 	DRFSettings.rpanel = CreateFrame("FRAME", settingrname, DRFSettings.panel)
 	DRFSettings.rpanel.name = settingrname
@@ -287,7 +297,11 @@ function DRaidFrames:InitSettings()
 	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RBUSI", 16, sliderX, Y, 8, 64, 1.0, "BUSI")
 	Y = Y - 32
 	DRaidFrames:CreateSlider(DRFSettings.rpanel, "ROORA", 0.4, sliderX, Y, 0.1, 0.9, 0.1, "OORA")
-	InterfaceOptions_AddCategory(DRFSettings.rpanel)
+	if InterfaceOptions_AddCategory then
+		InterfaceOptions_AddCategory(DRFSettings.rpanel)
+	else
+		print("WORK IN PROGRESS (Options)")
+	end
 end
 
 local f = CreateFrame("Frame")
