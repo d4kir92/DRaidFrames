@@ -105,14 +105,12 @@ local Y = 0
 local sliderX = 12
 function DRaidFrames:InitSettings()
 	local DRFSettings = {}
-	D4:SetVersion(AddonName, 254652, "1.0.78")
+	DRaidFrames:SetVersion(AddonName, 254652, "1.0.79")
 	local DRFname = "DRaidFrames |T254652:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t"
 	local settingname = DRFname
 	DRFSettings.panel = CreateFrame("FRAME")
 	DRFSettings.panel.name = settingname
 	Y = 0
-	H = 16
-	BR = 30
 	Y = Y - 10
 	local text = DRFSettings.panel:CreateFontString(nil, "ARTWORK")
 	text:SetFont(STANDARD_TEXT_FONT, 10, "OUTLINE")
@@ -169,8 +167,6 @@ function DRaidFrames:InitSettings()
 	DRFSettings.gpanel.name = settinggname
 	DRFSettings.gpanel.parent = settingname
 	Y = 0
-	H = 16
-	BR = 30
 	--Y = Y - 30
 	Y = Y - 10
 	local X = 500
@@ -238,8 +234,6 @@ function DRaidFrames:InitSettings()
 	DRFSettings.rpanel.name = settingrname
 	DRFSettings.rpanel.parent = settingname
 	Y = 0
-	H = 16
-	BR = 30
 	--Y = Y - 30
 	Y = Y - 10
 	X = 500
