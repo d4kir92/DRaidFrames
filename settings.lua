@@ -105,7 +105,7 @@ local Y = 0
 local sliderX = 12
 function DRaidFrames:InitSettings()
 	local DRFSettings = {}
-	DRaidFrames:SetVersion(AddonName, 254652, "1.0.80")
+	DRaidFrames:SetVersion(AddonName, 254652, "1.0.81")
 	local DRFname = "DRaidFrames |T254652:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t"
 	local settingname = DRFname
 	DRFSettings.panel = CreateFrame("FRAME")
