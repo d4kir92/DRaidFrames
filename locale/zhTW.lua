@@ -1,24 +1,24 @@
 -- zhTW Traditional Chinese
 local _, DRaidFrames = ...
-
-function DRaidFrames:DRFLangzhTW()
-	local lang = DRaidFrames:GetLangTab()
-	lang.SORTTYPE = "排序類型"
-	lang.OUBR = "外邊框"
-	lang.ROSP = "行間距"
-	lang.COSP = "欄間距"
-	lang.HEWI = "生命值寬度"
-	lang.HEHE = "生命值高度"
-	lang.POSI = "Power Size"
-	lang.GRHO = "水平群組"
-	lang.BAUP = "行列向上"
-	lang.DESI = "減益大小"
-	lang.BUSI = "增益大小"
-	lang.TETOTY = "Top Text type"
-	lang.TECETY = "生命文字類型"
-	lang.SHPO = "顯示能量"
-	lang.DETY = "減益類型"
-	lang.DECI = "Decimals"
-	lang.OVER = "Overlap"
-	lang.OORA = "Out Of Range Alpha"
-end
+DRaidFrames:AddTrans("zhTW", "SORTTYPE", "排序類型")
+DRaidFrames:AddTrans("zhTW", "GGRHO", "水平群組")
+DRaidFrames:AddTrans("zhTW", "GBAUP", "行列向上")
+DRaidFrames:AddTrans("zhTW", "GTETOTY", "Top Text type")
+DRaidFrames:AddTrans("zhTW", "GTECETY", "生命文字類型")
+DRaidFrames:AddTrans("zhTW", "GSHPO", "顯示能量")
+DRaidFrames:AddTrans("zhTW", "GDETY", "減益類型")
+DRaidFrames:AddTrans("zhTW", "GOVER", "Overlap")
+DRaidFrames:AddTrans("zhTW", "SHTO", "Show Tooltip")
+DRaidFrames:AddTrans("zhTW", "ghost", "Ghost")
+DRaidFrames:AddTrans("zhTW", "feigndeath", "Feign Death")
+DRaidFrames:AddTrans("zhTW", "GOUBR", "外邊框: %s")
+DRaidFrames:AddTrans("zhTW", "GROSP", "行間距: %s")
+DRaidFrames:AddTrans("zhTW", "GCOSP", "欄間距: %s")
+DRaidFrames:AddTrans("zhTW", "GHEWI", "生命值寬度: %s")
+DRaidFrames:AddTrans("zhTW", "GHEHE", "生命值高度: %s")
+DRaidFrames:AddTrans("zhTW", "GPOSI", "Power Size: %s")
+DRaidFrames:AddTrans("zhTW", "GDESI", "減益大小: %s")
+DRaidFrames:AddTrans("zhTW", "GBUSI", "增益大小: %s")
+DRaidFrames:AddTrans("zhTW", "DECI", "Decimals: %s")
+DRaidFrames:AddTrans("zhTW", "GOORA", "Out Of Range Alpha: %s")
+DRaidFrames:AddTrans("zhTW", "GELEM", "Elements: %s")

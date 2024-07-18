@@ -770,9 +770,9 @@ function DRaidFrames:SortUnits()
 	end
 
 	if IsInRaid() then
-		if DRaidFrames:GetConfig("RSORT", "Role") == "Group" then
+		if DRaidFrames:GetConfig("SORTTYPE", "Role") == "Group" then
 			table.sort(DRFSortedUnits, DRaidFrames_SortByGroup)
-		elseif DRaidFrames:GetConfig("RSORT", "Role") == "Role" then
+		elseif DRaidFrames:GetConfig("SORTTYPE", "Role") == "Role" then
 			table.sort(DRFSortedUnits, DRaidFrames_SortByRole)
 		end
 	else
@@ -1261,11 +1261,11 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		if not UnitIsConnected(unit) then
 			HealthTextCen = PLAYER_OFFLINE
 		elseif UnitIsFeignDeath and UnitIsFeignDeath(unit) then
-			HealthTextCen = DRaidFrames:GT("feigndeath")
+			HealthTextCen = DRaidFrames:Trans("feigndeath")
 		elseif UnitIsDead(unit) then
 			HealthTextCen = DEAD
 		elseif UnitHealth(unit) <= 1 then
-			HealthTextCen = DRaidFrames:GT("ghost")
+			HealthTextCen = DRaidFrames:Trans("ghost")
 		elseif uf.resurrect then
 			HealthTextCen = ""
 		end

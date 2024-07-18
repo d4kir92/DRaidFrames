@@ -1,26 +1,61 @@
 -- deDE German Deutsch
 local _, DRaidFrames = ...
-
-function DRaidFrames:DRFLangdeDE()
-	local lang = DRaidFrames:GetLangTab()
-	lang.SORTTYPE = "Sortierungsart"
-	lang.OUBR = "Äußerer Rand"
-	lang.ROSP = "Reihenabstand"
-	lang.COSP = "Spaltenabstand"
-	lang.HEWI = "Gesundheitsweite"
-	lang.HEHE = "Gesundheitshöhe"
-	lang.POSI = "Kraftgröße"
-	lang.GRHO = "Gruppe Horizontal"
-	lang.BAUP = "Balkenrichtung nach oben"
-	lang.DESI = "Debuffgröße"
-	lang.BUSI = "Buffgröße"
-	lang.TETOTY = "Oberer Text typ"
-	lang.TECETY = "Gesundheitstext typ"
-	lang.SHPO = "Kraft anzeigen"
-	lang.DETY = "DebuffTypen"
-	lang.DECI = "Dezimalstellen"
-	lang.OVER = "Überlappen"
-	lang.OORA = "Außer Reichweite Alpha"
-	lang.ghost = "Geist"
-	lang.feigndeath = "Totgestellt"
-end
+DRaidFrames:AddTrans("deDE", "SORTTYPE", "Sortierungsart")
+DRaidFrames:AddTrans("deDE", "GGRHO", "Gruppe Horizontal")
+DRaidFrames:AddTrans("deDE", "GBAUP", "Balkenrichtung nach oben")
+DRaidFrames:AddTrans("deDE", "GTETOTY", "Oberer Text typ")
+DRaidFrames:AddTrans("deDE", "GTECETY", "Gesundheitstext typ")
+DRaidFrames:AddTrans("deDE", "GSHPO", "Kraft anzeigen")
+DRaidFrames:AddTrans("deDE", "GDETY", "Debufftypen")
+DRaidFrames:AddTrans("deDE", "GOVER", "Überlappen")
+DRaidFrames:AddTrans("deDE", "RGRHO", "Gruppe Horizontal")
+DRaidFrames:AddTrans("deDE", "RBAUP", "Balkenrichtung nach oben")
+DRaidFrames:AddTrans("deDE", "RTETOTY", "Oberer Text typ")
+DRaidFrames:AddTrans("deDE", "RTECETY", "Gesundheitstext typ")
+DRaidFrames:AddTrans("deDE", "RSHPO", "Kraft anzeigen")
+DRaidFrames:AddTrans("deDE", "RDETY", "Debufftypen")
+DRaidFrames:AddTrans("deDE", "ROVER", "Überlappen")
+DRaidFrames:AddTrans("deDE", "SHTO", "Tooltip anzeigen")
+DRaidFrames:AddTrans("deDE", "ghost", "Geist")
+DRaidFrames:AddTrans("deDE", "feigndeath", "Totgestellt")
+DRaidFrames:AddTrans("deDE", "DECI", "Dezimalstellen: %s")
+DRaidFrames:AddTrans("deDE", "GOUBR", "Äußerer Rand: %s")
+DRaidFrames:AddTrans("deDE", "GROSP", "Reihenabstand: %s")
+DRaidFrames:AddTrans("deDE", "GCOSP", "Spaltenabstand: %s")
+DRaidFrames:AddTrans("deDE", "GHEWI", "Gesundheitsweite: %s")
+DRaidFrames:AddTrans("deDE", "GHEHE", "Gesundheitshöhe: %s")
+DRaidFrames:AddTrans("deDE", "GPOSI", "Kraftgröße (Mana, ...): %s")
+DRaidFrames:AddTrans("deDE", "GDESI", "Debuffgröße: %s")
+DRaidFrames:AddTrans("deDE", "GBUSI", "Buffgröße: %s")
+DRaidFrames:AddTrans("deDE", "GOORA", "Außer Reichweite Alpha: %s")
+DRaidFrames:AddTrans("deDE", "GELEM", "Elemente: %s")
+DRaidFrames:AddTrans("deDE", "ROUBR", "Äußerer Rand: %s")
+DRaidFrames:AddTrans("deDE", "RROSP", "Reihenabstand: %s")
+DRaidFrames:AddTrans("deDE", "RCOSP", "Spaltenabstand: %s")
+DRaidFrames:AddTrans("deDE", "RHEWI", "Gesundheitsweite: %s")
+DRaidFrames:AddTrans("deDE", "RHEHE", "Gesundheitshöhe: %s")
+DRaidFrames:AddTrans("deDE", "RPOSI", "Kraftgröße (Mana, ...): %s")
+DRaidFrames:AddTrans("deDE", "RDESI", "Debuffgröße: %s")
+DRaidFrames:AddTrans("deDE", "RBUSI", "Buffgröße: %s")
+DRaidFrames:AddTrans("deDE", "ROORA", "Außer Reichweite Alpha: %s")
+DRaidFrames:AddTrans("deDE", "RELEM", "Elemente: %s")
+DRaidFrames:AddTrans("deDE", "GPoison", "Gift")
+DRaidFrames:AddTrans("deDE", "GCurse", "Fluch")
+DRaidFrames:AddTrans("deDE", "GMagic", "Magie")
+DRaidFrames:AddTrans("deDE", "GDisease", "Krankheit")
+DRaidFrames:AddTrans("deDE", "GNone", "Kein")
+DRaidFrames:AddTrans("deDE", "RPoison", "Gift")
+DRaidFrames:AddTrans("deDE", "RCurse", "Fluch")
+DRaidFrames:AddTrans("deDE", "RMagic", "Magie")
+DRaidFrames:AddTrans("deDE", "RDisease", "Krankheit")
+DRaidFrames:AddTrans("deDE", "RNone", "Kein")
+DRaidFrames:AddTrans("deDE", "MMBTN", "Minimapknopf anzeigen")
+DRaidFrames:AddTrans("deDE", "GENERAL", "General")
+DRaidFrames:AddTrans("deDE", "PARTY", "Gruppe")
+DRaidFrames:AddTrans("deDE", "RAID", "Raid")
+DRaidFrames:AddTrans("deDE", "GFLAG", "Flagge")
+DRaidFrames:AddTrans("deDE", "GCLAS", "Klasse")
+DRaidFrames:AddTrans("deDE", "GTHRE", "Bedrohung")
+DRaidFrames:AddTrans("deDE", "RFLAG", "Flagge")
+DRaidFrames:AddTrans("deDE", "RCLAS", "Klasse")
+DRaidFrames:AddTrans("deDE", "RTHRE", "Bedrohung")

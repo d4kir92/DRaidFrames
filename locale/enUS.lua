@@ -1,26 +1,61 @@
 -- enUS English
 local _, DRaidFrames = ...
-
-function DRaidFrames:DRFLangenUS()
-	local lang = DRaidFrames:GetLangTab()
-	lang.SORTTYPE = "Sorting type"
-	lang.OUBR = "Outer Border"
-	lang.ROSP = "Row Spacing"
-	lang.COSP = "Column Spacing"
-	lang.HEWI = "Health Width"
-	lang.HEHE = "Health Height"
-	lang.POSI = "Power Size"
-	lang.GRHO = "Group Horizontal"
-	lang.BAUP = "Bar direction upwards"
-	lang.DESI = "Debuffsize"
-	lang.BUSI = "Buffsize"
-	lang.TETOTY = "Top Text type"
-	lang.TECETY = "Healthtext type"
-	lang.SHPO = "Show Power"
-	lang.DETY = "DebuffTypes"
-	lang.DECI = "Decimals"
-	lang.OVER = "Overlap"
-	lang.OORA = "Out Of Range Alpha"
-	lang.ghost = "Ghost"
-	lang.feigndeath = "Feign Death"
-end
+DRaidFrames:AddTrans("enUS", "SORTTYPE", "Sorting type")
+DRaidFrames:AddTrans("enUS", "GGRHO", "Group Horizontal")
+DRaidFrames:AddTrans("enUS", "GBAUP", "upwards")
+DRaidFrames:AddTrans("enUS", "GTETOTY", "Top Text type")
+DRaidFrames:AddTrans("enUS", "GTECETY", "type")
+DRaidFrames:AddTrans("enUS", "GSHPO", "Show Power")
+DRaidFrames:AddTrans("enUS", "GDETY", "DebuffTypes")
+DRaidFrames:AddTrans("enUS", "GOVER", "Overlap")
+DRaidFrames:AddTrans("enUS", "RGRHO", "Group Horizontal")
+DRaidFrames:AddTrans("enUS", "RBAUP", "upwards")
+DRaidFrames:AddTrans("enUS", "RTETOTY", "Top Text type")
+DRaidFrames:AddTrans("enUS", "RTECETY", "type")
+DRaidFrames:AddTrans("enUS", "RSHPO", "Show Power")
+DRaidFrames:AddTrans("enUS", "RDETY", "DebuffTypes")
+DRaidFrames:AddTrans("enUS", "ROVER", "Overlap")
+DRaidFrames:AddTrans("enUS", "SHTO", "Show Tooltip")
+DRaidFrames:AddTrans("enUS", "ghost", "Ghost")
+DRaidFrames:AddTrans("enUS", "feigndeath", "Feign Death")
+DRaidFrames:AddTrans("enUS", "DECI", "Decimals: %s")
+DRaidFrames:AddTrans("enUS", "GOUBR", "Outer Border: %s")
+DRaidFrames:AddTrans("enUS", "GROSP", "Spacing: %s")
+DRaidFrames:AddTrans("enUS", "GCOSP", "Column Spacing: %s")
+DRaidFrames:AddTrans("enUS", "GHEWI", "Width: %s")
+DRaidFrames:AddTrans("enUS", "GHEHE", "Health Height: %s")
+DRaidFrames:AddTrans("enUS", "GPOSI", "Size: %s")
+DRaidFrames:AddTrans("enUS", "GDESI", "Debuffsize: %s")
+DRaidFrames:AddTrans("enUS", "GBUSI", "Buffsize: %s")
+DRaidFrames:AddTrans("enUS", "GOORA", "Out Of Range Alpha: %s")
+DRaidFrames:AddTrans("enUS", "GELEM", "Elements: %s")
+DRaidFrames:AddTrans("enUS", "ROUBR", "Outer Border: %s")
+DRaidFrames:AddTrans("enUS", "RROSP", "Spacing: %s")
+DRaidFrames:AddTrans("enUS", "RCOSP", "Column Spacing: %s")
+DRaidFrames:AddTrans("enUS", "RHEWI", "Width: %s")
+DRaidFrames:AddTrans("enUS", "RHEHE", "Health Height: %s")
+DRaidFrames:AddTrans("enUS", "RPOSI", "Size: %s")
+DRaidFrames:AddTrans("enUS", "RDESI", "Debuffsize: %s")
+DRaidFrames:AddTrans("enUS", "RBUSI", "Buffsize: %s")
+DRaidFrames:AddTrans("enUS", "ROORA", "Out Of Range Alpha: %s")
+DRaidFrames:AddTrans("enUS", "RELEM", "Elements: %s")
+DRaidFrames:AddTrans("enUS", "GPoison", "Poison")
+DRaidFrames:AddTrans("enUS", "GCurse", "Curse")
+DRaidFrames:AddTrans("enUS", "GMagic", "Magic")
+DRaidFrames:AddTrans("enUS", "GDisease", "Disease")
+DRaidFrames:AddTrans("enUS", "GNone", "None")
+DRaidFrames:AddTrans("enUS", "RPoison", "Poison")
+DRaidFrames:AddTrans("enUS", "RCurse", "Curse")
+DRaidFrames:AddTrans("enUS", "RMagic", "Magic")
+DRaidFrames:AddTrans("enUS", "RDisease", "Disease")
+DRaidFrames:AddTrans("enUS", "RNone", "None")
+DRaidFrames:AddTrans("enUS", "MMBTN", "Show Minimap Button")
+DRaidFrames:AddTrans("enUS", "GENERAL", "General")
+DRaidFrames:AddTrans("enUS", "PARTY", "Party")
+DRaidFrames:AddTrans("enUS", "RAID", "Raid")
+DRaidFrames:AddTrans("enUS", "GFLAG", "Flag")
+DRaidFrames:AddTrans("enUS", "GCLAS", "Class")
+DRaidFrames:AddTrans("enUS", "GTHRE", "Threat")
+DRaidFrames:AddTrans("enUS", "RFLAG", "Flag")
+DRaidFrames:AddTrans("enUS", "RCLAS", "Class")
+DRaidFrames:AddTrans("enUS", "RTHRE", "Threat")

@@ -1,24 +1,24 @@
 -- ruRU Russian
 local _, DRaidFrames = ...
-
-function DRaidFrames:DRFLangruRU()
-	local lang = DRaidFrames:GetLangTab()
-	lang.SORTTYPE = "Тип сортировки"
-	lang.OUBR = "Внешняя граница"
-	lang.ROSP = "Расстояние между рядами"
-	lang.COSP = "Расстояние между столбцами"
-	lang.HEWI = "Ширина полосы здоровья"
-	lang.HEHE = "Высота полосы здоровья"
-	lang.POSI = "Power Size"
-	lang.GRHO = "Горизонтальное расположение группы"
-	lang.BAUP = "Направление иконки вверх"
-	lang.DESI = "Размер дебаффа"
-	lang.BUSI = "Размер баффа"
-	lang.TETOTY = "Top Text type"
-	lang.TECETY = "Тип Текста Здоровья"
-	lang.SHPO = "Показать силу"
-	lang.DETY = "Типы дебаффов"
-	lang.DECI = "Десятичные дроби"
-	lang.OVER = "Совпадение"
-	lang.OORA = "Out Of Range Alpha"
-end
+DRaidFrames:AddTrans("ruRU", "SORTTYPE", "Тип сортировки")
+DRaidFrames:AddTrans("ruRU", "GGRHO", "Группа горизонтальная")
+DRaidFrames:AddTrans("ruRU", "GBAUP", "вверх")
+DRaidFrames:AddTrans("ruRU", "GTETOTY", "Тип текста вверху")
+DRaidFrames:AddTrans("ruRU", "GTECETY", "тип")
+DRaidFrames:AddTrans("ruRU", "GSHPO", "Показать силу")
+DRaidFrames:AddTrans("ruRU", "GDETY", "Типы дебаффов")
+DRaidFrames:AddTrans("ruRU", "GOVER", "Перекрытие")
+DRaidFrames:AddTrans("ruRU", "SHTO", "Показать всплывающую подсказку")
+DRaidFrames:AddTrans("ruRU", "ghost", "Призрак")
+DRaidFrames:AddTrans("ruRU", "feigndeath", "Притворная смерть")
+DRaidFrames:AddTrans("ruRU", "GOUBR", "Внешняя граница: %s")
+DRaidFrames:AddTrans("ruRU", "GROSP", "Промежуток: %s")
+DRaidFrames:AddTrans("ruRU", "GCOSP", "Расстояние между колонками: %s")
+DRaidFrames:AddTrans("ruRU", "GHEWI", "Ширина: %s")
+DRaidFrames:AddTrans("ruRU", "GHEHE", "Высота здоровья: %s")
+DRaidFrames:AddTrans("ruRU", "GPOSI", "Размер: %s")
+DRaidFrames:AddTrans("ruRU", "GDESI", "Дебаффы: %s")
+DRaidFrames:AddTrans("ruRU", "GBUSI", "Размер буфера: %s")
+DRaidFrames:AddTrans("ruRU", "DECI", "Десятичные числа: %s")
+DRaidFrames:AddTrans("ruRU", "GOORA", "Альфа вне диапазона: %s")
+DRaidFrames:AddTrans("ruRU", "GELEM", "Элементы: %s")
