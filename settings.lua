@@ -61,14 +61,14 @@ end
 
 function DRaidFrames:InitSettings()
 	DRFTAB = DRFTAB or {}
-	DRaidFrames:SetVersion(AddonName, 254652, "1.1.0")
+	DRaidFrames:SetVersion(AddonName, 254652, "1.1.1")
 	drf_settings = DRaidFrames:CreateFrame(
 		{
 			["name"] = "DRaidFrames",
 			["pTab"] = {"CENTER"},
 			["sw"] = 520,
 			["sh"] = 520,
-			["title"] = format("DRaidFrames |T254652:16:16:0:0|t v|cff3FC7EB%s", "1.1.0")
+			["title"] = format("DRaidFrames |T254652:16:16:0:0|t v|cff3FC7EB%s", "1.1.1")
 		}
 	)
 
