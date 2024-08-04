@@ -61,14 +61,14 @@ end
 
 function DRaidFrames:InitSettings()
 	DRFTAB = DRFTAB or {}
-	DRaidFrames:SetVersion(AddonName, 254652, "1.1.1")
+	DRaidFrames:SetVersion(AddonName, 254652, "1.1.2")
 	drf_settings = DRaidFrames:CreateFrame(
 		{
 			["name"] = "DRaidFrames",
 			["pTab"] = {"CENTER"},
 			["sw"] = 520,
 			["sh"] = 520,
-			["title"] = format("DRaidFrames |T254652:16:16:0:0|t v|cff3FC7EB%s", "1.1.1")
+			["title"] = format("DRaidFrames |T254652:16:16:0:0|t v|cff3FC7EB%s", "1.1.2")
 		}
 	)
 
@@ -165,30 +165,36 @@ function DRaidFrames:InitSettings()
 	DRaidFrames:AppendCheckbox("RNone", true, nil, 28)
 	DRaidFrames:CreateComboBox(drf_settings.SC, "SORTTYPE", "Role", 0, DRaidFrames:GetAppendY(), "SORTTYPE", {"Group", "Role"})
 	DRaidFrames:SetAppendY(DRaidFrames:GetAppendY() - 32)
-	DRaidFrames:CreateMinimapButton(
-		{
-			["name"] = "DRaidFrames",
-			["icon"] = 254652,
-			["dbtab"] = DRFTAB,
-			["vTT"] = {"DRaidFrames", "Leftclick - Toggle Settings", "Shift + Rightclick - Hide Minimap Icon"},
-			["funcL"] = function()
-				DRaidFrames:ToggleSettings()
-			end,
-			["funcSR"] = function()
-				DRaidFrames:SV(DRFTAB, "MMBTN", false)
-				DRaidFrames:MSG("Minimap Button is now hidden.")
+	C_Timer.After(
+		0,
+		function()
+			DRaidFrames:CreateMinimapButton(
+				{
+					["name"] = "DRaidFrames",
+					["icon"] = 254652,
+					["dbtab"] = DRFTAB,
+					["vTT"] = {{"DRaidFrames |T254652:16:16:0:0|t", "v|cff3FC7EB1.1.2"}, {"Leftclick", "Toggle Settings"}, {"Rightclick", "Hide Minimap Icon"}},
+					["funcL"] = function()
+						DRaidFrames:ToggleSettings()
+					end,
+					["funcR"] = function()
+						DRaidFrames:SV(DRFTAB, "MMBTN", false)
+						DRaidFrames:MSG("Minimap Button is now hidden.")
+						DRaidFrames:HideMMBtn("DRaidFrames")
+					end,
+				}
+			)
+
+			if DRaidFrames:GV(DRFTAB, "MMBTN", DRaidFrames:GetWoWBuild() ~= "RETAIL") then
+				DRaidFrames:ShowMMBtn("DRaidFrames")
+			else
 				DRaidFrames:HideMMBtn("DRaidFrames")
-			end,
-		}
+			end
+		end
 	)
 
 	DRaidFrames:AddSlash("hla", DRaidFrames.ToggleSettings)
 	DRaidFrames:AddSlash("DRaidFrames", DRaidFrames.ToggleSettings)
-	if DRaidFrames:GV(DRFTAB, "MMBTN", true) then
-		DRaidFrames:ShowMMBtn("DRaidFrames")
-	else
-		DRaidFrames:HideMMBtn("DRaidFrames")
-	end
 	--[[
 	
 
