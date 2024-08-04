@@ -61,14 +61,14 @@ end
 
 function DRaidFrames:InitSettings()
 	DRFTAB = DRFTAB or {}
-	DRaidFrames:SetVersion(AddonName, 254652, "1.1.2")
+	DRaidFrames:SetVersion(AddonName, 254652, "1.1.3")
 	drf_settings = DRaidFrames:CreateFrame(
 		{
 			["name"] = "DRaidFrames",
 			["pTab"] = {"CENTER"},
 			["sw"] = 520,
 			["sh"] = 520,
-			["title"] = format("DRaidFrames |T254652:16:16:0:0|t v|cff3FC7EB%s", "1.1.2")
+			["title"] = format("DRaidFrames |T254652:16:16:0:0|t v|cff3FC7EB%s", "1.1.3")
 		}
 	)
 
@@ -86,7 +86,7 @@ function DRaidFrames:InitSettings()
 	DRaidFrames:AppendCategory("GENERAL")
 	DRaidFrames:AppendCheckbox(
 		"MMBTN",
-		true,
+		DRaidFrames:GetWoWBuild() ~= "RETAIL",
 		function(sel, checked)
 			if checked then
 				DRaidFrames:ShowMMBtn("DRaidFrames")
@@ -173,7 +173,7 @@ function DRaidFrames:InitSettings()
 					["name"] = "DRaidFrames",
 					["icon"] = 254652,
 					["dbtab"] = DRFTAB,
-					["vTT"] = {{"DRaidFrames |T254652:16:16:0:0|t", "v|cff3FC7EB1.1.2"}, {"Leftclick", "Toggle Settings"}, {"Rightclick", "Hide Minimap Icon"}},
+					["vTT"] = {{"DRaidFrames |T254652:16:16:0:0|t", "v|cff3FC7EB1.1.3"}, {"Leftclick", "Toggle Settings"}, {"Rightclick", "Hide Minimap Icon"}},
 					["funcL"] = function()
 						DRaidFrames:ToggleSettings()
 					end,
