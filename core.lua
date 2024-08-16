@@ -1047,6 +1047,24 @@ function DRaidFrames:UpdateSize()
 	)
 end
 
+function DRaidFrames:GetTexCoordsForRoleSmallCircle(irole)
+	if GetTexCoordsForRoleSmallCircle == nil then
+		function GetTexCoordsForRoleSmallCircle(role)
+			if role == "TANK" then
+				return 0, 19 / 64, 22 / 64, 41 / 64
+			elseif role == "HEALER" then
+				return 20 / 64, 39 / 64, 1 / 64, 20 / 64
+			elseif role == "DAMAGER" then
+				return 20 / 64, 39 / 64, 22 / 64, 41 / 64
+			else
+				error("Unknown role: " .. tostring(role))
+			end
+		end
+	end
+
+	return GetTexCoordsForRoleSmallCircle(irole)
+end
+
 function DRaidFrames:UpdateUnitInfo(uf, unit)
 	if UnitExists(unit) then
 		uf:Hide()
@@ -1348,7 +1366,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 
 		if UnitGroupRolesAssigned and DRaidFrames:GetWoWBuildNr() > 19999 then
 			if UnitGroupRolesAssigned(unit) ~= "NONE" then
-				uf.HealthBackground.RoleIcon:SetTexCoord(GetTexCoordsForRoleSmallCircle(UnitGroupRolesAssigned(unit)))
+				uf.HealthBackground.RoleIcon:SetTexCoord(DRaidFrames:GetTexCoordsForRoleSmallCircle(UnitGroupRolesAssigned(unit)))
 				uf.HealthBackground.RoleIcon:Show()
 			else
 				uf.HealthBackground.RoleIcon:Hide()
@@ -1356,9 +1374,9 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		end
 
 		if uf.HealthBackground.MythicIcon then
-			if UnitDebuff(unit, 396369) then
+			if DRaidFrames:UnitAura(unit, 396369, "HARMFULL") then
 				uf.HealthBackground.MythicIcon:SetTexture(135769) -- "+"
-			elseif UnitDebuff(unit, 396364) then
+			elseif DRaidFrames:UnitAura(unit, 396364, "HARMFULL") then
 				uf.HealthBackground.MythicIcon:SetTexture(135768) -- "-"
 			else
 				uf.HealthBackground.MythicIcon:SetTexture(nil)
@@ -1602,7 +1620,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		-- Buff
 		local idbu = 1
 		for i = 1, 20 do
-			local name, icon, count, _, duration, expirationTime, unitCaster, _, _, _ = UnitBuff(unit, i, "PLAYER|HELPFUL") --"RAID")
+			local name, icon, count, _, duration, expirationTime, unitCaster, _, _, _ = DRaidFrames:UnitAura(unit, i, "PLAYER|HELPFUL") --"RAID")
 			if idbu > DRF_MAX_BUFFS then break end
 			if name then
 				-- "player" or unitCaster == "pet" or unitCaster == "mouseover") then
@@ -1662,7 +1680,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		-- Debuff
 		local idde = 1
 		for i = 1, 20 do
-			local name, icon, count, debuffType, duration, expirationTime, unitCaster = UnitDebuff(unit, i, "RAID")
+			local name, icon, count, debuffType, duration, expirationTime, unitCaster = DRaidFrames:UnitAura(unit, i, "RAID")
 			if idde > DRF_MAX_DEBUFFS then break end
 			if name then
 				local allowed = false
