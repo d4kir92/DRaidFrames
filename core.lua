@@ -1621,6 +1621,15 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		local idbu = 1
 		for i = 1, 20 do
 			local name, icon, count, _, duration, expirationTime, unitCaster, _, _, _ = DRaidFrames:UnitAura(unit, i, "PLAYER|HELPFUL") --"RAID")
+			if name and type(name) == "table" then
+				icon = name.icon
+				count = name.applications
+				duration = name.duration
+				expirationTime = name.expirationTime
+				unitCaster = name.sourceUnit
+				name = name.name
+			end
+
 			if idbu > DRF_MAX_BUFFS then break end
 			if name then
 				-- "player" or unitCaster == "pet" or unitCaster == "mouseover") then
@@ -1681,6 +1690,15 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		local idde = 1
 		for i = 1, 20 do
 			local name, icon, count, debuffType, duration, expirationTime, unitCaster = DRaidFrames:UnitAura(unit, i, "RAID")
+			if name and type(name) == "table" then
+				icon = name.icon
+				count = name.applications
+				duration = name.duration
+				expirationTime = name.expirationTime
+				unitCaster = name.sourceUnit
+				name = name.name
+			end
+
 			if idde > DRF_MAX_DEBUFFS then break end
 			if name then
 				local allowed = false
