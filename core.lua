@@ -1481,6 +1481,8 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			else
 				uf.HealthBackground.RankIcon2:SetTexture(nil)
 			end
+		else
+			uf.HealthBackground.RankIcon2:SetTexture(nil)
 		end
 
 		-- READY CHECK
