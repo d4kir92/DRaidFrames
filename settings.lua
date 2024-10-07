@@ -61,14 +61,14 @@ end
 
 function DRaidFrames:InitSettings()
 	DRFTAB = DRFTAB or {}
-	DRaidFrames:SetVersion(AddonName, 254652, "1.1.8")
+	DRaidFrames:SetVersion(AddonName, 254652, "1.1.9")
 	drf_settings = DRaidFrames:CreateFrame(
 		{
 			["name"] = "DRaidFrames",
 			["pTab"] = {"CENTER"},
 			["sw"] = 520,
 			["sh"] = 520,
-			["title"] = format("DRaidFrames |T254652:16:16:0:0|t v|cff3FC7EB%s", "1.1.8")
+			["title"] = format("DRaidFrames |T254652:16:16:0:0|t v|cff3FC7EB%s", "1.1.9")
 		}
 	)
 
@@ -173,7 +173,7 @@ function DRaidFrames:InitSettings()
 					["name"] = "DRaidFrames",
 					["icon"] = 254652,
 					["dbtab"] = DRFTAB,
-					["vTT"] = {{"DRaidFrames |T254652:16:16:0:0|t", "v|cff3FC7EB1.1.8"}, {"Leftclick", "Toggle Settings"}, {"Rightclick", "Hide Minimap Icon"}},
+					["vTT"] = {{"DRaidFrames |T254652:16:16:0:0|t", "v|cff3FC7EB1.1.9"}, {"Leftclick", "Toggle Settings"}, {"Rightclick", "Hide Minimap Icon"}},
 					["funcL"] = function()
 						DRaidFrames:ToggleSettings()
 					end,
@@ -195,79 +195,6 @@ function DRaidFrames:InitSettings()
 
 	DRaidFrames:AddSlash("hla", DRaidFrames.ToggleSettings)
 	DRaidFrames:AddSlash("DRaidFrames", DRaidFrames.ToggleSettings)
-	--[[
-	
-
-
-
-
-	local settingrname = RAID
-	DRFSettings.rpanel = CreateFrame("FRAME", settingrname, DRFSettings.panel)
-	DRFSettings.rpanel.name = settingrname
-	DRFSettings.rpanel.parent = settingname
-	Y = 0
-	--Y = Y - 30
-	Y = Y - 10
-	X = 500
-	DRFSettings.rpanel.Text = DRFSettings.rpanel:CreateFontString(nil, "ARTWORK")
-	DRFSettings.rpanel.Text:SetFont(STANDARD_TEXT_FONT, 11, "")
-	DRFSettings.rpanel.Text:SetPoint("TOPLEFT", DRFSettings.rpanel, "TOPLEFT", X, Y)
-	DRFSettings.rpanel.Text:SetText(DRaidFrames:Trans("DETY"))
-	Y = Y - 18
-	for i, v in pairs(DebuffTypeSymbol) do
-		DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "R" .. i, true, X, Y, i, true) -- parent, key, vval, x, y, lstr)
-		Y = Y - 18
-	end
-
-	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "R" .. "None", true, X, Y, "None", true)
-	Y = -10
-	DRaidFrames:CreateComboBox(DRFSettings.rpanel, "SORTTYPE", "Role", 0, Y, "SORTTYPE", {"Group", "Role"})
-	Y = Y - 32
-	DRaidFrames:CreateComboBox(DRFSettings.rpanel, "RTETOTY", "Name", 0, Y, "TETOTY", {"Name", "Class", "Class + Name", "Name + Class", "None"})
-	Y = Y - 32
-	DRaidFrames:CreateComboBox(DRFSettings.rpanel, "RTECETY", "Health in Percent", 0, Y, "TECETY", {"Health in Percent", "Lost Health in Percent", "None"})
-	Y = Y - 32
-	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RELEM", 5, 12, Y, 1, 40, 1.0, "ELEMENTS")
-	Y = Y - 32
-	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RSHPO", true, 12, Y, "SHPO") -- parent, key, vval, x, y, lstr)
-	Y = Y - 20
-	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RGRHO", true, 12, Y, "GGRHO") -- parent, key, vval, x, y, lstr)
-	Y = Y - 20
-	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RBAUP", true, 12, Y, "GBAUP") -- parent, key, vval, x, y, lstr)
-	Y = Y - 20
-	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "ROVER", false, 12, Y, "OVER") -- parent, key, vval, x, y, lstr)
-	if UnitHasRating then
-		DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RRATE", true, 200, Y + 60, "Rating") -- parent, key, vval, x, y, lstr)
-	end
-
-	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RFLAG", true, 200, Y + 40, LANGUAGE) -- parent, key, vval, x, y, lstr)
-	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RCLAS", true, 200, Y + 20, CLASS) -- parent, key, vval, x, y, lstr)
-	DRaidFrames:CreateCheckBox(DRFSettings.rpanel, "RTHRE", false, 200, Y + 0, "Threat") -- parent, key, vval, x, y, lstr)
-	Y = Y - 28
-	DRaidFrames:CreateSlider(DRFSettings.rpanel, "ROUBR", 6, sliderX, Y, 0, 20, 1.0, "GOUBR")
-	Y = Y - 32
-	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RROSP", 4, sliderX, Y, 0, 50, 1.0, "GROSP")
-	Y = Y - 32
-	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RCOSP", 20, sliderX, Y, 0, 50, 1.0, "COSP")
-	Y = Y - 10
-	Y = Y - 32
-	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RHEWI", 80, sliderX, Y, 20, 300, 1.0, "HEWI")
-	Y = Y - 32
-	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RHEHE", 60, sliderX, Y, 20, 300, 1.0, "GHEHE")
-	Y = Y - 32
-	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RPOSI", 10, sliderX, Y, 8, 300, 1.0, "GPOSI")
-	Y = Y - 10
-	Y = Y - 32
-	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RDESI", 16, sliderX, Y, 8, 64, 1.0, "GDESI")
-	Y = Y - 32
-	DRaidFrames:CreateSlider(DRFSettings.rpanel, "RBUSI", 16, sliderX, Y, 8, 64, 1.0, "BUSI")
-	Y = Y - 32
-	DRaidFrames:CreateSlider(DRFSettings.rpanel, "ROORA", 0.4, sliderX, Y, 0.1, 0.9, 0.1, "OORA")
-	if InterfaceOptions_AddCategory then
-		InterfaceOptions_AddCategory(DRFSettings.rpanel)
-	else
-		print("[DRaidFrames] WORK IN PROGRESS (Options)")
-	end]]
 end
 
 local f = CreateFrame("Frame")
