@@ -61,14 +61,14 @@ end
 
 function DRaidFrames:InitSettings()
 	DRFTAB = DRFTAB or {}
-	DRaidFrames:SetVersion(AddonName, 254652, "1.1.15")
+	DRaidFrames:SetVersion(AddonName, 254652, "1.1.16")
 	drf_settings = DRaidFrames:CreateFrame(
 		{
 			["name"] = "DRaidFrames",
 			["pTab"] = {"CENTER"},
 			["sw"] = 520,
 			["sh"] = 520,
-			["title"] = format("DRaidFrames |T254652:16:16:0:0|t v|cff3FC7EB%s", "1.1.15")
+			["title"] = format("DRaidFrames |T254652:16:16:0:0|t v|cff3FC7EB%s", "1.1.16")
 		}
 	)
 
@@ -170,7 +170,7 @@ function DRaidFrames:InitSettings()
 			["name"] = "DRaidFrames",
 			["icon"] = 254652,
 			["dbtab"] = DRFTAB,
-			["vTT"] = {{"DRaidFrames |T254652:16:16:0:0|t", "v|cff3FC7EB1.1.15"}, {"Leftclick", "Toggle Settings"}, {"Rightclick", "Hide Minimap Icon"}},
+			["vTT"] = {{"DRaidFrames |T254652:16:16:0:0|t", "v|cff3FC7EB1.1.16"}, {"Leftclick", "Toggle Settings"}, {"Rightclick", "Hide Minimap Icon"}},
 			["funcL"] = function()
 				DRaidFrames:ToggleSettings()
 			end,
@@ -188,7 +188,7 @@ function DRaidFrames:InitSettings()
 		DRaidFrames:HideMMBtn("DRaidFrames")
 	end
 
-	DRaidFrames:AddSlash("hla", DRaidFrames.ToggleSettings)
+	DRaidFrames:AddSlash("drf", DRaidFrames.ToggleSettings)
 	DRaidFrames:AddSlash("DRaidFrames", DRaidFrames.ToggleSettings)
 end
 
