@@ -574,7 +574,7 @@ for group = 1, 8 do
 		DRF.UFS[id].Aggro:SetTexCoord(unpack(texCoords["Raid-AggroFrame"]))
 		DRF.UFS[id].Aggro:SetVertexColor(1, 0.2, 0.2)
 		-- Role Icon
-		if UnitGroupRolesAssigned and DRaidFrames:GetWoWBuildNr() > 19999 then
+		if UnitGroupRolesAssigned then
 			DRF.UFS[id].HealthBackground.RoleIcon = DRF.UFS[id]:CreateTexture(nil, "OVERLAY")
 			DRF.UFS[id].HealthBackground.RoleIcon:SetDrawLayer("OVERLAY", DRFLayers["RoleIcon"])
 			DRF.UFS[id].HealthBackground.RoleIcon:SetSize(18, 18)
@@ -680,7 +680,7 @@ end
 local function DRaidFrames_SortByRole(a, b)
 	local arole = "NONE" --UnitGroupRolesAssigned(a)
 	local brole = "NONE" --UnitGroupRolesAssigned(b)
-	if UnitGroupRolesAssigned and DRaidFrames:GetWoWBuildNr() > 19999 then
+	if UnitGroupRolesAssigned then
 		arole = UnitGroupRolesAssigned(a)
 		brole = UnitGroupRolesAssigned(b)
 	end
@@ -1021,7 +1021,7 @@ function DRaidFrames:UpdateSize()
 				-- Aggro
 				DRF.UFS[pid].Aggro:ClearAllPoints()
 				DRF.UFS[pid].Aggro:SetAllPoints(DRF.UFS[pid])
-				if UnitGroupRolesAssigned and DRaidFrames:GetWoWBuildNr() > 19999 then
+				if UnitGroupRolesAssigned then
 					DRF.UFS[pid].HealthBackground.RoleIcon:SetSize(18, 18)
 					DRF.UFS[pid].HealthBackground.RoleIcon:SetPoint("TOPRIGHT", DRF.UFS[pid].HealthBackground, "TOPRIGHT", -1, -2)
 				end
@@ -1364,7 +1364,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 			uf.Aggro:Hide()
 		end
 
-		if UnitGroupRolesAssigned and DRaidFrames:GetWoWBuildNr() > 19999 then
+		if UnitGroupRolesAssigned then
 			if UnitGroupRolesAssigned(unit) ~= "NONE" then
 				uf.HealthBackground.RoleIcon:SetTexCoord(DRaidFrames:GetTexCoordsForRoleSmallCircle(UnitGroupRolesAssigned(unit)))
 				uf.HealthBackground.RoleIcon:Show()
