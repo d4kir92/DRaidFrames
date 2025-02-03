@@ -1,5 +1,5 @@
 ## Interface: 30403
-## Version: 1.1.19
+## Version: 1.1.20
 ## Title: DRaidFrames |T254652:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
 ## Notes: Raid Frames
 ## Author: D4KiR
