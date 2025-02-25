@@ -61,14 +61,14 @@ end
 
 function DRaidFrames:InitSettings()
 	DRFTAB = DRFTAB or {}
-	DRaidFrames:SetVersion(AddonName, 254652, "1.1.21")
+	DRaidFrames:SetVersion(254652, "1.1.22")
 	drf_settings = DRaidFrames:CreateFrame(
 		{
 			["name"] = "DRaidFrames",
 			["pTab"] = {"CENTER"},
 			["sw"] = 520,
 			["sh"] = 520,
-			["title"] = format("DRaidFrames |T254652:16:16:0:0|t v|cff3FC7EB%s", "1.1.21")
+			["title"] = format("|T254652:16:16:0:0|t DRaidFrames v|cff3FC7EB%s", DRaidFrames:GetVersion())
 		}
 	)
 
@@ -170,7 +170,7 @@ function DRaidFrames:InitSettings()
 			["name"] = "DRaidFrames",
 			["icon"] = 254652,
 			["dbtab"] = DRFTAB,
-			["vTT"] = {{"DRaidFrames |T254652:16:16:0:0|t", "v|cff3FC7EB1.1.21"}, {"Leftclick", "Toggle Settings"}, {"Rightclick", "Hide Minimap Icon"}},
+			["vTT"] = {{"|T254652:16:16:0:0|t DRaidFrames", "v|cff3FC7EB" .. DRaidFrames:GetVersion()}, {DRaidFrames:Trans("LID_LEFTCLICK"), DRaidFrames:Trans("LID_OPENSETTINGS")}, {DRaidFrames:Trans("LID_RIGHTCLICK"), DRaidFrames:Trans("LID_HIDEMINIMAPBUTTON")}},
 			["funcL"] = function()
 				DRaidFrames:ToggleSettings()
 			end,
