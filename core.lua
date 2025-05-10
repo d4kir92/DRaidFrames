@@ -1342,7 +1342,7 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		end
 
 		if uClass ~= nil then
-			local r, g, b, _ = GetClassColor(uClassEng)
+			local r, g, b, _ = DRaidFrames:GetClassColor(uClassEng)
 			uf.HealthBar:SetVertexColor(r, g, b)
 			if UnitGetIncomingHeals and UnitGetTotalAbsorbs then
 				uf.Prediction:SetVertexColor(r + 0.2, g + 0.2, b + 0.2)
