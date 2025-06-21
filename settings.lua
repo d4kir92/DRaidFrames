@@ -1,5 +1,5 @@
 -- By D4KiR
-local AddonName, DRaidFrames = ...
+local _, DRaidFrames = ...
 local DRFLoaded = false
 function DRaidFrames:GetConfig(key, value, pc)
 	DRFTAB = DRFTAB or {}
@@ -31,7 +31,7 @@ function DRaidFrames:CreateComboBox(parent, key, vval, x, y, lstr, tab)
 	local rows = {
 		["name"] = lstr,
 		["parent"] = parent,
-		["title"] = lstr,
+		["title"] = "LID_" .. lstr,
 		["items"] = tab,
 		["defaultVal"] = DRaidFrames:GetConfig(key, vval),
 		["changeFunc"] = function(dropdown_frame, dropdown_val)
@@ -61,7 +61,7 @@ end
 
 function DRaidFrames:InitSettings()
 	DRFTAB = DRFTAB or {}
-	DRaidFrames:SetVersion(254652, "1.1.29")
+	DRaidFrames:SetVersion(254652, "1.1.30")
 	drf_settings = DRaidFrames:CreateFrame(
 		{
 			["name"] = "DRaidFrames",

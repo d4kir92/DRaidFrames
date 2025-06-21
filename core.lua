@@ -272,7 +272,7 @@ DRF:SetMovable(true)
 DRF:SetUserPlaced(true)
 DRF:EnableMouse(true)
 DRF:RegisterForDrag("LeftButton")
-DRF:SetClampedToScreen(true)
+DRaidFrames:SetClampedToScreen(DRF, true)
 function DRaidFrames:SavePosition()
 	local point, parent, relativePoint, ofsx, ofsy = DRF:GetPoint()
 	if IsInRaid() then
@@ -1279,11 +1279,11 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 		if not UnitIsConnected(unit) then
 			HealthTextCen = PLAYER_OFFLINE
 		elseif UnitIsFeignDeath and UnitIsFeignDeath(unit) then
-			HealthTextCen = DRaidFrames:Trans("feigndeath")
+			HealthTextCen = DRaidFrames:Trans("LID_feigndeath")
 		elseif UnitIsDead(unit) then
 			HealthTextCen = DEAD
 		elseif UnitHealth(unit) <= 1 then
-			HealthTextCen = DRaidFrames:Trans("ghost")
+			HealthTextCen = DRaidFrames:Trans("LID_ghost")
 		elseif uf.resurrect then
 			HealthTextCen = ""
 		end
