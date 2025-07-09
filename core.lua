@@ -321,7 +321,8 @@ end
 DRF.isMoving = false
 DRF:SetScript(
 	"OnDragStart",
-	function(self)
+	function(sel)
+		if InCombatLockdown() and DRF:IsProtected() then return end
 		DRF:StartMoving()
 		DRF.isMoving = true
 	end
@@ -329,7 +330,8 @@ DRF:SetScript(
 
 DRF:SetScript(
 	"OnDragStop",
-	function(self)
+	function(sel)
+		if InCombatLockdown() and DRF:IsProtected() then return end
 		DRF:StopMovingOrSizing()
 		DRF.isMoving = false
 		DRaidFrames:SavePosition()
