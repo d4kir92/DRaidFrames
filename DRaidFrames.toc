@@ -8,6 +8,7 @@
 ## Version: 1.1.35
 ## Title: DRaidFrames by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
 ## Notes: Raid Frames
+## Notes-ruRU: Рейдовые фреймы
 ## Author: D|cff3FC7EB4KiR |T132115:16:16:0:0|t
 ## Category: D|cff3FC7EB4KiR |T132115:16:16:0:0|t
 ## X-Category: D|cff3FC7EB4KiR |T132115:16:16:0:0|t
