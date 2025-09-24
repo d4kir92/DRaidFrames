@@ -1,5 +1,5 @@
-## Interface: 50500
-## Version: 1.1.35
+## Interface: 50501
+## Version: 1.1.36
 ## Title: DRaidFrames |T254652:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
 ## Notes: Raid Frames
 ## Notes-ruRU: Рейдовые фреймы
