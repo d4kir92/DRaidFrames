@@ -3,9 +3,9 @@
 ## Interface-Wrath: 30300, 30403
 ## Interface-Cata: 40402
 ## Interface-Mists: 50501
-## Interface: 110200
+## Interface: 110205
 
-## Version: 1.1.36
+## Version: 1.1.37
 ## Title: DRaidFrames by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
 ## Notes: Raid Frames
 ## Notes-ruRU: Рейдовые фреймы
