@@ -1,5 +1,5 @@
 ## Interface: 40402
-## Version: 1.1.37
+## Version: 1.1.38
 ## Title: DRaidFrames |T254652:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
 ## Notes: Raid Frames
 ## Notes-ruRU: Рейдовые фреймы
