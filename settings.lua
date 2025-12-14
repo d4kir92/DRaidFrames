@@ -61,7 +61,7 @@ end
 
 function DRaidFrames:InitSettings()
 	DRFTAB = DRFTAB or {}
-	DRaidFrames:SetVersion(254652, "1.1.40")
+	DRaidFrames:SetVersion(254652, "1.1.41")
 	drf_settings = DRaidFrames:CreateWindow(
 		{
 			["name"] = "DRaidFrames",

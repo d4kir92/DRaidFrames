@@ -1,5 +1,5 @@
 ## Interface: 30300, 30403
-## Version: 1.1.40
+## Version: 1.1.41
 ## Title: DRaidFrames |T254652:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
 ## Notes: Raid Frames
 ## Notes-ruRU: Рейдовые фреймы
