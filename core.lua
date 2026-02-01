@@ -455,11 +455,11 @@ for group = 1, 8 do
 		DRF.UFS[id].BuffBar:SetSize(DRF_MAX_BUFFS * 18, 18)
 		DRF.UFS[id].BuffBar:SetPoint("BOTTOMRIGHT", DRF.UFS[id].HealthBackground, "BOTTOMRIGHT", 0, 0)
 		for i = 1, DRF_MAX_BUFFS do
-			if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
-				DRF.UFS[id].BuffBar[i] = CreateFrame("Button", "DRFBUFF" .. id .. "_" .. i, DRF.UFS[id].BuffBar, "BuffButtonTemplate")
-			else
+			if DoesTemplateExist("AuraButtonTemplate") then
 				DRF.UFS[id].BuffBar[i] = CreateFrame("Button", "DRFBUFF" .. id .. "_" .. i, DRF.UFS[id].BuffBar, "AuraButtonTemplate")
 				DRF.UFS[id].BuffBar[i]:UpdateAuraType("Buff")
+			else
+				DRF.UFS[id].BuffBar[i] = CreateFrame("Button", "DRFBUFF" .. id .. "_" .. i, DRF.UFS[id].BuffBar, "BuffButtonTemplate")
 			end
 
 			DRF.UFS[id].BuffBar[i].buttonInfo = {}
@@ -512,11 +512,11 @@ for group = 1, 8 do
 		DRF.UFS[id].DebuffBar:SetSize(DRF_MAX_DEBUFFS * 18, 18)
 		DRF.UFS[id].DebuffBar:SetPoint("BOTTOMLEFT", DRF.UFS[id].HealthBackground, "BOTTOMLEFT", 0, 0)
 		for i = 1, DRF_MAX_DEBUFFS do
-			if DRaidFrames:GetWoWBuild() ~= "RETAIL" then
-				DRF.UFS[id].DebuffBar[i] = CreateFrame("Button", "DRFDEBUFF" .. id .. "_" .. i, DRF.UFS[id].DebuffBar, "DebuffButtonTemplate")
-			else
+			if DoesTemplateExist("AuraButtonTemplate") then
 				DRF.UFS[id].DebuffBar[i] = CreateFrame("Button", "DRFDEBUFF" .. id .. "_" .. i, DRF.UFS[id].DebuffBar, "AuraButtonTemplate")
 				DRF.UFS[id].DebuffBar[i]:UpdateAuraType("Debuff")
+			else
+				DRF.UFS[id].DebuffBar[i] = CreateFrame("Button", "DRFDEBUFF" .. id .. "_" .. i, DRF.UFS[id].DebuffBar, "DebuffButtonTemplate")
 			end
 
 			DRF.UFS[id].DebuffBar[i].buttonInfo = {}
