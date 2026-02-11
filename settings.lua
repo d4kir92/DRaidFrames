@@ -61,7 +61,7 @@ end
 
 function DRaidFrames:InitSettings()
 	DRFTAB = DRFTAB or {}
-	DRaidFrames:SetVersion(254652, "1.1.44")
+	DRaidFrames:SetVersion(254652, "1.1.45")
 	drf_settings = DRaidFrames:CreateWindow(
 		{
 			["name"] = "DRaidFrames",
@@ -126,8 +126,12 @@ function DRaidFrames:InitSettings()
 	DRaidFrames:AppendSlider("GBUSI", 16, 8, 65, 1, 0)
 	DRaidFrames:AppendSlider("GOORA", 0.4, 0.1, 0.9, 0.1, 1)
 	DRaidFrames:AppendCategory("GDETY", 24)
-	for i, v in pairs(DebuffTypeSymbol) do
-		DRaidFrames:AppendCheckbox("G" .. i, true, nil, 28)
+	if GetDebuffColors() then
+		for i, v in pairs(GetDebuffColors()) do
+			DRaidFrames:AppendCheckbox("G" .. i, true, nil, 28)
+		end
+	else
+		DRaidFrames:MSG("MISSING GetDebuffColors() #1")
 	end
 
 	DRaidFrames:AppendCheckbox("GNone", true, null, 28)
@@ -158,8 +162,12 @@ function DRaidFrames:InitSettings()
 	DRaidFrames:AppendSlider("RBUSI", 16, 8, 65, 1, 0)
 	DRaidFrames:AppendSlider("ROORA", 0.4, 0.1, 0.9, 0.1, 1)
 	DRaidFrames:AppendCategory("RDETY", 24)
-	for i, v in pairs(DebuffTypeSymbol) do
-		DRaidFrames:AppendCheckbox("R" .. i, true, nil, 28)
+	if GetDebuffColors() then
+		for i, v in pairs(GetDebuffColors()) do
+			DRaidFrames:AppendCheckbox("R" .. i, true, nil, 28)
+		end
+	else
+		DRaidFrames:MSG("MISSING GetDebuffColors() #2")
 	end
 
 	DRaidFrames:AppendCheckbox("RNone", true, nil, 28)

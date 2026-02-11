@@ -64,6 +64,24 @@ if UnitGetTotalAbsorbs == nil then
 	end
 end
 
+local DebuffColors = {}
+if DebuffTypeSymbol then
+	DebuffColors = DebuffTypeSymbol
+else
+	for i, v in pairs(_G) do
+		if i and type(i) == "string" and string.find(i, "DEBUFF_TYPE_") and not string.find(i, "CODE") then
+			local typ = i
+			typ = string.gsub(typ, "DEBUFF_TYPE_", "")
+			typ = string.gsub(typ, "_COLOR", "")
+			DebuffColors[string.sub(typ, 1, 1) .. string.lower(string.sub(typ, 2))] = string.sub(i, 1, 2)
+		end
+	end
+end
+
+function GetDebuffColors()
+	return DebuffColors
+end
+
 local DRFUNITSGROUP = {}
 for i = 1, 4 do
 	tinsert(DRFUNITSGROUP, "PARTY" .. i)
@@ -1750,8 +1768,8 @@ function DRaidFrames:UpdateUnitInfo(uf, unit)
 							uf.DebuffBar[idde].symbol:SetFont(fontFamily, 9, fontFlags)
 							uf.DebuffBar[idde].symbol:SetWidth(DESI)
 							uf.DebuffBar[idde].symbol:SetHeight(DESI / 2)
-							if DebuffTypeSymbol[debuffType] ~= nil then
-								uf.DebuffBar[idde].symbol:SetText(DebuffTypeSymbol[debuffType])
+							if GetDebuffColors()[debuffType] ~= nil then
+								uf.DebuffBar[idde].symbol:SetText(GetDebuffColors()[debuffType])
 							end
 
 							uf.DebuffBar[idde].symbol:SetVertexColor(color.r, color.g, color.b)
