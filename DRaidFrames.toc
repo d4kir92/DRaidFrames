@@ -2,10 +2,10 @@
 ## Interface-BCC: 20505
 ## Interface-Wrath: 30300, 30403
 ## Interface-Cata: 40402
-## Interface-Mists: 50503
-## Interface: 120005
+## Interface-Mists: 50504
+## Interface: 120007, 120005, 120001, 120000
 
-## Version: 1.1.48
+## Version: 1.1.49
 ## Title: DRaidFrames by |cff55d2ffD4KiR |T132115:16:16:0:0|t
 ## Notes: Raid Frames
 ## Notes-ruRU: Рейдовые фреймы
