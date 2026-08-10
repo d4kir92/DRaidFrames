@@ -20,10 +20,7 @@ function DRaidFrames:GetConfig(key, value, pc)
 		end
 	end
 
-	if tonumber(value) ~= nil then
-		value = tonumber(value)
-	end
-
+	if tonumber(value) ~= nil then value = tonumber(value) end
 	return value
 end
 
@@ -43,7 +40,6 @@ function DRaidFrames:CreateComboBox(parent, key, vval, x, y, lstr, tab)
 
 	local DD = DRaidFrames:CreateDropdown(rows)
 	DD:SetPoint("TOPLEFT", parent, "TOPLEFT", x, y)
-
 	return DD
 end
 
@@ -61,16 +57,14 @@ end
 
 function DRaidFrames:InitSettings()
 	DRFTAB = DRFTAB or {}
-	DRaidFrames:SetVersion(254652, "1.1.51")
-	drf_settings = DRaidFrames:CreateWindow(
-		{
-			["name"] = "DRaidFrames",
-			["pTab"] = {"CENTER"},
-			["sw"] = 520,
-			["sh"] = 520,
-			["title"] = format("|T254652:16:16:0:0|t DRaidFrames v%s", DRaidFrames:GetVersion())
-		}
-	)
+	DRaidFrames:SetVersion(254652, "1.1.52")
+	drf_settings = DRaidFrames:CreateWindow({
+		["name"] = "DRaidFrames",
+		["pTab"] = {"CENTER"},
+		["sw"] = 520,
+		["sh"] = 520,
+		["title"] = format("|T254652:16:16:0:0|t DRaidFrames v%s", DRaidFrames:GetVersion())
+	})
 
 	drf_settings.SF = CreateFrame("ScrollFrame", "drf_settings_SF", drf_settings, "UIPanelScrollFrameTemplate")
 	drf_settings.SF:SetPoint("TOPLEFT", drf_settings, 8, -26)
@@ -84,17 +78,13 @@ function DRaidFrames:InitSettings()
 	DRaidFrames:SetAppendParent(drf_settings.SC)
 	DRaidFrames:SetAppendTab(DRFTAB)
 	DRaidFrames:AppendCategory("GENERAL")
-	DRaidFrames:AppendCheckbox(
-		"MMBTN",
-		DRaidFrames:GetWoWBuild() ~= "RETAIL",
-		function(sel, checked)
-			if checked then
-				DRaidFrames:ShowMMBtn("DRaidFrames")
-			else
-				DRaidFrames:HideMMBtn("DRaidFrames")
-			end
+	DRaidFrames:AppendCheckbox("MMBTN", DRaidFrames:GetWoWBuild() ~= "RETAIL", function(sel, checked)
+		if checked then
+			DRaidFrames:ShowMMBtn("DRaidFrames")
+		else
+			DRaidFrames:HideMMBtn("DRaidFrames")
 		end
-	)
+	end)
 
 	--parent, key, vval, x, y, vmin, vmax, steps, lstr
 	DRaidFrames:AppendSlider("DECI", 0, 0, 3, 1, 0)
@@ -104,10 +94,7 @@ function DRaidFrames:InitSettings()
 	DRaidFrames:AppendCheckbox("GGRHO", true)
 	DRaidFrames:AppendCheckbox("GBAUP", true)
 	DRaidFrames:AppendCheckbox("GOVER", true)
-	if UnitHasRating then
-		DRaidFrames:AppendCheckbox("GRATE", true)
-	end
-
+	if UnitHasRating then DRaidFrames:AppendCheckbox("GRATE", true) end
 	DRaidFrames:AppendCheckbox("GFLAG", true)
 	DRaidFrames:AppendCheckbox("GCLAS", true)
 	DRaidFrames:AppendCheckbox("GTHRE", true)
@@ -140,10 +127,7 @@ function DRaidFrames:InitSettings()
 	DRaidFrames:AppendCheckbox("RGRHO", true)
 	DRaidFrames:AppendCheckbox("RBAUP", true)
 	DRaidFrames:AppendCheckbox("ROVER", true)
-	if UnitHasRating then
-		DRaidFrames:AppendCheckbox("RRATE", true)
-	end
-
+	if UnitHasRating then DRaidFrames:AppendCheckbox("RRATE", true) end
 	DRaidFrames:AppendCheckbox("RFLAG", true)
 	DRaidFrames:AppendCheckbox("RCLAS", true)
 	DRaidFrames:AppendCheckbox("RTHRE", true)
@@ -173,23 +157,19 @@ function DRaidFrames:InitSettings()
 	DRaidFrames:AppendCheckbox("RNone", true, nil, 28)
 	DRaidFrames:CreateComboBox(drf_settings.SC, "SORTTYPE", "Role", 0, DRaidFrames:GetAppendY(), "SORTTYPE", {"Group", "Role"})
 	DRaidFrames:SetAppendY(DRaidFrames:GetAppendY() - 32)
-	DRaidFrames:CreateMinimapButton(
-		{
-			["name"] = "DRaidFrames",
-			["icon"] = 254652,
-			["dbtab"] = DRFTAB,
-			["vTT"] = {{"|T254652:16:16:0:0|t DRaidFrames", "v" .. DRaidFrames:GetVersion()}, {DRaidFrames:Trans("LID_LEFTCLICK"), DRaidFrames:Trans("LID_OPENSETTINGS")}, {DRaidFrames:Trans("LID_RIGHTCLICK"), DRaidFrames:Trans("LID_HIDEMINIMAPBUTTON")}},
-			["funcL"] = function()
-				DRaidFrames:ToggleSettings()
-			end,
-			["funcR"] = function()
-				DRaidFrames:SV(DRFTAB, "MMBTN", false)
-				DRaidFrames:MSG("Minimap Button is now hidden.")
-				DRaidFrames:HideMMBtn("DRaidFrames")
-			end,
-			["dbkey"] = "MMBTN"
-		}
-	)
+	DRaidFrames:CreateMinimapButton({
+		["name"] = "DRaidFrames",
+		["icon"] = 254652,
+		["dbtab"] = DRFTAB,
+		["vTT"] = {{"|T254652:16:16:0:0|t DRaidFrames", "v" .. DRaidFrames:GetVersion()}, {DRaidFrames:Trans("LID_LEFTCLICK"), DRaidFrames:Trans("LID_OPENSETTINGS")}, {DRaidFrames:Trans("LID_RIGHTCLICK"), DRaidFrames:Trans("LID_HIDEMINIMAPBUTTON")}},
+		["funcL"] = function() DRaidFrames:ToggleSettings() end,
+		["funcR"] = function()
+			DRaidFrames:SV(DRFTAB, "MMBTN", false)
+			DRaidFrames:MSG("Minimap Button is now hidden.")
+			DRaidFrames:HideMMBtn("DRaidFrames")
+		end,
+		["dbkey"] = "MMBTN"
+	})
 
 	DRaidFrames:AddSlash("drf", DRaidFrames.ToggleSettings)
 	DRaidFrames:AddSlash("DRaidFrames", DRaidFrames.ToggleSettings)
@@ -200,22 +180,14 @@ f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("PLAYER_ENTERING_WORLD")
 f:RegisterEvent("GROUP_ROSTER_UPDATE")
 function f:OnEvent(event)
-	if event == "GROUP_ROSTER_UPDATE" then
-		DRaidFrames:SetSizing(true)
-	end
-
+	if event == "GROUP_ROSTER_UPDATE" then DRaidFrames:SetSizing(true) end
 	if (event == "PLAYER_LOGIN" or event == "PLAYER_ENTERING_WORLD") and not DRFLoaded then
 		DRFLoaded = true
 		DRaidFrames:SetSizingForce(true)
 		DRaidFrames:UpdateSize()
 		DRaidFrames:SetUpdating(true)
 		DRaidFrames:OnUpdate()
-		C_Timer.After(
-			0,
-			function()
-				DRaidFrames:InitSettings()
-			end
-		)
+		C_Timer.After(0, function() DRaidFrames:InitSettings() end)
 	end
 end
 
