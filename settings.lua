@@ -57,7 +57,7 @@ end
 
 function DRaidFrames:InitSettings()
 	DRFTAB = DRFTAB or {}
-	DRaidFrames:SetVersion(254652, "1.1.53")
+	DRaidFrames:SetVersion(254652, "1.1.54")
 	drf_settings = DRaidFrames:CreateWindow({
 		["name"] = "DRaidFrames",
 		["pTab"] = {"CENTER"},
