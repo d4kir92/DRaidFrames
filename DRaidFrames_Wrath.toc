@@ -1,8 +1,18 @@
-## Interface: 30300, 30403
-## Version: 1.1.52
+## Interface: 30403
+## Version: 1.1.53
 ## Title: DRaidFrames |T254652:16:16:0:0|t by |cff55d2ffD4KiR |T132115:16:16:0:0|t
-## Notes: Raid Frames
-## Notes-ruRU: Рейдовые фреймы
+## Notes: D4KiRs Raid Frames
+## Notes-deDE: D4KiRs Schlachtzugsfenster
+## Notes-esES: Marcos de banda de D4KiR
+## Notes-esMX: Marcos de banda de D4KiR
+## Notes-frFR: Cadres de raid de D4KiR
+## Notes-itIT: Cornici raid di D4KiR
+## Notes-koKR: D4KiR의 공격대 프레임
+## Notes-ptBR: Quadros de raide de D4KiR
+## Notes-ruRU: Рейдовые фреймы D4KiR
+## Notes-zhCN: D4KiR的团队框架
+## Notes-zhTW: D4KiR的團隊框架
+
 ## Author: D4KiR |T132115:16:16:0:0|t
 ## Category: Unit Frames
 ## Category-deDE: Einheitenfenster
