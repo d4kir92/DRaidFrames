@@ -57,7 +57,7 @@ end
 
 function DRaidFrames:InitSettings()
 	DRFTAB = DRFTAB or {}
-	DRaidFrames:SetVersion(254652, "1.1.54")
+	DRaidFrames:SetVersion(254652, "1.1.55")
 	drf_settings = DRaidFrames:CreateWindow({
 		["name"] = "DRaidFrames",
 		["pTab"] = {"CENTER"},
@@ -183,6 +183,7 @@ function f:OnEvent(event)
 	if event == "GROUP_ROSTER_UPDATE" then DRaidFrames:SetSizing(true) end
 	if (event == "PLAYER_LOGIN" or event == "PLAYER_ENTERING_WORLD") and not DRFLoaded then
 		DRFLoaded = true
+		DRaidFrames:SetAddonOutput("DRaidFrames", 254652)
 		DRaidFrames:SetSizingForce(true)
 		DRaidFrames:UpdateSize()
 		DRaidFrames:SetUpdating(true)
