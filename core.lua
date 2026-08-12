@@ -334,7 +334,7 @@ DRF.texture = DRF:CreateTexture(nil, "BACKGROUND")
 DRF.texture:SetAllPoints(DRF)
 DRF.texture:SetColorTexture(0, 0, 0, 1)
 function DRaidFrames:Think()
-	if MouseIsOver(DRF) then
+	if DRF:IsMouseOver() then
 		DRF.texture:SetAlpha(0.5)
 	else
 		DRF.texture:SetAlpha(0.25)
@@ -594,7 +594,7 @@ for group = 1, 8 do
 		end)
 
 		function BTN.think()
-			if MouseIsOver(BTN) or BTN.unit and UnitIsUnit("TARGET", BTN.unit) then
+			if BTN:IsMouseOver() or BTN.unit and UnitIsUnit("TARGET", BTN.unit) then
 				BTN.Highlight:SetAlpha(0.2)
 			else
 				BTN.Highlight:SetAlpha(0)
