@@ -1,6 +1,16 @@
 -- deDE German Deutsch
 local _, DRaidFrames = ...
 DRaidFrames:AddTrans("deDE", "LID_SORTTYPE", "Sortierungsart")
+DRaidFrames:AddTrans("deDE", "LID_TETY_NAME", "Name")
+DRaidFrames:AddTrans("deDE", "LID_TETY_NAMEREALM", "Name + Realm")
+DRaidFrames:AddTrans("deDE", "LID_TETY_CLASS", "Klasse")
+DRaidFrames:AddTrans("deDE", "LID_TETY_CLASSNAME", "Klasse + Name")
+DRaidFrames:AddTrans("deDE", "LID_TETY_NAMECLASS", "Name + Klasse")
+DRaidFrames:AddTrans("deDE", "LID_TETY_NONE", "Keine")
+DRaidFrames:AddTrans("deDE", "LID_CETY_HEALTHPCT", "Leben in Prozent")
+DRaidFrames:AddTrans("deDE", "LID_CETY_LOSTHEALTHPCT", "Verlorenes Leben in Prozent")
+DRaidFrames:AddTrans("deDE", "LID_SORT_GROUP", "Gruppe")
+DRaidFrames:AddTrans("deDE", "LID_SORT_ROLE", "Rolle")
 DRaidFrames:AddTrans("deDE", "LID_GGRHO", "Gruppe Horizontal")
 DRaidFrames:AddTrans("deDE", "LID_GBAUP", "Balkenrichtung nach oben")
 DRaidFrames:AddTrans("deDE", "LID_GTETOTY", "Oberer Text typ")

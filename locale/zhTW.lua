@@ -1,6 +1,16 @@
 -- zhTW Traditional Chinese
 local _, DRaidFrames = ...
 DRaidFrames:AddTrans("zhTW", "LID_SORTTYPE", "排序類型")
+DRaidFrames:AddTrans("zhTW", "LID_TETY_NAME", "名字")
+DRaidFrames:AddTrans("zhTW", "LID_TETY_NAMEREALM", "名字 + 伺服器")
+DRaidFrames:AddTrans("zhTW", "LID_TETY_CLASS", "職業")
+DRaidFrames:AddTrans("zhTW", "LID_TETY_CLASSNAME", "職業 + 名字")
+DRaidFrames:AddTrans("zhTW", "LID_TETY_NAMECLASS", "名字 + 職業")
+DRaidFrames:AddTrans("zhTW", "LID_TETY_NONE", "無")
+DRaidFrames:AddTrans("zhTW", "LID_CETY_HEALTHPCT", "生命值百分比")
+DRaidFrames:AddTrans("zhTW", "LID_CETY_LOSTHEALTHPCT", "已損失生命值百分比")
+DRaidFrames:AddTrans("zhTW", "LID_SORT_GROUP", "隊伍")
+DRaidFrames:AddTrans("zhTW", "LID_SORT_ROLE", "職責")
 DRaidFrames:AddTrans("zhTW", "LID_GGRHO", "水平群組")
 DRaidFrames:AddTrans("zhTW", "LID_GBAUP", "行列向上")
 DRaidFrames:AddTrans("zhTW", "LID_GTETOTY", "頂部文字類型")

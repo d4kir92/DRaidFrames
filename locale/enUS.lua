@@ -1,6 +1,16 @@
 -- enUS English
 local _, DRaidFrames = ...
 DRaidFrames:AddTrans("enUS", "LID_SORTTYPE", "Sorting type")
+DRaidFrames:AddTrans("enUS", "LID_TETY_NAME", "Name")
+DRaidFrames:AddTrans("enUS", "LID_TETY_NAMEREALM", "Name + Realm")
+DRaidFrames:AddTrans("enUS", "LID_TETY_CLASS", "Class")
+DRaidFrames:AddTrans("enUS", "LID_TETY_CLASSNAME", "Class + Name")
+DRaidFrames:AddTrans("enUS", "LID_TETY_NAMECLASS", "Name + Class")
+DRaidFrames:AddTrans("enUS", "LID_TETY_NONE", "None")
+DRaidFrames:AddTrans("enUS", "LID_CETY_HEALTHPCT", "Health in Percent")
+DRaidFrames:AddTrans("enUS", "LID_CETY_LOSTHEALTHPCT", "Lost Health in Percent")
+DRaidFrames:AddTrans("enUS", "LID_SORT_GROUP", "Group")
+DRaidFrames:AddTrans("enUS", "LID_SORT_ROLE", "Role")
 DRaidFrames:AddTrans("enUS", "LID_GGRHO", "Group Horizontal")
 DRaidFrames:AddTrans("enUS", "LID_GBAUP", "upwards")
 DRaidFrames:AddTrans("enUS", "LID_GTETOTY", "Top Text type")

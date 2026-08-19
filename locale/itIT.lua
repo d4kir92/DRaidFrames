@@ -1,6 +1,16 @@
 -- itIT Italian
 local _, DRaidFrames = ...
 DRaidFrames:AddTrans("itIT", "LID_SORTTYPE", "Tipo di ordinamento")
+DRaidFrames:AddTrans("itIT", "LID_TETY_NAME", "Nome")
+DRaidFrames:AddTrans("itIT", "LID_TETY_NAMEREALM", "Nome + Reame")
+DRaidFrames:AddTrans("itIT", "LID_TETY_CLASS", "Classe")
+DRaidFrames:AddTrans("itIT", "LID_TETY_CLASSNAME", "Classe + Nome")
+DRaidFrames:AddTrans("itIT", "LID_TETY_NAMECLASS", "Nome + Classe")
+DRaidFrames:AddTrans("itIT", "LID_TETY_NONE", "Nessuno")
+DRaidFrames:AddTrans("itIT", "LID_CETY_HEALTHPCT", "Salute in percentuale")
+DRaidFrames:AddTrans("itIT", "LID_CETY_LOSTHEALTHPCT", "Salute persa in percentuale")
+DRaidFrames:AddTrans("itIT", "LID_SORT_GROUP", "Gruppo")
+DRaidFrames:AddTrans("itIT", "LID_SORT_ROLE", "Ruolo")
 DRaidFrames:AddTrans("itIT", "LID_GGRHO", "Gruppo Orizzontale")
 DRaidFrames:AddTrans("itIT", "LID_GBAUP", "verso l'alto")
 DRaidFrames:AddTrans("itIT", "LID_GTETOTY", "Tipo di testo superiore")

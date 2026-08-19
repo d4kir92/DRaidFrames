@@ -24,23 +24,28 @@ function DRaidFrames:GetConfig(key, value, pc)
 	return value
 end
 
-function DRaidFrames:CreateComboBox(parent, key, vval, x, y, lstr, tab)
-	local rows = {
-		["name"] = lstr,
-		["parent"] = parent,
-		["title"] = "LID_" .. lstr,
-		["items"] = tab,
-		["defaultVal"] = DRaidFrames:GetConfig(key, vval),
-		["changeFunc"] = function(dropdown_frame, dropdown_val)
-			--dropdown_val = tonumber( dropdown_val )
-			DRFTAB[key] = dropdown_val
-			DRaidFrames:SetSizing(true)
-		end
-	}
+local TOPTEXTTYPES = {
+	["Name"] = "TETY_NAME",
+	["Name + Realm"] = "TETY_NAMEREALM",
+	["Class"] = "TETY_CLASS",
+	["Class + Name"] = "TETY_CLASSNAME",
+	["Name + Class"] = "TETY_NAMECLASS",
+	["None"] = "TETY_NONE"
+}
 
-	local DD = DRaidFrames:CreateDropdown(rows)
-	DD:SetPoint("TOPLEFT", parent, "TOPLEFT", x, y)
-	return DD
+local CENTERTEXTTYPES = {
+	["Health in Percent"] = "CETY_HEALTHPCT",
+	["Lost Health in Percent"] = "CETY_LOSTHEALTHPCT",
+	["None"] = "TETY_NONE"
+}
+
+local SORTTYPES = {
+	["Group"] = "SORT_GROUP",
+	["Role"] = "SORT_ROLE"
+}
+
+local function OnDropdownChanged()
+	DRaidFrames:SetSizing(true)
 end
 
 DRaidFrames:SetAddonOutput("DRaidFrames", 254652)
@@ -57,7 +62,7 @@ end
 
 function DRaidFrames:InitSettings()
 	DRFTAB = DRFTAB or {}
-	DRaidFrames:SetVersion(254652, "1.1.56")
+	DRaidFrames:SetVersion(254652, "1.1.57")
 	drf_settings = DRaidFrames:CreateWindow({
 		["name"] = "DRaidFrames",
 		["pTab"] = {"CENTER"},
@@ -98,10 +103,8 @@ function DRaidFrames:InitSettings()
 	DRaidFrames:AppendCheckbox("GFLAG", true)
 	DRaidFrames:AppendCheckbox("GCLAS", true)
 	DRaidFrames:AppendCheckbox("GTHRE", true)
-	DRaidFrames:CreateComboBox(drf_settings.SC, "GTETOTY", "Name", 0, DRaidFrames:GetAppendY(), "GTETOTY", {"Name", "Name + Realm", "Class", "Class + Name", "Name + Class", "None"})
-	DRaidFrames:SetAppendY(DRaidFrames:GetAppendY() - 32)
-	DRaidFrames:CreateComboBox(drf_settings.SC, "GTECETY", "Health in Percent", 0, DRaidFrames:GetAppendY(), "GTECETY", {"Health in Percent", "Lost Health in Percent", "None"})
-	DRaidFrames:SetAppendY(DRaidFrames:GetAppendY() - 32)
+	DRaidFrames:AppendDropdown("GTETOTY", "Name", TOPTEXTTYPES, OnDropdownChanged)
+	DRaidFrames:AppendDropdown("GTECETY", "Health in Percent", CENTERTEXTTYPES, OnDropdownChanged)
 	DRaidFrames:AppendSlider("GELEM", 5, 1, 40, 1, 0)
 	DRaidFrames:AppendSlider("GOUBR", 6, 0, 20, 1, 0)
 	DRaidFrames:AppendSlider("GROSP", 6, 0, 50, 1, 0)
@@ -131,10 +134,8 @@ function DRaidFrames:InitSettings()
 	DRaidFrames:AppendCheckbox("RFLAG", true)
 	DRaidFrames:AppendCheckbox("RCLAS", true)
 	DRaidFrames:AppendCheckbox("RTHRE", true)
-	DRaidFrames:CreateComboBox(drf_settings.SC, "GTETOTY", "Name", 0, DRaidFrames:GetAppendY(), "GTETOTY", {"Name", "Name + Realm", "Class", "Class + Name", "Name + Class", "None"})
-	DRaidFrames:SetAppendY(DRaidFrames:GetAppendY() - 32)
-	DRaidFrames:CreateComboBox(drf_settings.SC, "GTECETY", "Health in Percent", 0, DRaidFrames:GetAppendY(), "GTECETY", {"Health in Percent", "Lost Health in Percent", "None"})
-	DRaidFrames:SetAppendY(DRaidFrames:GetAppendY() - 32)
+	DRaidFrames:AppendDropdown("RTETOTY", "Name", TOPTEXTTYPES, OnDropdownChanged)
+	DRaidFrames:AppendDropdown("RTECETY", "Health in Percent", CENTERTEXTTYPES, OnDropdownChanged)
 	DRaidFrames:AppendSlider("RELEM", 5, 1, 40, 1, 0)
 	DRaidFrames:AppendSlider("ROUBR", 6, 0, 20, 1, 0)
 	DRaidFrames:AppendSlider("RROSP", 6, 0, 50, 1, 0)
@@ -155,8 +156,7 @@ function DRaidFrames:InitSettings()
 	end
 
 	DRaidFrames:AppendCheckbox("RNone", true, nil, 28)
-	DRaidFrames:CreateComboBox(drf_settings.SC, "SORTTYPE", "Role", 0, DRaidFrames:GetAppendY(), "SORTTYPE", {"Group", "Role"})
-	DRaidFrames:SetAppendY(DRaidFrames:GetAppendY() - 32)
+	DRaidFrames:AppendDropdown("SORTTYPE", "Role", SORTTYPES, OnDropdownChanged)
 	DRaidFrames:CreateMinimapButton({
 		["name"] = "DRaidFrames",
 		["icon"] = 254652,

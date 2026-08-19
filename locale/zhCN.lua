@@ -1,6 +1,16 @@
 -- zhCN Simplified Chinese
 local _, DRaidFrames = ...
 DRaidFrames:AddTrans("zhCN", "LID_SORTTYPE", "排序类型")
+DRaidFrames:AddTrans("zhCN", "LID_TETY_NAME", "名字")
+DRaidFrames:AddTrans("zhCN", "LID_TETY_NAMEREALM", "名字 + 服务器")
+DRaidFrames:AddTrans("zhCN", "LID_TETY_CLASS", "职业")
+DRaidFrames:AddTrans("zhCN", "LID_TETY_CLASSNAME", "职业 + 名字")
+DRaidFrames:AddTrans("zhCN", "LID_TETY_NAMECLASS", "名字 + 职业")
+DRaidFrames:AddTrans("zhCN", "LID_TETY_NONE", "无")
+DRaidFrames:AddTrans("zhCN", "LID_CETY_HEALTHPCT", "生命值百分比")
+DRaidFrames:AddTrans("zhCN", "LID_CETY_LOSTHEALTHPCT", "已损失生命值百分比")
+DRaidFrames:AddTrans("zhCN", "LID_SORT_GROUP", "队伍")
+DRaidFrames:AddTrans("zhCN", "LID_SORT_ROLE", "职责")
 DRaidFrames:AddTrans("zhCN", "LID_GGRHO", "水平分组")
 DRaidFrames:AddTrans("zhCN", "LID_GBAUP", "向上")
 DRaidFrames:AddTrans("zhCN", "LID_GTETOTY", "顶部文字类型")

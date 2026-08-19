@@ -1,6 +1,16 @@
 -- frFR French
 local _, DRaidFrames = ...
 DRaidFrames:AddTrans("frFR", "LID_SORTTYPE", "Type de tri")
+DRaidFrames:AddTrans("frFR", "LID_TETY_NAME", "Nom")
+DRaidFrames:AddTrans("frFR", "LID_TETY_NAMEREALM", "Nom + Royaume")
+DRaidFrames:AddTrans("frFR", "LID_TETY_CLASS", "Classe")
+DRaidFrames:AddTrans("frFR", "LID_TETY_CLASSNAME", "Classe + Nom")
+DRaidFrames:AddTrans("frFR", "LID_TETY_NAMECLASS", "Nom + Classe")
+DRaidFrames:AddTrans("frFR", "LID_TETY_NONE", "Aucun")
+DRaidFrames:AddTrans("frFR", "LID_CETY_HEALTHPCT", "Santé en pourcentage")
+DRaidFrames:AddTrans("frFR", "LID_CETY_LOSTHEALTHPCT", "Santé perdue en pourcentage")
+DRaidFrames:AddTrans("frFR", "LID_SORT_GROUP", "Groupe")
+DRaidFrames:AddTrans("frFR", "LID_SORT_ROLE", "Rôle")
 DRaidFrames:AddTrans("frFR", "LID_GGRHO", "Groupe Horizontal")
 DRaidFrames:AddTrans("frFR", "LID_GBAUP", "vers le haut")
 DRaidFrames:AddTrans("frFR", "LID_GTETOTY", "Type de texte supérieur")

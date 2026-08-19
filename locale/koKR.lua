@@ -1,6 +1,16 @@
 -- koKR Korean
 local _, DRaidFrames = ...
 DRaidFrames:AddTrans("koKR", "LID_SORTTYPE", "정렬 유형")
+DRaidFrames:AddTrans("koKR", "LID_TETY_NAME", "이름")
+DRaidFrames:AddTrans("koKR", "LID_TETY_NAMEREALM", "이름 + 서버")
+DRaidFrames:AddTrans("koKR", "LID_TETY_CLASS", "직업")
+DRaidFrames:AddTrans("koKR", "LID_TETY_CLASSNAME", "직업 + 이름")
+DRaidFrames:AddTrans("koKR", "LID_TETY_NAMECLASS", "이름 + 직업")
+DRaidFrames:AddTrans("koKR", "LID_TETY_NONE", "없음")
+DRaidFrames:AddTrans("koKR", "LID_CETY_HEALTHPCT", "생명력 백분율")
+DRaidFrames:AddTrans("koKR", "LID_CETY_LOSTHEALTHPCT", "잃은 생명력 백분율")
+DRaidFrames:AddTrans("koKR", "LID_SORT_GROUP", "그룹")
+DRaidFrames:AddTrans("koKR", "LID_SORT_ROLE", "역할")
 DRaidFrames:AddTrans("koKR", "LID_GGRHO", "그룹 수평 배치")
 DRaidFrames:AddTrans("koKR", "LID_GBAUP", "위쪽으로")
 DRaidFrames:AddTrans("koKR", "LID_GTETOTY", "상단 텍스트 유형")

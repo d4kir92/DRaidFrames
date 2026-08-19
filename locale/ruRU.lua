@@ -1,6 +1,16 @@
 -- ruRU Russian
 local _, DRaidFrames = ...
 DRaidFrames:AddTrans("ruRU", "LID_SORTTYPE", "Тип сортировки")
+DRaidFrames:AddTrans("ruRU", "LID_TETY_NAME", "Имя")
+DRaidFrames:AddTrans("ruRU", "LID_TETY_NAMEREALM", "Имя + Игровой мир")
+DRaidFrames:AddTrans("ruRU", "LID_TETY_CLASS", "Класс")
+DRaidFrames:AddTrans("ruRU", "LID_TETY_CLASSNAME", "Класс + Имя")
+DRaidFrames:AddTrans("ruRU", "LID_TETY_NAMECLASS", "Имя + Класс")
+DRaidFrames:AddTrans("ruRU", "LID_TETY_NONE", "Нет")
+DRaidFrames:AddTrans("ruRU", "LID_CETY_HEALTHPCT", "Здоровье в процентах")
+DRaidFrames:AddTrans("ruRU", "LID_CETY_LOSTHEALTHPCT", "Потерянное здоровье в процентах")
+DRaidFrames:AddTrans("ruRU", "LID_SORT_GROUP", "Группа")
+DRaidFrames:AddTrans("ruRU", "LID_SORT_ROLE", "Роль")
 DRaidFrames:AddTrans("ruRU", "LID_GGRHO", "Горизонтальная группа")
 DRaidFrames:AddTrans("ruRU", "LID_GBAUP", "вверх")
 DRaidFrames:AddTrans("ruRU", "LID_GTETOTY", "Верхний тип текста")
