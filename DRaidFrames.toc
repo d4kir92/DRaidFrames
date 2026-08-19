@@ -54,7 +54,6 @@ locale\zhCN.lua
 locale\zhTW.lua
 
 libs\realms.lua
-libs\dropdown.lua
 
 settings.lua
 
