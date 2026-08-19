@@ -3,7 +3,7 @@
 ## Interface-Wrath: 30403
 ## Interface-Cata: 40402
 ## Interface-Mists: 50504
-## Interface: 120100, 120007
+## Interface: 120100
 
 ## Version: 1.1.56
 ## Title: DRaidFrames by |cff55d2ffD4KiR |T132115:16:16:0:0|t
@@ -40,8 +40,6 @@
 
 # External Libs
 libs\D4Lib\D4Lib.xml
-libs\LibStub\LibStub.lua
-libs\LibDropDown\embed.xml
 
 locale\deDE.lua
 locale\enUS.lua

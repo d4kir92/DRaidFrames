@@ -34,8 +34,6 @@
 
 # External Libs
 libs\D4Lib\D4Lib.xml
-libs\LibStub\LibStub.lua
-libs\LibDropDown\embed.xml
 
 locale\deDE.lua
 locale\enUS.lua
