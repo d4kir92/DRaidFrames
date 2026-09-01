@@ -1,6 +1,10 @@
 -- By D4KiR
 local _, DRaidFrames = ...
+local ICON = 254652
+local DEFAULT_WIDTH = 520
+local DEFAULT_HEIGHT = 560
 local DRFLoaded = false
+local drfset = nil
 function DRaidFrames:GetConfig(key, value, pc)
 	DRFTAB = DRFTAB or {}
 	DRFTABPC = DRFTABPC or {}
@@ -24,155 +28,255 @@ function DRaidFrames:GetConfig(key, value, pc)
 	return value
 end
 
-local TOPTEXTTYPES = {
-	["Name"] = "TETY_NAME",
-	["Name + Realm"] = "TETY_NAMEREALM",
-	["Class"] = "TETY_CLASS",
-	["Class + Name"] = "TETY_CLASSNAME",
-	["Name + Class"] = "TETY_NAMECLASS",
-	["None"] = "TETY_NONE"
-}
+function DRaidFrames:SetConfig(key, value, pc)
+	if pc then
+		DRFTABPC = DRFTABPC or {}
+		DRFTABPC[key] = value
+		return
+	end
 
-local CENTERTEXTTYPES = {
-	["Health in Percent"] = "CETY_HEALTHPCT",
-	["Lost Health in Percent"] = "CETY_LOSTHEALTHPCT",
-	["None"] = "TETY_NONE"
-}
-
-local SORTTYPES = {
-	["Group"] = "SORT_GROUP",
-	["Role"] = "SORT_ROLE"
-}
-
-local function OnDropdownChanged()
-	DRaidFrames:SetSizing(true)
+	DRFTAB = DRFTAB or {}
+	DRFTAB[key] = value
 end
 
-DRaidFrames:SetAddonOutput("DRaidFrames", 254652)
-local drf_settings = nil
+DRaidFrames:SetAddonOutput("DRaidFrames", ICON)
+local TOPTEXTCHOICES = {
+	{
+		["value"] = "Name",
+		["label"] = "LID_TETY_NAME"
+	},
+	{
+		["value"] = "Name + Realm",
+		["label"] = "LID_TETY_NAMEREALM"
+	},
+	{
+		["value"] = "Class",
+		["label"] = "LID_TETY_CLASS"
+	},
+	{
+		["value"] = "Class + Name",
+		["label"] = "LID_TETY_CLASSNAME"
+	},
+	{
+		["value"] = "Name + Class",
+		["label"] = "LID_TETY_NAMECLASS"
+	},
+	{
+		["value"] = "None",
+		["label"] = "LID_TETY_NONE"
+	}
+}
+
+local CENTERTEXTCHOICES = {
+	{
+		["value"] = "Health in Percent",
+		["label"] = "LID_CETY_HEALTHPCT"
+	},
+	{
+		["value"] = "Lost Health in Percent",
+		["label"] = "LID_CETY_LOSTHEALTHPCT"
+	},
+	{
+		["value"] = "None",
+		["label"] = "LID_TETY_NONE"
+	}
+}
+
+local SORTCHOICES = {
+	{
+		["value"] = "Group",
+		["label"] = "LID_SORT_GROUP"
+	},
+	{
+		["value"] = "Role",
+		["label"] = "LID_SORT_ROLE"
+	}
+}
+
 function DRaidFrames:ToggleSettings()
-	if drf_settings then
-		if drf_settings:IsShown() then
-			drf_settings:Hide()
-		else
-			drf_settings:Show()
-		end
+	if drfset == nil then return end
+	drfset:Toggle()
+end
+
+local function GetCollapsed(key)
+	if key == nil then return nil end
+	if type(DRFTAB) ~= "table" then return nil end
+	if type(DRFTAB["COLLAPSED"]) ~= "table" then return nil end
+	return DRFTAB["COLLAPSED"][key]
+end
+
+local function SetCollapsed(key, collapsed)
+	if key == nil then return end
+	if type(DRFTAB) ~= "table" then return end
+	if type(DRFTAB["COLLAPSED"]) ~= "table" then DRFTAB["COLLAPSED"] = {} end
+	if collapsed then
+		DRFTAB["COLLAPSED"][key] = true
+	else
+		DRFTAB["COLLAPSED"][key] = nil
 	end
 end
 
+local function LID(key)
+	return "LID_" .. key
+end
+
+local function AddCategory(key, label, level)
+	drfset:AddCategory({
+		["label"] = label,
+		["key"] = key,
+		["search"] = key,
+		["level"] = level
+	})
+end
+
+local function AddCheckbox(key, default, pc, func)
+	drfset:AddCheckbox({
+		["label"] = LID(key),
+		["search"] = key,
+		["value"] = DRaidFrames:GetConfig(key, default, pc),
+		["func"] = function(value)
+			DRaidFrames:SetConfig(key, value, pc)
+			DRaidFrames:SetSizing(true)
+			if func then func(value) end
+		end
+	})
+end
+
+local function AddSlider(key, default, vmin, vmax, step, decimals)
+	drfset:AddSlider({
+		["label"] = LID(key),
+		["search"] = key,
+		["value"] = DRaidFrames:GetConfig(key, default),
+		["min"] = vmin,
+		["max"] = vmax,
+		["step"] = step,
+		["decimals"] = decimals or 0,
+		["func"] = function(value)
+			DRaidFrames:SetConfig(key, value)
+			DRaidFrames:SetSizing(true)
+		end
+	})
+end
+
+local function AddDropdown(key, default, choices)
+	drfset:AddDropdown({
+		["label"] = LID(key),
+		["search"] = key,
+		["value"] = DRaidFrames:GetConfig(key, default),
+		["choices"] = choices,
+		["func"] = function(value)
+			DRaidFrames:SetConfig(key, value)
+			DRaidFrames:SetSizing(true)
+		end
+	})
+end
+
+local function AddDebuffTypes(prefix)
+	local colors = GetDebuffColors()
+	if colors == nil then
+		DRaidFrames:MSG("MISSING GetDebuffColors()")
+		return
+	end
+
+	local types = {}
+	for typ in pairs(colors) do
+		if typ ~= "None" then tinsert(types, typ) end
+	end
+
+	table.sort(types)
+	for _, typ in ipairs(types) do
+		AddCheckbox(prefix .. typ, true, true)
+	end
+
+	AddCheckbox(prefix .. "None", true, true)
+end
+
+local function AddFrameOptions(category, prefix)
+	AddCategory(category .. "_LAYOUT", "LID_LAYOUT", 2)
+	AddCheckbox(prefix .. "GRHO", true)
+	AddCheckbox(prefix .. "BAUP", true)
+	AddCheckbox(prefix .. "OVER", true)
+	AddSlider(prefix .. "ELEM", 5, 1, 40, 1)
+	AddSlider(prefix .. "ROSP", 6, 0, 50, 1)
+	AddSlider(prefix .. "COSP", 6, 0, 50, 1)
+	AddSlider(prefix .. "OUBR", 6, 0, 20, 1)
+	AddCategory(category .. "_SIZE", "LID_SIZE", 2)
+	AddSlider(prefix .. "HEWI", 120, 20, 300, 1)
+	AddSlider(prefix .. "HEHE", 60, 20, 300, 1)
+	AddSlider(prefix .. "POSI", 20, 8, 300, 1)
+	AddCategory(category .. "_DISPLAY", "LID_DISPLAY", 2)
+	AddCheckbox(prefix .. "SHPO", true)
+	AddCheckbox(prefix .. "FLAG", true)
+	AddCheckbox(prefix .. "CLAS", true)
+	AddCheckbox(prefix .. "THRE", true)
+	AddSlider(prefix .. "OORA", 0.4, 0.1, 0.9, 0.1, 1)
+	AddCategory(category .. "_TEXT", "LID_TEXT", 2)
+	AddDropdown(prefix .. "TETOTY", "Name", TOPTEXTCHOICES)
+	AddDropdown(prefix .. "TECETY", "Health in Percent", CENTERTEXTCHOICES)
+	AddCategory(category .. "_AURAS", "LID_AURAS", 2)
+	AddSlider(prefix .. "BUSI", 16, 8, 65, 1)
+	AddSlider(prefix .. "DESI", 16, 8, 65, 1)
+	AddCategory(category .. "_DEBUFFTYPES", LID(prefix .. "DETY"), 3)
+	AddDebuffTypes(prefix)
+end
+
+local drfsetting = false
 function DRaidFrames:InitSettings()
+	if drfsetting then return end
+	drfsetting = true
 	DRFTAB = DRFTAB or {}
-	DRaidFrames:SetVersion(254652, "1.1.57")
-	drf_settings = DRaidFrames:CreateWindow({
-		["name"] = "DRaidFrames",
+	DRaidFrames:SetVersion(ICON, "1.2.0")
+	drfset = DRaidFrames:CreateUIWindow({
+		["name"] = "DRaidFramesSettings",
 		["pTab"] = {"CENTER"},
-		["sw"] = 520,
-		["sh"] = 520,
-		["title"] = format("|T254652:16:16:0:0|t DRaidFrames v%s", DRaidFrames:GetVersion())
+		["width"] = DRaidFrames:GetConfig("WINDOWWIDTH", DEFAULT_WIDTH),
+		["height"] = DRaidFrames:GetConfig("WINDOWHEIGHT", DEFAULT_HEIGHT),
+		["minWidth"] = 360,
+		["minHeight"] = 240,
+		["onResize"] = function(width, height)
+			DRaidFrames:SetConfig("WINDOWWIDTH", width)
+			DRaidFrames:SetConfig("WINDOWHEIGHT", height)
+		end,
+		["getCollapsed"] = function(key) return GetCollapsed(key) end,
+		["setCollapsed"] = function(key, collapsed) SetCollapsed(key, collapsed) end,
+		["title"] = format("|T%d:16:16:0:0|t DRaidFrames by |cff55d2ffD4KiR|r v%s", ICON, DRaidFrames:GetVersion())
 	})
 
-	drf_settings.SF = CreateFrame("ScrollFrame", "drf_settings_SF", drf_settings, "UIPanelScrollFrameTemplate")
-	drf_settings.SF:SetPoint("TOPLEFT", drf_settings, 8, -26)
-	drf_settings.SF:SetPoint("BOTTOMRIGHT", drf_settings, -32, 8)
-	drf_settings.SC = CreateFrame("Frame", "drf_settings_SC", drf_settings.SF)
-	drf_settings.SC:SetSize(drf_settings.SF:GetSize())
-	drf_settings.SC:SetPoint("TOPLEFT", drf_settings.SF, "TOPLEFT", 0, 0)
-	drf_settings.SF:SetScrollChild(drf_settings.SC)
-	local y = 0
-	DRaidFrames:SetAppendY(y)
-	DRaidFrames:SetAppendParent(drf_settings.SC)
-	DRaidFrames:SetAppendTab(DRFTAB)
-	DRaidFrames:AppendCategory("GENERAL")
-	DRaidFrames:AppendCheckbox("MMBTN", DRaidFrames:GetWoWBuild() ~= "RETAIL", function(sel, checked)
-		if checked then
+	drfset:SuspendLayout()
+	drfset:AddSearch()
+	AddCategory("GENERAL", "LID_GENERAL", 1)
+	AddCheckbox("MMBTN", DRaidFrames:GetWoWBuild() ~= "RETAIL", false, function(value)
+		if value then
 			DRaidFrames:ShowMMBtn("DRaidFrames")
 		else
 			DRaidFrames:HideMMBtn("DRaidFrames")
 		end
 	end)
 
-	--parent, key, vval, x, y, vmin, vmax, steps, lstr
-	DRaidFrames:AppendSlider("DECI", 0, 0, 3, 1, 0)
-	DRaidFrames:AppendCheckbox("SHTO", true)
-	DRaidFrames:AppendCategory("PARTY")
-	DRaidFrames:AppendCheckbox("GSHPO", true)
-	DRaidFrames:AppendCheckbox("GGRHO", true)
-	DRaidFrames:AppendCheckbox("GBAUP", true)
-	DRaidFrames:AppendCheckbox("GOVER", true)
-	if UnitHasRating then DRaidFrames:AppendCheckbox("GRATE", true) end
-	DRaidFrames:AppendCheckbox("GFLAG", true)
-	DRaidFrames:AppendCheckbox("GCLAS", true)
-	DRaidFrames:AppendCheckbox("GTHRE", true)
-	DRaidFrames:AppendDropdown("GTETOTY", "Name", TOPTEXTTYPES, OnDropdownChanged)
-	DRaidFrames:AppendDropdown("GTECETY", "Health in Percent", CENTERTEXTTYPES, OnDropdownChanged)
-	DRaidFrames:AppendSlider("GELEM", 5, 1, 40, 1, 0)
-	DRaidFrames:AppendSlider("GOUBR", 6, 0, 20, 1, 0)
-	DRaidFrames:AppendSlider("GROSP", 6, 0, 50, 1, 0)
-	DRaidFrames:AppendSlider("GCOSP", 6, 0, 50, 1, 0)
-	DRaidFrames:AppendSlider("GHEWI", 120, 20, 300, 1, 0)
-	DRaidFrames:AppendSlider("GHEHE", 60, 20, 300, 1, 0)
-	DRaidFrames:AppendSlider("GPOSI", 20, 8, 300, 1, 0)
-	DRaidFrames:AppendSlider("GDESI", 16, 8, 65, 1, 0)
-	DRaidFrames:AppendSlider("GBUSI", 16, 8, 65, 1, 0)
-	DRaidFrames:AppendSlider("GOORA", 0.4, 0.1, 0.9, 0.1, 1)
-	DRaidFrames:AppendCategory("GDETY", 24)
-	if GetDebuffColors() then
-		for i, v in pairs(GetDebuffColors()) do
-			DRaidFrames:AppendCheckbox("G" .. i, true, nil, 28)
-		end
-	else
-		DRaidFrames:MSG("MISSING GetDebuffColors() #1")
-	end
-
-	DRaidFrames:AppendCheckbox("GNone", true, null, 28)
-	DRaidFrames:AppendCategory("RAID")
-	DRaidFrames:AppendCheckbox("RSHPO", true)
-	DRaidFrames:AppendCheckbox("RGRHO", true)
-	DRaidFrames:AppendCheckbox("RBAUP", true)
-	DRaidFrames:AppendCheckbox("ROVER", true)
-	if UnitHasRating then DRaidFrames:AppendCheckbox("RRATE", true) end
-	DRaidFrames:AppendCheckbox("RFLAG", true)
-	DRaidFrames:AppendCheckbox("RCLAS", true)
-	DRaidFrames:AppendCheckbox("RTHRE", true)
-	DRaidFrames:AppendDropdown("RTETOTY", "Name", TOPTEXTTYPES, OnDropdownChanged)
-	DRaidFrames:AppendDropdown("RTECETY", "Health in Percent", CENTERTEXTTYPES, OnDropdownChanged)
-	DRaidFrames:AppendSlider("RELEM", 5, 1, 40, 1, 0)
-	DRaidFrames:AppendSlider("ROUBR", 6, 0, 20, 1, 0)
-	DRaidFrames:AppendSlider("RROSP", 6, 0, 50, 1, 0)
-	DRaidFrames:AppendSlider("RCOSP", 6, 0, 50, 1, 0)
-	DRaidFrames:AppendSlider("RHEWI", 120, 20, 300, 1, 0)
-	DRaidFrames:AppendSlider("RHEHE", 60, 20, 300, 1, 0)
-	DRaidFrames:AppendSlider("RPOSI", 20, 8, 300, 1, 0)
-	DRaidFrames:AppendSlider("RDESI", 16, 8, 65, 1, 0)
-	DRaidFrames:AppendSlider("RBUSI", 16, 8, 65, 1, 0)
-	DRaidFrames:AppendSlider("ROORA", 0.4, 0.1, 0.9, 0.1, 1)
-	DRaidFrames:AppendCategory("RDETY", 24)
-	if GetDebuffColors() then
-		for i, v in pairs(GetDebuffColors()) do
-			DRaidFrames:AppendCheckbox("R" .. i, true, nil, 28)
-		end
-	else
-		DRaidFrames:MSG("MISSING GetDebuffColors() #2")
-	end
-
-	DRaidFrames:AppendCheckbox("RNone", true, nil, 28)
-	DRaidFrames:AppendDropdown("SORTTYPE", "Role", SORTTYPES, OnDropdownChanged)
+	AddCheckbox("SHTO", true)
+	AddDropdown("SORTTYPE", "Role", SORTCHOICES)
+	AddSlider("DECI", 0, 0, 3, 1)
+	AddCategory("PARTY", "LID_PARTY", 1)
+	AddFrameOptions("PARTY", "G")
+	AddCategory("RAID", "LID_RAID", 1)
+	AddFrameOptions("RAID", "R")
+	drfset:ResumeLayout()
 	DRaidFrames:CreateMinimapButton({
 		["name"] = "DRaidFrames",
-		["icon"] = 254652,
+		["icon"] = ICON,
 		["dbtab"] = DRFTAB,
-		["vTT"] = {{"|T254652:16:16:0:0|t DRaidFrames", "v" .. DRaidFrames:GetVersion()}, {DRaidFrames:Trans("LID_LEFTCLICK"), DRaidFrames:Trans("LID_OPENSETTINGS")}, {DRaidFrames:Trans("LID_RIGHTCLICK"), DRaidFrames:Trans("LID_HIDEMINIMAPBUTTON")}},
+		["dbkey"] = "MMBTN",
+		["vTT"] = {{format("|T%d:16:16:0:0|t DRaidFrames", ICON), "v" .. DRaidFrames:GetVersion()}, {DRaidFrames:Trans("LID_LEFTCLICK"), DRaidFrames:Trans("LID_OPENSETTINGS")}, {DRaidFrames:Trans("LID_RIGHTCLICK"), DRaidFrames:Trans("LID_HIDEMINIMAPBUTTON")}},
 		["funcL"] = function() DRaidFrames:ToggleSettings() end,
 		["funcR"] = function()
-			DRaidFrames:SV(DRFTAB, "MMBTN", false)
+			DRaidFrames:SetConfig("MMBTN", false)
 			DRaidFrames:MSG("Minimap Button is now hidden.")
 			DRaidFrames:HideMMBtn("DRaidFrames")
-		end,
-		["dbkey"] = "MMBTN"
+		end
 	})
 
-	DRaidFrames:AddSlash("drf", DRaidFrames.ToggleSettings)
-	DRaidFrames:AddSlash("DRaidFrames", DRaidFrames.ToggleSettings)
+	DRaidFrames:AddSlash("drf", function() DRaidFrames:ToggleSettings() end)
+	DRaidFrames:AddSlash("draidframes", function() DRaidFrames:ToggleSettings() end)
 end
 
 local f = CreateFrame("Frame")
@@ -183,7 +287,7 @@ function f:OnEvent(event)
 	if event == "GROUP_ROSTER_UPDATE" then DRaidFrames:SetSizing(true) end
 	if (event == "PLAYER_LOGIN" or event == "PLAYER_ENTERING_WORLD") and not DRFLoaded then
 		DRFLoaded = true
-		DRaidFrames:SetAddonOutput("DRaidFrames", 254652)
+		DRaidFrames:SetAddonOutput("DRaidFrames", ICON)
 		DRaidFrames:SetSizingForce(true)
 		DRaidFrames:UpdateSize()
 		DRaidFrames:SetUpdating(true)
