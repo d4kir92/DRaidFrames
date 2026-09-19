@@ -225,7 +225,7 @@ function DRaidFrames:InitSettings()
 	if drfsetting then return end
 	drfsetting = true
 	DRFTAB = DRFTAB or {}
-	DRaidFrames:SetVersion(ICON, "1.2.0")
+	DRaidFrames:SetVersion(ICON, "1.2.1")
 	drfset = DRaidFrames:CreateUIWindow({
 		["name"] = "DRaidFramesSettings",
 		["pTab"] = {"CENTER"},
