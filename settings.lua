@@ -1,6 +1,6 @@
 -- By D4KiR
 local _, DRaidFrames = ...
-local ICON = 254652
+local ICON = DRaidFrames:GetAddonIcon()
 local DEFAULT_WIDTH = 520
 local DEFAULT_HEIGHT = 560
 local DRFLoaded = false
@@ -39,7 +39,7 @@ function DRaidFrames:SetConfig(key, value, pc)
 	DRFTAB[key] = value
 end
 
-DRaidFrames:SetAddonOutput("DRaidFrames", ICON)
+DRaidFrames:SetAddonOutput()
 local TOPTEXTCHOICES = {
 	{
 		["value"] = "Name",
@@ -225,7 +225,7 @@ function DRaidFrames:InitSettings()
 	if drfsetting then return end
 	drfsetting = true
 	DRFTAB = DRFTAB or {}
-	DRaidFrames:SetVersion(ICON, "1.2.2")
+	DRaidFrames:SetVersion()
 	drfset = DRaidFrames:CreateUIWindow({
 		["name"] = "DRaidFramesSettings",
 		["pTab"] = {"CENTER"},
@@ -287,7 +287,7 @@ function f:OnEvent(event)
 	if event == "GROUP_ROSTER_UPDATE" then DRaidFrames:SetSizing(true) end
 	if (event == "PLAYER_LOGIN" or event == "PLAYER_ENTERING_WORLD") and not DRFLoaded then
 		DRFLoaded = true
-		DRaidFrames:SetAddonOutput("DRaidFrames", ICON)
+		DRaidFrames:SetAddonOutput()
 		DRaidFrames:SetSizingForce(true)
 		DRaidFrames:UpdateSize()
 		DRaidFrames:SetUpdating(true)
